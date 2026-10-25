@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AuthShell from '../components/AuthShell.jsx';
+import PasswordField from '../components/PasswordField.jsx';
 import api from '../config/api.js';
-
-const inputClass =
-  'w-full rounded-xl border border-border bg-bg px-4 py-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none';
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -70,33 +68,23 @@ export default function ResetPasswordPage() {
           </div>
         ) : null}
 
-        <label className="block text-sm font-semibold">
-          Contraseña nueva
-          <input
-            type="password"
-            className={`${inputClass} mt-2`}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="new-password"
-            minLength={8}
-            maxLength={128}
-            required
-          />
-        </label>
+        <PasswordField
+          label="Contraseña nueva"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoComplete="new-password"
+          minLength={8}
+          maxLength={128}
+        />
 
-        <label className="block text-sm font-semibold">
-          Repetir contraseña
-          <input
-            type="password"
-            className={`${inputClass} mt-2`}
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            autoComplete="new-password"
-            minLength={8}
-            maxLength={128}
-            required
-          />
-        </label>
+        <PasswordField
+          label="Repetir contraseña"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          autoComplete="new-password"
+          minLength={8}
+          maxLength={128}
+        />
 
         <button
           type="submit"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell.jsx';
+import PasswordField from '../components/PasswordField.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const inputClass =
@@ -47,19 +48,12 @@ export default function LoginPage() {
       title="Iniciar sesión"
       subtitle="Entrá para ver tus matches y tu disponibilidad."
       footer={
-        <div className="space-y-2">
-          <p>
-            ¿No tenés cuenta?{' '}
-            <Link to="/register" className="font-semibold text-accent">
-              Crear cuenta
-            </Link>
-          </p>
-          <p>
-            <Link to="/forgot-password" className="text-muted underline">
-              Olvidé mi contraseña
-            </Link>
-          </p>
-        </div>
+        <p>
+          ¿No tenés cuenta?{' '}
+          <Link to="/register" className="font-semibold text-accent">
+            Crear cuenta
+          </Link>
+        </p>
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,17 +74,16 @@ export default function LoginPage() {
           />
         </label>
 
-        <label className="block text-sm font-semibold">
-          Contraseña
-          <input
-            type="password"
-            className={`${inputClass} mt-2`}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
-            required
-          />
-        </label>
+        <PasswordField
+          label="Contraseña"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          action={
+            <Link to="/forgot-password" className="text-xs font-semibold text-accent">
+              ¿Has olvidado tu contraseña?
+            </Link>
+          }
+        />
 
         <button
           type="submit"

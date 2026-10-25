@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import AuthShell from '../components/AuthShell.jsx';
+import PasswordField from '../components/PasswordField.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const siteKey = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
@@ -112,33 +113,23 @@ export default function RegisterPage() {
           />
         </label>
 
-        <label className="block text-sm font-semibold">
-          Contraseña
-          <input
-            type="password"
-            className={`${inputClass} mt-2`}
-            value={form.password}
-            onChange={setField('password')}
-            autoComplete="new-password"
-            minLength={8}
-            maxLength={128}
-            required
-          />
-        </label>
+        <PasswordField
+          label="Contraseña"
+          value={form.password}
+          onChange={setField('password')}
+          autoComplete="new-password"
+          minLength={8}
+          maxLength={128}
+        />
 
-        <label className="block text-sm font-semibold">
-          Repetir contraseña
-          <input
-            type="password"
-            className={`${inputClass} mt-2`}
-            value={form.confirmPassword}
-            onChange={setField('confirmPassword')}
-            autoComplete="new-password"
-            minLength={8}
-            maxLength={128}
-            required
-          />
-        </label>
+        <PasswordField
+          label="Repetir contraseña"
+          value={form.confirmPassword}
+          onChange={setField('confirmPassword')}
+          autoComplete="new-password"
+          minLength={8}
+          maxLength={128}
+        />
 
         <label className="flex items-start gap-3 text-sm text-muted">
           <input
