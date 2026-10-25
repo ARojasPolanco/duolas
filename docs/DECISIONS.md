@@ -217,3 +217,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** confirmación +18 al registrarse, términos, privacidad y aviso de no afiliación con Riot.
 
 **Consecuencias:** se guardan timestamps de aceptación. No se implementa verificación de identidad.
+
+## ADR-028 — `dev` como rama principal
+
+**Contexto:** el proyecto se desarrolla por fases y `main` se reserva para el release final.
+
+**Decisión:** todo el desarrollo vive en `dev`, que es la rama default del repositorio. `main` se crea y actualiza recién cuando el producto esté al 100%.
+
+**Consecuencias:** los pushes diarios van a `dev`. `main` queda limpia para el release y no se toca durante el desarrollo.

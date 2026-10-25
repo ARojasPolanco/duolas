@@ -6,6 +6,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 - **Fase:** Fase 0 (scaffold) completada. Siguiente: Fase 1 (cuenta y perfil).
 - **Código:** monorepo base con API, web y migración inicial.
+- **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
 - **Última actualización:** 2026-10-25.
@@ -205,7 +206,6 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - Sin roster de grupo en Busco 1: el post representa al grupo.
 - Sin chat interno: el contacto es Riot ID + Discord tras la conexión.
 - `npm audit` reporta una vulnerabilidad alta en Zod 3 (DoS con colecciones gigantes) y una moderada en `uuid` 8 vía Sequelize. El body limit de 100 KB mitiga; no se aplicó `audit fix --force` porque rompería Zod y degradaría Sequelize. Revisar al actualizar majors.
-- Repositorio sin `git init`: Husky se activa al inicializar git y reinstalar.
 
 ## Próxima acción
 

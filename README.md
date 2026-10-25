@@ -8,6 +8,7 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 
 - **Fase actual:** Fase 0 (scaffold) completada. Siguiente: Fase 1 (cuenta y perfil).
 - **Código:** monorepo base con API, web y migración inicial.
+- **Rama principal:** `dev`. `main` se reserva para el release final.
 - **Fuente de verdad:** los documentos de `docs/`.
 - **Propuesta original:** `Propuesta plataforma de duos para League of Legends.pdf`.
 

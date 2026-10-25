@@ -246,6 +246,8 @@ Heredadas del incidente real de Market Design:
 
 ## 16. Git y commits
 
+- Rama principal de desarrollo: `dev`. Todo el trabajo se integra ahí y es la rama default del repositorio.
+- `main` queda reservada para el release al 100%. No se crea ni se actualiza hasta esa instancia.
 - Husky + lint-staged en pre-commit (Prettier + ESLint).
 - commitlint en commit-msg.
 - Formato: `type(scope): descripción`.
