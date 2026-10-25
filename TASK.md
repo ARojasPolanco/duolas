@@ -6,6 +6,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 - **Fase:** Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
 - **Código:** monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
+- **Demo:** `npm run seed` crea 4 cuentas verificadas, un match activo y likes pendientes para probar la UI.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.

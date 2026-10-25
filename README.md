@@ -76,6 +76,34 @@ npm run dev:web
 
 La API queda en `http://localhost:3000` y la web en `http://localhost:5173`. PostgreSQL escucha en `localhost:5433`.
 
+## Datos de prueba
+
+El seed de desarrollo crea cuentas ya verificadas, perfiles completos y un match activo. Solo funciona fuera de producción.
+
+```bash
+npm run docker:up
+npm run seed
+npm run dev
+npm run dev:web
+```
+
+| Cuenta                    | Contraseña   | Uso                                           |
+| ------------------------- | ------------ | --------------------------------------------- |
+| `demo_mid@duolas.app`     | `Demo12345!` | Cuenta principal para probar Match y Matches  |
+| `demo_jungle@duolas.app`  | `Demo12345!` | Tiene un match activo con `demo_mid`          |
+| `demo_adc@duolas.app`     | `Demo12345!` | Candidato con like pendiente hacia `demo_mid` |
+| `demo_support@duolas.app` | `Demo12345!` | Candidato compatible adicional                |
+
+Flujo rápido:
+
+1. Abrí `http://localhost:5173/login` e iniciá sesión con `demo_mid@duolas.app`.
+2. En `/match` vas a ver `demo_adc` y `demo_support`.
+3. Si le das like a `demo_adc`, como ya existe un like pendiente suyo, el match se concreta al instante y aparece en `/matches`.
+4. En `/matches` vas a ver el contacto de `demo_jungle` y podés probar copiar, archivar y bloquear.
+5. Si querés reiniciar el escenario, volvé a correr `npm run seed`.
+
+> Las cuentas demo son solo para desarrollo local. No usarlas en producción.
+
 ## Scripts
 
 | Comando               | Descripción              |
