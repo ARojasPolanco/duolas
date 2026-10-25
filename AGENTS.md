@@ -27,9 +27,10 @@ La propuesta original está en `Propuesta plataforma de duos para League of Lege
 6. `docs/MATCHING.md`
 7. `docs/METRICS.md`
 8. `docs/TESTING.md`
-9. `docs/UI.md`
-10. `docs/DECISIONS.md`
-11. `TASK.md`
+9. `docs/PRODUCTION.md`
+10. `docs/UI.md`
+11. `docs/DECISIONS.md`
+12. `TASK.md`
 
 ## 4. Stack
 
@@ -311,4 +312,5 @@ npm run seed:admin       # admin desde variables de entorno
 - `docs/MATCHING.md` concentra fórmulas y pesos.
 - `docs/METRICS.md` concentra eventos, definiciones de KPIs y consultas SQL.
 - `docs/TESTING.md` concentra el plan y el smoke manual.
+- `docs/PRODUCTION.md` concentra las envs, claves y checklist de deploy.
 - `docs/UI.md` concentra rutas, pantallas y componentes.

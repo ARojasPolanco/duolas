@@ -42,6 +42,7 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 | `docs/MATCHING.md`     | Fórmulas, filtros y pesos del match                       |
 | `docs/METRICS.md`      | Eventos, KPIs y consultas SQL                             |
 | `docs/TESTING.md`      | Plan de pruebas y smoke manual                            |
+| `docs/PRODUCTION.md`   | Checklist de envs, claves y deploy a producción           |
 | `docs/UI.md`           | Rutas, pantallas, componentes y copy                      |
 | `docs/DECISIONS.md`    | Registro de decisiones (ADR)                              |
 

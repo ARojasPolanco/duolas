@@ -186,6 +186,10 @@ Reglas:
 | `RATE_LIMIT_WINDOW_MS` | Default 900000                            |
 | `RATE_LIMIT_MAX`       | Default 100                               |
 | `LOG_LEVEL`            | Nivel de Winston                          |
+| `ADMIN_EMAIL`          | Email del admin para el seed              |
+| `ADMIN_PASSWORD`       | Password del admin para el seed           |
+
+El checklist completo de variables de producción está en `docs/PRODUCTION.md`.
 
 Frontend:
 

@@ -33,6 +33,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Crear `docs/MATCHING.md`.
 - [x] Crear `docs/METRICS.md`.
 - [x] Crear `docs/TESTING.md`.
+- [x] Crear `docs/PRODUCTION.md`.
 - [x] Crear `docs/DECISIONS.md`.
 - [x] Crear `docs/UI.md`.
 
@@ -207,6 +208,26 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - Sin roster de grupo en Busco 1: el post representa al grupo.
 - Sin chat interno: el contacto es Riot ID + Discord tras la conexión.
 - `npm audit` reporta una vulnerabilidad alta en Zod 3 (DoS con colecciones gigantes) y una moderada en `uuid` 8 vía Sequelize. El body limit de 100 KB mitiga; no se aplicó `audit fix --force` porque rompería Zod y degradaría Sequelize. Revisar al actualizar majors.
+
+## Pre-producción
+
+Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.production.example` y `apps/web/.env.production.example`.
+
+- [ ] `HCAPTCHA_SECRET`
+- [ ] `RESEND_API_KEY`
+- [ ] `OWNER_EMAIL`
+- [ ] `VAPID_PUBLIC_KEY`
+- [ ] `VAPID_PRIVATE_KEY`
+- [ ] `ADMIN_EMAIL` (solo seed)
+- [ ] `ADMIN_PASSWORD` (solo seed)
+- [ ] `VITE_API_URL` (incluye `/api`)
+- [ ] `VITE_HCAPTCHA_SITE_KEY`
+- [ ] Reemplazar `DB_URI` por Neon con SSL
+- [ ] Reemplazar `CORS_ORIGIN` y `APP_URL` por los dominios reales
+- [ ] Generar un `SECRET_JWT_SEED` nuevo
+- [ ] Confirmar `NODE_ENV=production`
+- [ ] No configurar `TEST_DB_URI` en producción
+- [ ] Quitar `ADMIN_PASSWORD` después del seed
 
 ## Próxima acción
 
