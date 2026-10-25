@@ -1,0 +1,641 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  LANGUAGES,
+  PLAY_STYLES,
+  RANK_DIVISIONS,
+  RANK_TIERS,
+  ROLES,
+  SCHEDULE_BLOCKS,
+  SCHEDULE_DAYS,
+} from '@duo-las/shared';
+import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
+import api from '../config/api.js';
+
+const ROLE_LABELS = {
+  top: 'Top',
+  jungle: 'Jungla',
+  mid: 'Mid',
+  adc: 'ADC',
+  support: 'Support',
+};
+
+const RANK_LABELS = {
+  iron: 'Hierro',
+  bronze: 'Bronce',
+  silver: 'Plata',
+  gold: 'Oro',
+  platinum: 'Platino',
+  emerald: 'Esmeralda',
+  diamond: 'Diamante',
+  master: 'Maestro',
+  grandmaster: 'Gran Maestro',
+  challenger: 'Challenger',
+};
+
+const DIVISION_LABELS = { iv: 'IV', iii: 'III', ii: 'II', i: 'I' };
+const STYLE_LABELS = { casual: 'Casual', ranked: 'Ranked en serio', tryhard: 'Tryhard' };
+const LANGUAGE_LABELS = { es: 'Español', en: 'Inglés', pt: 'Portugués' };
+const DAY_LABELS = {
+  mon: 'Lun',
+  tue: 'Mar',
+  wed: 'Mié',
+  thu: 'Jue',
+  fri: 'Vie',
+  sat: 'Sáb',
+  sun: 'Dom',
+};
+const BLOCK_LABELS = {
+  early: '00-06',
+  morning: '06-12',
+  afternoon: '12-18',
+  night: '18-24',
+};
+
+const APEX_TIERS = ['master', 'grandmaster', 'challenger'];
+const RIOT_ID_REGEX = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,14}[\p{L}\p{N}]#[A-Za-z0-9]{3,5}$/u;
+
+const STEPS = ['Riot ID', 'Roles', 'Rango', 'Horarios', 'Estilo', 'Cierre'];
+
+const initialForm = {
+  riotId: '',
+  primaryRole: '',
+  secondaryRole: '',
+  rankTier: '',
+  rankDivision: '',
+  rankLp: '',
+  playStyle: '',
+  languages: [],
+  hasMic: false,
+  scheduleBlocks: [],
+  bio: '',
+  discordTag: '',
+};
+
+const inputClass =
+  'w-full rounded-xl border border-border bg-bg px-4 py-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none';
+
+const choiceClass = (selected) =>
+  `rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${
+    selected
+      ? 'border-accent bg-accent/15 text-accent'
+      : 'border-border bg-bg text-muted hover:border-accent/50'
+  }`;
+
+export default function OnboardingPage() {
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState(initialForm);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const { refreshUser } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let active = true;
+
+    const load = async () => {
+      try {
+        const res = await api.get('/v1/profiles/me');
+        if (!active || !res.data.profile) return;
+
+        const profile = res.data.profile;
+        setForm({
+          riotId: profile.riotId || '',
+          primaryRole: profile.primaryRole || '',
+          secondaryRole: profile.secondaryRole || '',
+          rankTier: profile.rankTier || '',
+          rankDivision: profile.rankDivision || '',
+          rankLp: profile.rankLp ?? '',
+          playStyle: profile.playStyle || '',
+          languages: profile.languages || [],
+          hasMic: Boolean(profile.hasMic),
+          scheduleBlocks: profile.scheduleBlocks || [],
+          bio: profile.bio || '',
+          discordTag: profile.discordTag || '',
+        });
+      } catch (_error) {
+        // Si todavía no hay perfil, el formulario arranca vacío.
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const isApex = APEX_TIERS.includes(form.rankTier);
+
+  const setField = (field) => (event) => {
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const setRankTier = (tier) => {
+    setForm((current) => ({
+      ...current,
+      rankTier: tier,
+      rankDivision: APEX_TIERS.includes(tier) ? '' : current.rankDivision,
+    }));
+  };
+
+  const toggleValue = (field, value) => {
+    setForm((current) => {
+      const values = current[field];
+      const exists = values.includes(value);
+      return {
+        ...current,
+        [field]: exists ? values.filter((item) => item !== value) : [...values, value],
+      };
+    });
+  };
+
+  const canContinue = () => {
+    if (step === 0) return RIOT_ID_REGEX.test(form.riotId.trim());
+    if (step === 1) {
+      return (
+        Boolean(form.primaryRole) &&
+        Boolean(form.secondaryRole) &&
+        form.primaryRole !== form.secondaryRole
+      );
+    }
+    if (step === 2) return Boolean(form.rankTier) && (isApex || Boolean(form.rankDivision));
+    if (step === 3) return form.scheduleBlocks.length > 0;
+    if (step === 4) return Boolean(form.playStyle) && form.languages.length > 0;
+    return true;
+  };
+
+  const goNext = () => {
+    if (!canContinue()) {
+      setError('Completá este paso antes de continuar.');
+      return;
+    }
+    setError('');
+    setStep((current) => current + 1);
+  };
+
+  const goBack = () => {
+    setError('');
+    setStep((current) => Math.max(0, current - 1));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!canContinue()) {
+      setError('Completá este paso antes de continuar.');
+      return;
+    }
+
+    setSubmitting(true);
+    setError('');
+
+    const payload = {
+      riotId: form.riotId.trim(),
+      primaryRole: form.primaryRole,
+      secondaryRole: form.secondaryRole,
+      rankTier: form.rankTier,
+      rankDivision: isApex ? null : form.rankDivision,
+      rankLp: form.rankLp === '' ? null : Number(form.rankLp),
+      playStyle: form.playStyle,
+      languages: form.languages,
+      hasMic: form.hasMic,
+      scheduleBlocks: form.scheduleBlocks,
+      bio: form.bio.trim() || null,
+      discordTag: form.discordTag.trim() || null,
+    };
+
+    try {
+      await api.patch('/v1/profiles/me', payload);
+      await refreshUser();
+      toast.success('Perfil guardado. Ya podés empezar a buscar duo.');
+      navigate('/inicio', { replace: true });
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message || 'No pudimos guardar tu perfil. Intentá de nuevo.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-bg">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-bg px-5 py-8 text-text">
+      <div className="mx-auto max-w-3xl space-y-5">
+        <header className="flex items-center justify-between">
+          <span className="text-xl font-extrabold tracking-tight">
+            Duo<span className="text-accent">LAS</span>
+          </span>
+          <span className="text-xs font-semibold text-muted">
+            Paso {step + 1} de {STEPS.length}
+          </span>
+        </header>
+
+        <div className="h-2 overflow-hidden rounded-full bg-surface-2">
+          <div
+            className="h-full rounded-full bg-accent transition-all"
+            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+          />
+        </div>
+
+        <EmailVerificationBanner />
+
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl border border-border bg-surface p-6 sm:p-8"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+            {STEPS[step]}
+          </p>
+
+          {error ? (
+            <div className="mt-4 rounded-xl border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
+              {error}
+            </div>
+          ) : null}
+
+          <div className="mt-5">
+            {step === 0 ? (
+              <div className="space-y-5">
+                <h1 className="text-2xl font-bold">Tu cuenta de League of Legends</h1>
+                <p className="text-sm leading-relaxed text-muted">
+                  Usá tu Riot ID actual con el formato Nombre#TAG. El servidor es LAS y no se puede
+                  cambiar en el MVP.
+                </p>
+                <label className="block text-sm font-semibold">
+                  Riot ID
+                  <input
+                    className={`${inputClass} mt-2`}
+                    value={form.riotId}
+                    onChange={setField('riotId')}
+                    placeholder="Faker#LAS"
+                    maxLength={22}
+                    required
+                  />
+                </label>
+                <div className="rounded-xl border border-border bg-bg px-4 py-3 text-sm">
+                  <span className="text-muted">Servidor: </span>
+                  <span className="font-semibold">LAS</span>
+                </div>
+                <p className="text-xs text-muted">
+                  Tu Riot ID y tu Discord se revelan solo después de una conexión.
+                </p>
+              </div>
+            ) : null}
+
+            {step === 1 ? (
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-2xl font-bold">Tus roles</h1>
+                  <p className="mt-2 text-sm text-muted">
+                    Elegí tu rol principal y uno secundario. Deben ser distintos.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-semibold">Rol principal</p>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                    {ROLES.map((role) => (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => setForm((current) => ({ ...current, primaryRole: role }))}
+                        className={choiceClass(form.primaryRole === role)}
+                      >
+                        {ROLE_LABELS[role]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-semibold">Rol secundario</p>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                    {ROLES.map((role) => (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => setForm((current) => ({ ...current, secondaryRole: role }))}
+                        className={choiceClass(form.secondaryRole === role)}
+                      >
+                        {ROLE_LABELS[role]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {form.primaryRole && form.primaryRole === form.secondaryRole ? (
+                  <p className="text-sm text-danger">
+                    El rol principal y el secundario tienen que ser distintos.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
+            {step === 2 ? (
+              <div className="space-y-5">
+                <div>
+                  <h1 className="text-2xl font-bold">Tu rango</h1>
+                  <p className="mt-2 text-sm text-muted">
+                    El rango es declarado. Más adelante se podrá verificar con Riot.
+                  </p>
+                </div>
+
+                <label className="block text-sm font-semibold">
+                  Tier
+                  <select
+                    className={`${inputClass} mt-2`}
+                    value={form.rankTier}
+                    onChange={(event) => setRankTier(event.target.value)}
+                    required
+                  >
+                    <option value="">Elegí tu tier</option>
+                    {RANK_TIERS.map((tier) => (
+                      <option key={tier} value={tier}>
+                        {RANK_LABELS[tier]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                {form.rankTier && !isApex ? (
+                  <div>
+                    <p className="mb-2 text-sm font-semibold">División</p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {RANK_DIVISIONS.map((division) => (
+                        <button
+                          key={division}
+                          type="button"
+                          onClick={() =>
+                            setForm((current) => ({ ...current, rankDivision: division }))
+                          }
+                          className={choiceClass(form.rankDivision === division)}
+                        >
+                          {DIVISION_LABELS[division]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                <label className="block text-sm font-semibold">
+                  LP (opcional)
+                  <input
+                    type="number"
+                    min="0"
+                    className={`${inputClass} mt-2`}
+                    value={form.rankLp}
+                    onChange={setField('rankLp')}
+                    placeholder="0"
+                  />
+                </label>
+              </div>
+            ) : null}
+
+            {step === 3 ? (
+              <div className="space-y-5">
+                <div>
+                  <h1 className="text-2xl font-bold">Tus horarios</h1>
+                  <p className="mt-2 text-sm text-muted">
+                    Todos los horarios están en hora Argentina. Marcá los bloques en los que
+                    normalmente podés jugar.
+                  </p>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <div className="grid min-w-[420px] grid-cols-5 gap-2">
+                    <div />
+                    {SCHEDULE_BLOCKS.map((block) => (
+                      <div key={block} className="text-center text-[11px] font-semibold text-muted">
+                        {BLOCK_LABELS[block]}
+                      </div>
+                    ))}
+
+                    {SCHEDULE_DAYS.map((day) => (
+                      <div key={day} className="contents">
+                        <div className="flex items-center text-xs font-semibold text-muted">
+                          {DAY_LABELS[day]}
+                        </div>
+                        {SCHEDULE_BLOCKS.map((block) => {
+                          const value = `${day}_${block}`;
+                          const selected = form.scheduleBlocks.includes(value);
+                          return (
+                            <button
+                              key={value}
+                              type="button"
+                              onClick={() => toggleValue('scheduleBlocks', value)}
+                              aria-pressed={selected}
+                              aria-label={`${DAY_LABELS[day]} ${BLOCK_LABELS[block]}`}
+                              className={`h-10 rounded-lg border text-xs font-bold transition ${
+                                selected
+                                  ? 'border-accent bg-accent text-bg'
+                                  : 'border-border bg-bg text-muted hover:border-accent/50'
+                              }`}
+                            >
+                              {selected ? '✓' : ''}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {step === 4 ? (
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-2xl font-bold">Cómo jugás</h1>
+                  <p className="mt-2 text-sm text-muted">
+                    Esto nos ayuda a mostrarte duos compatibles.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-semibold">Estilo</p>
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    {PLAY_STYLES.map((style) => (
+                      <button
+                        key={style}
+                        type="button"
+                        onClick={() => setForm((current) => ({ ...current, playStyle: style }))}
+                        className={choiceClass(form.playStyle === style)}
+                      >
+                        {STYLE_LABELS[style]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-semibold">Idiomas</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {LANGUAGES.map((language) => (
+                      <button
+                        key={language}
+                        type="button"
+                        onClick={() => toggleValue('languages', language)}
+                        className={choiceClass(form.languages.includes(language))}
+                      >
+                        {LANGUAGE_LABELS[language]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-semibold">Micrófono</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setForm((current) => ({ ...current, hasMic: true }))}
+                      className={choiceClass(form.hasMic)}
+                    >
+                      Sí, tengo mic
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setForm((current) => ({ ...current, hasMic: false }))}
+                      className={choiceClass(!form.hasMic)}
+                    >
+                      No tengo mic
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {step === 5 ? (
+              <div className="space-y-5">
+                <div>
+                  <h1 className="text-2xl font-bold">Últimos detalles</h1>
+                  <p className="mt-2 text-sm text-muted">
+                    La bio y el Discord son opcionales. El Discord se revela solo tras una conexión.
+                  </p>
+                </div>
+
+                <label className="block text-sm font-semibold">
+                  Bio (opcional)
+                  <textarea
+                    className={`${inputClass} mt-2 min-h-[100px] resize-y`}
+                    value={form.bio}
+                    onChange={setField('bio')}
+                    maxLength={280}
+                    placeholder="Contá cómo jugás, qué buscás y en qué horarios."
+                  />
+                  <span className="mt-1 block text-right text-xs text-muted">
+                    {form.bio.length}/280
+                  </span>
+                </label>
+
+                <label className="block text-sm font-semibold">
+                  Discord (opcional)
+                  <input
+                    className={`${inputClass} mt-2`}
+                    value={form.discordTag}
+                    onChange={setField('discordTag')}
+                    maxLength={32}
+                    placeholder="usuario"
+                  />
+                </label>
+
+                <div className="rounded-xl border border-border bg-bg p-4 text-sm">
+                  <p className="font-semibold">Resumen</p>
+                  <ul className="mt-3 space-y-2 text-muted">
+                    <li>
+                      <span className="text-text">Riot ID:</span> {form.riotId || '—'}
+                    </li>
+                    <li>
+                      <span className="text-text">Roles:</span>{' '}
+                      {form.primaryRole
+                        ? `${ROLE_LABELS[form.primaryRole]} / ${
+                            form.secondaryRole ? ROLE_LABELS[form.secondaryRole] : '—'
+                          }`
+                        : '—'}
+                    </li>
+                    <li>
+                      <span className="text-text">Rango:</span>{' '}
+                      {form.rankTier
+                        ? `${RANK_LABELS[form.rankTier]}${
+                            form.rankDivision ? ` ${DIVISION_LABELS[form.rankDivision]}` : ''
+                          }`
+                        : '—'}
+                    </li>
+                    <li>
+                      <span className="text-text">Horarios:</span> {form.scheduleBlocks.length}{' '}
+                      bloques
+                    </li>
+                    <li>
+                      <span className="text-text">Estilo:</span>{' '}
+                      {form.playStyle ? STYLE_LABELS[form.playStyle] : '—'}
+                    </li>
+                    <li>
+                      <span className="text-text">Idiomas:</span>{' '}
+                      {form.languages.map((language) => LANGUAGE_LABELS[language]).join(', ') ||
+                        '—'}
+                    </li>
+                    <li>
+                      <span className="text-text">Micrófono:</span> {form.hasMic ? 'Sí' : 'No'}
+                    </li>
+                  </ul>
+                </div>
+
+                <p className="text-xs text-muted">
+                  Al guardar, tu perfil queda visible para otros jugadores de LAS. Podés editarlo
+                  cuando quieras.
+                </p>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+            {step > 0 ? (
+              <button
+                type="button"
+                onClick={goBack}
+                className="rounded-xl border border-border px-5 py-3 text-sm font-semibold text-muted"
+              >
+                Atrás
+              </button>
+            ) : (
+              <span />
+            )}
+
+            {step < STEPS.length - 1 ? (
+              <button
+                type="button"
+                onClick={goNext}
+                className="rounded-xl bg-accent px-6 py-3 text-sm font-bold text-bg"
+              >
+                Continuar
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={submitting}
+                className="rounded-xl bg-accent px-6 py-3 text-sm font-bold text-bg disabled:opacity-60"
+              >
+                {submitting ? 'Guardando...' : 'Guardar perfil'}
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

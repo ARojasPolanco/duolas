@@ -231,14 +231,15 @@ Además, índices únicos y parciales como última barrera:
 | Migración                    | Contenido                                   |
 | ---------------------------- | ------------------------------------------- |
 | `001_initial`                | `users` completa + `errors` completa        |
-| `002_player_profiles`        | Perfiles, `rank_index`, Riot ID normalizado |
-| `003_matching`               | Likes, conexiones y bloqueos                |
-| `004_notifications`          | Notificaciones                              |
-| `005_availability_invites`   | Disponibilidades e invitaciones             |
-| `006_duo_posts_applications` | Posts y postulaciones                       |
-| `007_trust_safety`           | Reportes y feedbacks                        |
-| `008_push_subscriptions`     | Suscripciones push                          |
-| `009_metrics_events`         | Eventos de métricas                         |
+| `002_auth_hardening`         | `changed_password_at` para invalidar JWT    |
+| `003_player_profiles`        | Perfiles, `rank_index`, Riot ID normalizado |
+| `004_matching`               | Likes, conexiones y bloqueos                |
+| `005_notifications`          | Notificaciones                              |
+| `006_availability_invites`   | Disponibilidades e invitaciones             |
+| `007_duo_posts_applications` | Posts y postulaciones                       |
+| `008_trust_safety`           | Reportes y feedbacks                        |
+| `009_push_subscriptions`     | Suscripciones push                          |
+| `010_metrics_events`         | Eventos de métricas                         |
 
 ### Jobs internos
 

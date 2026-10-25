@@ -225,3 +225,19 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** todo el desarrollo vive en `dev`, que es la rama default del repositorio. `main` se crea y actualiza recién cuando el producto esté al 100%.
 
 **Consecuencias:** los pushes diarios van a `dev`. `main` queda limpia para el release y no se toca durante el desarrollo.
+
+## ADR-029 — Token de verificación en query, no en path
+
+**Contexto:** el access log y la tabla de errores guardan el path de cada request. Un token en el path quedaría persistido.
+
+**Decisión:** la verificación usa `GET /auth/verify-email?token=...`. El access log y el log de errores eliminan la query string.
+
+**Consecuencias:** el token no aparece en logs ni en la tabla `errors`. El link del email apunta a la web con el token en query.
+
+## ADR-030 — Perfil completo antes de crearlo
+
+**Contexto:** el esquema exige campos obligatorios y el match necesita perfiles completos.
+
+**Decisión:** `PATCH /profiles/me` exige que el estado final quede completo; el onboarding envía todos los campos juntos. Las ediciones posteriores también validan el estado final.
+
+**Consecuencias:** no existen perfiles parciales. `profile_completed_at` se setea al crear o actualizar un perfil completo y la UI valida cada paso antes de guardar.

@@ -79,6 +79,7 @@ Zona canónica: `America/Argentina/Buenos_Aires`. No hay horario de verano.
 | `email_verification_expires` | TIMESTAMPTZ  | NULL                                          |
 | `password_reset_token`       | VARCHAR(64)  | NULL, hash SHA-256                            |
 | `password_reset_expires`     | TIMESTAMPTZ  | NULL                                          |
+| `changed_password_at`        | TIMESTAMPTZ  | NULL; invalida JWT emitidos antes             |
 | `age_confirmed_at`           | TIMESTAMPTZ  | NOT NULL                                      |
 | `terms_accepted_at`          | TIMESTAMPTZ  | NOT NULL                                      |
 | `status`                     | VARCHAR(10)  | NOT NULL, default `active`, check             |
@@ -483,7 +484,7 @@ Se recalcula al revelar feedback. Arranca en 50.
 
 ### `profile_completed_at`
 
-Se setea cuando el perfil tiene todos los campos obligatorios y los cumple. Si una edición deja el perfil incompleto, se vuelve a NULL y el usuario deja de aparecer en candidatos.
+Se setea cuando el perfil se crea o actualiza con todos los campos obligatorios. Una edición que intente dejar el perfil incompleto se rechaza con 422; el usuario no aparece en candidatos hasta completarlo.
 
 ### Invariantes
 

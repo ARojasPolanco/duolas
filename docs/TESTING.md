@@ -10,6 +10,13 @@ Plan de pruebas del MVP. Sin tests E2E automatizados: el smoke manual es obligat
 | Integración | Vitest + Supertest | Endpoints, permisos, transacciones y reglas de negocio                |
 | Manual      | Checklist          | Auth sin loops, SSE, push, PWA, mobile y desktop                      |
 
+### Estado actual
+
+- F0 y F1 cerrados con **48 tests pasando**.
+- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, perfiles, Riot ID, roles, rango, completitud y middlewares.
+- Smoke técnico: flujo API contra PostgreSQL y rutas web respondiendo 200.
+- Pendiente: smoke visual interactivo en navegador antes del release.
+
 - `NODE_ENV=test`.
 - `fileParallelism: false`.
 - Timeout 15 segundos.

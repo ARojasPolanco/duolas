@@ -4,8 +4,8 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** Fase 0 (scaffold) completada. Siguiente: Fase 1 (cuenta y perfil).
-- **Código:** monorepo base con API, web y migración inicial.
+- **Fase:** Fase 1 (cuenta y perfil) completada. Siguiente: Fase 2 (match de duo).
+- **Código:** monorepo con auth, verificación de email, reset, perfiles públicos/privados y onboarding.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
@@ -65,21 +65,22 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 **Objetivo:** registro +18, verificación de email y onboarding completo.
 
-- [ ] Modelo `User` con edad, términos, suspensión y actividad.
-- [ ] Modelo `PlayerProfile` con `rank_index`, Riot ID normalizado y Discord.
-- [ ] Migración `002_player_profiles`.
-- [ ] Registro con hCaptcha opcional y validación +18.
-- [ ] Login, logout del cliente, cambio de contraseña.
-- [ ] Verificación de email (24 h) y resend.
-- [ ] Forgot/reset password (SHA-256, 1 h, un uso).
-- [ ] `protect`, `requireVerifiedEmail`, `requireCompleteProfile`, `restrictTo`.
-- [ ] CRUD de perfil propio y perfil público.
-- [ ] Cálculo de completitud y `profile_completed_at`.
-- [ ] Validaciones Zod de Riot ID, roles, rango, horarios, idiomas y estilo.
-- [ ] Páginas login, register, verify, forgot, reset y onboarding.
-- [ ] Tests de auth y perfil.
+- [x] Modelo `User` con edad, términos, suspensión y actividad.
+- [x] Modelo `PlayerProfile` con `rank_index`, Riot ID normalizado y Discord.
+- [x] Migración `002_auth_hardening`.
+- [x] Migración `003_player_profiles`.
+- [x] Registro con hCaptcha opcional y validación +18.
+- [x] Login, logout del cliente, cambio de contraseña.
+- [x] Verificación de email (24 h) y resend.
+- [x] Forgot/reset password (SHA-256, 1 h, un uso).
+- [x] `protect`, `requireVerifiedEmail`, `requireCompleteProfile`, `restrictTo`.
+- [x] CRUD de perfil propio y perfil público.
+- [x] Cálculo de completitud y `profile_completed_at`.
+- [x] Validaciones Zod de Riot ID, roles, rango, horarios, idiomas y estilo.
+- [x] Páginas login, register, verify, forgot, reset y onboarding.
+- [x] Tests de auth y perfil.
 
-**DoD:** no se puede registrar sin +18; no se matchea sin email verificado y perfil completo; el perfil público no filtra email, Riot ID ni Discord.
+**DoD técnico cumplido:** 48 tests pasando (auth, perfiles y health), lint y build verdes, flujo API de registro/login/perfil verificado contra PostgreSQL y rutas web respondiendo 200. El smoke visual interactivo en navegador queda pendiente para la revisión manual antes del release.
 
 ## Fase 2 — Match de duo
 
@@ -87,7 +88,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 - [ ] `config/matching.js` con tolerancias y pesos.
 - [ ] Funciones puras de rango, roles, horarios y score.
-- [ ] Migraciones `003_matching` y `004_notifications`.
+- [ ] Migraciones `004_matching` y `005_notifications`.
 - [ ] Modelo `Notification` y endpoints básicos del centro de notificaciones.
 - [ ] Modelo `Block` y endpoints de bloquear/desbloquear.
 - [ ] Endpoint de candidatos con filtros duros y orden por score.
@@ -107,7 +108,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** disponibilidad inmediata, invitaciones y publicaciones de grupo.
 
 - [ ] Modelo y servicio de `AvailabilitySession` con TTL 30/60.
-- [ ] Migraciones `005_availability_invites` y `006_duo_posts_applications`.
+- [ ] Migraciones `006_availability_invites` y `007_duo_posts_applications`.
 - [ ] Una sola sesión activa por usuario y cierre por expiración/manual/match.
 - [ ] Cierre perezoso de disponibilidades vencidas.
 - [ ] Listado de disponibles con `nowScore`.
@@ -128,7 +129,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** feedback, reputación, reportes, bloqueos y sanciones.
 
 - [ ] Modelo `Feedback` con `visible_at` y unique por conexión/autor.
-- [ ] Migración `007_trust_safety`.
+- [ ] Migración `008_trust_safety`.
 - [ ] Feedback doble ciego y revelado a los 7 días o cuando ambos envían.
 - [ ] Job de revelado vencido cada 5 minutos.
 - [ ] Cálculo y cache de reputación (Laplace).
@@ -148,7 +149,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** notificaciones en vivo y push con la app cerrada.
 
 - [ ] Modelo `PushSubscription` y endpoints.
-- [ ] Migración `008_push_subscriptions`.
+- [ ] Migración `009_push_subscriptions`.
 - [ ] Ticket SSE de 60 s y stream con heartbeat.
 - [ ] Bus de eventos interno y máximo de conexiones.
 - [ ] Limpieza periódica de tickets vencidos.
@@ -167,7 +168,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** medir los KPIs, endurecer abuso y dejar documentación final.
 
 - [ ] Modelo `MetricsEvent` y registro en los flujos.
-- [ ] Migración `009_metrics_events`.
+- [ ] Migración `010_metrics_events`.
 - [ ] Resumen admin de los 4 KPIs.
 - [ ] Rate limits por usuario en likes, invitaciones, posts, postulaciones, reportes y tickets.
 - [ ] Seeds idempotentes: 12 jugadores LAS + admin.
@@ -209,6 +210,6 @@ Todas en `docs/DECISIONS.md`. Resumen:
 
 ## Próxima acción
 
-1. Iniciar Fase 1 (cuenta y perfil).
-2. Implementar auth, verificación de email y onboarding.
+1. Iniciar Fase 2 (match de duo).
+2. Implementar motor de afinidad, candidatos, likes y conexiones.
 3. Actualizar `TASK.md` al cerrar cada tarea.

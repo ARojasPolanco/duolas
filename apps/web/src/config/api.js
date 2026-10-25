@@ -30,6 +30,18 @@ api.interceptors.response.use(
       '/auth/reset-password',
     ].some((path) => url.includes(path));
 
+    const publicAuthPaths = [
+      '/',
+      '/login',
+      '/register',
+      '/verify-email',
+      '/forgot-password',
+      '/reset-password',
+      '/terminos',
+      '/privacidad',
+    ];
+    const onPublicAuthPage = publicAuthPaths.includes(window.location.pathname);
+
     const suspended = status === 403 && message.toLowerCase().includes('suspendida');
 
     if ((status === 401 && !isAuthEndpoint) || suspended) {
@@ -43,7 +55,7 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('duo_user');
 
-      if (window.location.pathname !== '/login') {
+      if (!onPublicAuthPage) {
         window.location.assign('/login');
       }
     }

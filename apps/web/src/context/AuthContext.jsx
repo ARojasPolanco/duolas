@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import api from '../config/api.js';
 
 const AuthContext = createContext(null);
 
@@ -10,29 +11,86 @@ const readStoredUser = () => {
   }
 };
 
+const storeUser = (user) => {
+  if (user) {
+    localStorage.setItem('duo_user', JSON.stringify(user));
+  } else {
+    localStorage.removeItem('duo_user');
+  }
+};
+
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState(readStoredUser);
-  const loading = false;
+  const [loading, setLoading] = useState(() => Boolean(localStorage.getItem('token')));
 
   const setSession = useCallback((newToken, newUser) => {
     localStorage.setItem('token', newToken);
-    localStorage.setItem('duo_user', JSON.stringify(newUser));
+    storeUser(newUser);
     setToken(newToken);
     setUser(newUser);
+    setLoading(false);
   }, []);
 
+  const clearSession = useCallback(() => {
+    localStorage.removeItem('token');
+    storeUser(null);
+    setToken(null);
+    setUser(null);
+    setLoading(false);
+  }, []);
+
+  const fetchProfile = useCallback(async () => {
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) {
+      setUser(null);
+      setLoading(false);
+      return null;
+    }
+
+    try {
+      const res = await api.get('/v1/auth/profile');
+      storeUser(res.data.user);
+      setUser(res.data.user);
+      return res.data.user;
+    } catch (_error) {
+      clearSession();
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [clearSession]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  const login = useCallback(
+    async (identifier, password) => {
+      const res = await api.post('/v1/auth/login', { identifier, password });
+      setSession(res.data.token, res.data.user);
+      return res.data.user;
+    },
+    [setSession]
+  );
+
+  const register = useCallback(
+    async (data) => {
+      const res = await api.post('/v1/auth/register', data);
+      setSession(res.data.token, res.data.user);
+      return res.data.user;
+    },
+    [setSession]
+  );
+
   const updateUser = useCallback((newUser) => {
-    localStorage.setItem('duo_user', JSON.stringify(newUser));
+    storeUser(newUser);
     setUser(newUser);
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('duo_user');
-    setToken(null);
-    setUser(null);
-  }, []);
+    clearSession();
+  }, [clearSession]);
 
   const value = useMemo(
     () => ({
@@ -40,11 +98,13 @@ export function AuthProvider({ children }) {
       user,
       loading,
       isAuthenticated: Boolean(token),
-      setSession,
+      login,
+      register,
+      refreshUser: fetchProfile,
       updateUser,
       logout,
     }),
-    [token, user, loading, setSession, updateUser, logout]
+    [token, user, loading, login, register, fetchProfile, updateUser, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

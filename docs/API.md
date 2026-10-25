@@ -76,8 +76,11 @@ Público. hCaptcha opcional.
     "email": "faker@example.com",
     "role": "player",
     "emailVerified": false,
-    "ageConfirmed": true,
-    "termsAccepted": true
+    "status": "active",
+    "ageConfirmedAt": "2026-10-25T...",
+    "termsAcceptedAt": "2026-10-25T...",
+    "warningCount": 0,
+    "profileCompleted": false
   }
 }
 ```
@@ -92,9 +95,9 @@ Errores: 422 si falta +18 o términos; 409 si email o username existen; 422 si e
 
 `identifier` acepta email o username. `200` con token y usuario. 401 si las credenciales son incorrectas. 403 si la suspensión está vigente; si la suspensión temporal venció, se permite el login y el estado se corrige. El username y el email no se pueden modificar en el MVP.
 
-### `GET /auth/verify-email/:token`
+### `GET /auth/verify-email?token=...`
 
-`200` con mensaje. 400 si el token es inválido o expiró.
+`200` con mensaje. 400 si el token es inválido, falta o expiró. El token viaja en query para que no quede en el path ni en los logs.
 
 ### `POST /auth/resend-verification`
 
@@ -143,13 +146,13 @@ Protegido. Devuelve la cuenta:
 { "currentPassword": "actual", "newPassword": "nuevaPassword123" }
 ```
 
-`200`. 401 si la actual es incorrecta. Invalida tokens previos vía `changedPasswordAt`.
+`200`. 401 si la actual es incorrecta. Invalida tokens previos vía `changedPasswordAt` y devuelve un token nuevo.
 
 ## 5. Perfiles
 
 ### `GET /profiles/me`
 
-Protegido.
+Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` y `completeness` lista los campos faltantes.
 
 ```json
 {
@@ -195,7 +198,7 @@ Protegido. Acepta actualización parcial de:
 
 `riotId`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`.
 
-El servicio valida el estado final completo. Si queda incompleto, `profile_completed_at` vuelve a NULL. `200` con perfil y completitud.
+El servicio exige que el estado final quede completo. Para crear el perfil hay que enviar todos los campos obligatorios; si falta alguno responde 422 con la lista. Una vez creado, acepta actualizaciones parciales que mantengan el perfil completo. `profile_completed_at` se setea al completar. `200` con perfil y completitud.
 
 Reglas:
 
