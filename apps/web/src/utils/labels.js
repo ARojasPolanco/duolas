@@ -60,5 +60,11 @@ export const formatRoles = (profile) => {
 
 export const initialsOf = (username) => {
   const value = (username || '??').trim();
+  const parts = value.split(/[_\s-]+/).filter(Boolean);
+
+  if (parts.length > 1) {
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+
   return value.slice(0, 2).toUpperCase();
 };

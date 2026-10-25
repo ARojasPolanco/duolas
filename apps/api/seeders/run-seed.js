@@ -30,6 +30,9 @@ const demoPlayers = [
     scheduleBlocks: ['sun_early', 'sun_night'],
     bio: 'Mid main. Busco duo para ranked con horarios de noche.',
     discordTag: 'demomid',
+    reputationPositive: 12,
+    reputationNegative: 1,
+    reputationScore: 82,
   },
   {
     key: 'jungle',
@@ -47,6 +50,9 @@ const demoPlayers = [
     scheduleBlocks: ['sun_early', 'sun_night'],
     bio: 'Jungla main, prefiero comunicar por voz.',
     discordTag: 'demojungle',
+    reputationPositive: 8,
+    reputationNegative: 2,
+    reputationScore: 71,
   },
   {
     key: 'adc',
@@ -64,6 +70,9 @@ const demoPlayers = [
     scheduleBlocks: ['sun_early', 'sun_night'],
     bio: 'ADC main. Busco support o jungla para duo.',
     discordTag: 'demoadc',
+    reputationPositive: 6,
+    reputationNegative: 0,
+    reputationScore: 80,
   },
   {
     key: 'support',
@@ -81,6 +90,9 @@ const demoPlayers = [
     scheduleBlocks: ['sun_early', 'sun_night'],
     bio: 'Support main, juego para mejorar sin toxicidad.',
     discordTag: 'demosupport',
+    reputationPositive: 4,
+    reputationNegative: 1,
+    reputationScore: 67,
   },
 ];
 
@@ -103,6 +115,10 @@ const createOrUpdateDemoUser = async (player) => {
     discordTag: player.discordTag,
     rankSource: 'declared',
     profileCompletedAt: new Date(),
+    reputationPositive: player.reputationPositive,
+    reputationNegative: player.reputationNegative,
+    reputationScore: player.reputationScore,
+    reputationCalculatedAt: new Date(),
     isDeleted: false,
   };
 
@@ -159,67 +175,51 @@ const main = async () => {
 
     const demoIds = Object.values(users).map((user) => user.id);
 
-    await Block.update(
-      { isDeleted: true },
-      {
-        where: {
-          isDeleted: false,
-          blockerId: { [Op.in]: demoIds },
-          blockedId: { [Op.in]: demoIds },
-        },
-      }
-    );
+    await DuoLike.destroy({
+      where: {
+        fromUserId: { [Op.in]: demoIds },
+        toUserId: { [Op.in]: demoIds },
+      },
+    });
+    await DuoConnection.destroy({
+      where: {
+        userLowId: { [Op.in]: demoIds },
+        userHighId: { [Op.in]: demoIds },
+      },
+    });
+    await Notification.destroy({ where: { userId: { [Op.in]: demoIds } } });
+    await Block.destroy({
+      where: {
+        blockerId: { [Op.in]: demoIds },
+        blockedId: { [Op.in]: demoIds },
+      },
+    });
 
     const [lowId, highId] = orderedPair(users.mid.id, users.jungle.id);
 
-    let connection = await DuoConnection.findOne({
-      where: { userLowId: lowId, userHighId: highId },
+    const connection = await DuoConnection.create({
+      userLowId: lowId,
+      userHighId: highId,
+      source: 'like',
+      status: 'active',
+      contactRevealedAt: new Date(),
     });
 
-    let connectionCreated = false;
+    await DuoLike.bulkCreate([
+      { fromUserId: users.mid.id, toUserId: users.jungle.id, status: 'matched' },
+      { fromUserId: users.jungle.id, toUserId: users.mid.id, status: 'matched' },
+      { fromUserId: users.adc.id, toUserId: users.mid.id, status: 'pending' },
+    ]);
 
-    if (!connection) {
-      connection = await DuoConnection.create({
-        userLowId: lowId,
-        userHighId: highId,
-        source: 'like',
-        status: 'active',
-        contactRevealedAt: new Date(),
-      });
-      connectionCreated = true;
-    } else if (connection.status === 'archived') {
-      await connection.update({
-        status: 'active',
-        archivedAt: null,
-        archivedBy: null,
-        contactRevealedAt: new Date(),
-      });
-    }
+    const notificationData = {
+      type: 'match_created',
+      title: 'Es un match',
+      message: 'Ya pueden coordinar su duo.',
+      data: { connectionId: connection.id, url: '/matches' },
+    };
 
-    await DuoLike.findOrCreate({
-      where: { fromUserId: users.mid.id, toUserId: users.jungle.id },
-      defaults: { status: 'matched' },
-    });
-    await DuoLike.findOrCreate({
-      where: { fromUserId: users.jungle.id, toUserId: users.mid.id },
-      defaults: { status: 'matched' },
-    });
-    await DuoLike.findOrCreate({
-      where: { fromUserId: users.adc.id, toUserId: users.mid.id },
-      defaults: { status: 'pending' },
-    });
-
-    if (connectionCreated) {
-      const notificationData = {
-        type: 'match_created',
-        title: 'Es un match',
-        message: 'Ya pueden coordinar su duo.',
-        data: { connectionId: connection.id, url: '/matches' },
-      };
-
-      await Notification.create({ userId: users.mid.id, ...notificationData });
-      await Notification.create({ userId: users.jungle.id, ...notificationData });
-    }
+    await Notification.create({ userId: users.mid.id, ...notificationData });
+    await Notification.create({ userId: users.jungle.id, ...notificationData });
 
     console.log('Seed de demo listo.');
     console.log('Cuentas:');

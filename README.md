@@ -76,6 +76,14 @@ npm run dev:web
 
 La API queda en `http://localhost:3000` y la web en `http://localhost:5173`. PostgreSQL escucha en `localhost:5433`.
 
+También podés levantar API y web en contenedores separados, sin depender de dos terminales:
+
+```bash
+npm run docker:app
+```
+
+Eso construye y levanta `postgres`, `api` y `web`. Para bajar todo: `npm run docker:down`.
+
 ## Datos de prueba
 
 El seed de desarrollo crea cuentas ya verificadas, perfiles completos y un match activo. Solo funciona fuera de producción.
@@ -106,17 +114,18 @@ Flujo rápido:
 
 ## Scripts
 
-| Comando               | Descripción              |
-| --------------------- | ------------------------ |
-| `npm run docker:up`   | Levanta PostgreSQL       |
-| `npm run docker:down` | Baja PostgreSQL          |
-| `npm run dev`         | API con recarga          |
-| `npm run dev:web`     | Web en modo desarrollo   |
-| `npm test`            | Vitest + Supertest       |
-| `npm run lint`        | ESLint                   |
-| `npm run format`      | Prettier                 |
-| `npm run seed`        | Datos de desarrollo      |
-| `npm run seed:admin`  | Crea el admin desde envs |
+| Comando               | Descripción                             |
+| --------------------- | --------------------------------------- |
+| `npm run docker:up`   | Levanta PostgreSQL                      |
+| `npm run docker:down` | Baja PostgreSQL                         |
+| `npm run docker:app`  | Levanta PostgreSQL, API y web en Docker |
+| `npm run dev`         | API con recarga                         |
+| `npm run dev:web`     | Web en modo desarrollo                  |
+| `npm test`            | Vitest + Supertest                      |
+| `npm run lint`        | ESLint                                  |
+| `npm run format`      | Prettier                                |
+| `npm run seed`        | Datos de desarrollo                     |
+| `npm run seed:admin`  | Crea el admin desde envs                |
 
 ## Reglas del MVP
 

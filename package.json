@@ -18,6 +18,7 @@
     "seed:admin": "npm run seed:admin -w @duo-las/api",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
+    "docker:app": "docker compose --profile app up -d --build",
     "prepare": "husky || true"
   },
   "lint-staged": {

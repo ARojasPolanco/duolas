@@ -65,14 +65,18 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches, campana y menú d
 
 - Hero: "Encontrá tu duo en LAS y subí de elo".
 - Dos CTAs: "Crear cuenta" y "Ya tengo cuenta".
+- Carrusel de 4 slides con ilustraciones propias: match por afinidad, Disponible ya, Busco 1 y confianza.
+- Vista previa de 3 cards de jugadores de ejemplo, sin Riot ID ni Discord.
 - Tres bloques: match por afinidad, Disponible ya, Busco 1.
-- Aviso +18.
-- Footer con términos, privacidad y "no avalado por Riot Games".
+- Aviso +18 y aviso de no afiliación con Riot.
+- Footer con términos y privacidad.
 
 ### 3.2 Login `/login`
 
 - Email o username + contraseña.
-- Link a registro y a olvidé mi contraseña.
+- Toggle para mostrar u ocultar la contraseña.
+- Link "¿Has olvidado tu contraseña?" junto al campo, hacia `/forgot-password`.
+- Link a registro.
 - Mensaje de suspensión si corresponde.
 - Sin redirect loop.
 
@@ -110,13 +114,15 @@ Reglas:
 
 ### 3.6 Inicio `/inicio`
 
-- Saludo y rango.
-- Banner de perfil incompleto si aplica.
-- Card de disponibilidad activa con countdown o CTA para activarla.
-- Matches recientes.
-- Feedback pendiente.
-- Accesos rápidos a Match y Busco 1.
-- Estado vacío con CTA.
+- Hero con saludo, email y perfil propio.
+- Stats de rango, roles, reputación y estado de cuenta.
+- Card de perfil propio con Riot ID y Discord visibles solo para el dueño.
+- Accesos rápidos a Match, Matches y edición de perfil.
+- Carrusel compacto "Cómo funciona".
+- Sección "Jugadores para vos" con hasta 4 cards de candidatos, score, motivos, like y bloqueo.
+- Sección "Tus matches" con hasta 2 conexiones y contacto disponible para copiar.
+- Banner de email sin verificar y CTA de onboarding si falta perfil.
+- Estados de carga, vacío y error.
 
 ### 3.7 Match `/match`
 
@@ -217,6 +223,9 @@ Reglas:
 | `RankBadge`          | Tier, división y color                |
 | `RoleIcon`           | Icono SVG propio por rol              |
 | `PlayerAvatar`       | Iniciales con color determinístico    |
+| `PlayerPreviewCard`  | Card de jugador compatible            |
+| `HowItWorksCarousel` | Carrusel ilustrado de cómo funciona   |
+| `PasswordField`      | Input de contraseña con toggle        |
 | `AffinityCard`       | Card de candidato con score y motivos |
 | `ScoreRing`          | Anillo de afinidad                    |
 | `ScheduleGrid`       | Grilla semanal de bloques             |
@@ -354,6 +363,7 @@ Los iconos de rango y rol son SVG propios. No se usan assets oficiales de Riot.
 - El interceptor 401 no redirige en bucle.
 - No se usa `dangerouslySetInnerHTML`.
 - No se muestran datos de contacto antes de una conexión.
+- El Riot ID y el Discord propios sí se muestran en `/inicio`; los ajenos, solo en matches.
 - No se muestran emails en perfiles.
 - Fechas y countdowns en ART con `Intl`.
 - Toda acción destructiva pide confirmación.

@@ -304,6 +304,17 @@ En ventana incógnita, sin sesión:
 - [ ] Confirmar que el click abre la ruta correcta.
 - [ ] Instalar la PWA en Android/iOS y repetir.
 
+### UI y demo F2
+
+- [ ] `npm run docker:app` levanta PostgreSQL, API y web.
+- [ ] `npm run seed` crea las cuentas demo y el match inicial.
+- [ ] Landing muestra el carrusel de 4 slides y las cards de ejemplo.
+- [ ] Login muestra el toggle de contraseña y el link "¿Has olvidado tu contraseña?".
+- [ ] Home muestra Riot ID propio, jugadores compatibles y el match con `demo_jungle`.
+- [ ] Like a `demo_adc` concreta el match y actualiza la sección de matches.
+- [ ] Copiar Riot ID, archivar y bloquear funcionan desde `/matches`.
+- [ ] `npm run seed` reinicia el escenario demo.
+
 ### Mobile y desktop
 
 - [ ] 360 px, 390 px, 768 px y 1440 px.

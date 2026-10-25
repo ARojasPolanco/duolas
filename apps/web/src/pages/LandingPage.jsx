@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Radio, Swords, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Radio, ShieldCheck, Swords, Users } from 'lucide-react';
+import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
+import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
 
 const features = [
   {
@@ -19,6 +22,60 @@ const features = [
   },
 ];
 
+const mockPlayers = [
+  {
+    profile: {
+      id: 'demo-card-mid',
+      username: 'MidOrDodge',
+      rankTier: 'diamond',
+      rankDivision: 'ii',
+      primaryRole: 'mid',
+      secondaryRole: 'jungle',
+      playStyle: 'ranked',
+      languages: ['es', 'en'],
+      hasMic: true,
+      reputation: { label: '92%' },
+      bio: 'Mid main. Busco duo para ranked con horarios de noche.',
+    },
+    score: 94,
+    reasons: ['Coinciden 5 horarios', 'Mismo estilo', 'Roles complementarios'],
+  },
+  {
+    profile: {
+      id: 'demo-card-jungle',
+      username: 'JungleTrack',
+      rankTier: 'diamond',
+      rankDivision: 'iii',
+      primaryRole: 'jungle',
+      secondaryRole: 'top',
+      playStyle: 'ranked',
+      languages: ['es'],
+      hasMic: true,
+      reputation: { label: '88%' },
+      bio: 'Jungla main, prefiero comunicar por voz.',
+    },
+    score: 91,
+    reasons: ['Mismo rango', 'Roles complementarios', 'Ambos con micrófono'],
+  },
+  {
+    profile: {
+      id: 'demo-card-support',
+      username: 'SupportCarry',
+      rankTier: 'platinum',
+      rankDivision: 'i',
+      primaryRole: 'support',
+      secondaryRole: 'adc',
+      playStyle: 'casual',
+      languages: ['es', 'pt'],
+      hasMic: true,
+      reputation: { label: 'Nuevo' },
+      bio: 'Support main, juego para mejorar sin toxicidad.',
+    },
+    score: 86,
+    reasons: ['Horarios compatibles', 'Roles complementarios', 'Comparten idioma'],
+  },
+];
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-bg text-text">
@@ -26,37 +83,124 @@ export default function LandingPage() {
         <span className="text-lg font-extrabold tracking-tight">
           Duo<span className="text-accent">LAS</span>
         </span>
-        <span className="rounded-full border border-border px-3 py-1 text-xs text-muted">
-          Solo LAS · +18
-        </span>
+        <div className="flex items-center gap-3 text-sm font-semibold">
+          <Link to="/login" className="text-muted">
+            Iniciar sesión
+          </Link>
+          <Link to="/register" className="rounded-lg bg-accent px-4 py-2 text-xs font-bold text-bg">
+            Crear cuenta
+          </Link>
+        </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-5 pb-16">
-        <section className="pt-10 sm:pt-16">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-            League of Legends · LAS
-          </p>
-          <h1 className="max-w-3xl text-4xl font-extrabold leading-tight sm:text-6xl">
-            Encontrá tu duo en LAS y subí de elo.
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-            Duo LAS ordena la búsqueda de duo: perfiles compatibles, disponibilidad inmediata y
-            reputación. Gratis, mobile-first y solo para mayores de 18 años.
-          </p>
+        <section className="relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-10 sm:px-10 sm:py-16">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
+          <div className="relative max-w-3xl">
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-accent"
+            >
+              League of Legends · LAS
+            </motion.p>
+            <motion.h1
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="text-4xl font-extrabold leading-tight sm:text-6xl"
+            >
+              Encontrá tu duo en LAS y subí de elo.
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
+            >
+              Perfiles compatibles, disponibilidad inmediata y reputación. Gratis, mobile-first y
+              solo para mayores de 18 años.
+            </motion.p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="mt-8 flex flex-col gap-3 sm:flex-row"
+            >
+              <Link
+                to="/register"
+                className="rounded-xl bg-accent px-6 py-3.5 text-center text-sm font-bold text-bg transition hover:bg-accent-strong"
+              >
+                Crear cuenta
+              </Link>
+              <Link
+                to="/login"
+                className="rounded-xl border border-border bg-bg px-6 py-3.5 text-center text-sm font-bold text-text transition hover:border-accent"
+              >
+                Ya tengo cuenta
+              </Link>
+            </motion.div>
+
+            <div className="mt-8 flex flex-wrap gap-2 text-xs font-semibold text-muted">
+              <span className="rounded-full border border-border px-3 py-1">Solo LAS</span>
+              <span className="rounded-full border border-border px-3 py-1">+18</span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1">
+                <ShieldCheck size={13} className="text-accent" aria-hidden="true" />
+                Contacto solo con match
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                Cómo funciona
+              </p>
+              <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">
+                Todo el flujo, en cuatro pasos.
+              </h2>
+            </div>
+          </div>
+          <HowItWorksCarousel />
+        </section>
+
+        <section className="mt-14">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                Vista previa
+              </p>
+              <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">
+                Así se ve tu próximo duo.
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-muted">
+                Estos son ejemplos visuales. El Riot ID y el Discord de otra persona se revelan
+                recién cuando hay match mutuo.
+              </p>
+            </div>
             <Link
               to="/register"
-              className="rounded-xl bg-accent px-6 py-3.5 text-center text-sm font-bold text-bg transition hover:bg-accent-strong"
+              className="rounded-xl bg-accent px-5 py-3 text-sm font-bold text-bg"
             >
-              Crear cuenta
+              Quiero mi match
             </Link>
-            <Link
-              to="/login"
-              className="rounded-xl border border-border bg-surface px-6 py-3.5 text-center text-sm font-bold text-text transition hover:border-accent"
-            >
-              Ya tengo cuenta
-            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {mockPlayers.map((player) => (
+              <PlayerPreviewCard
+                key={player.profile.id}
+                player={player.profile}
+                score={player.score}
+                reasons={player.reasons}
+                showActions={false}
+                compact
+              />
+            ))}
           </div>
         </section>
 
@@ -64,8 +208,9 @@ export default function LandingPage() {
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <article
+              <motion.article
                 key={feature.title}
+                whileHover={{ y: -4 }}
                 className="rounded-2xl border border-border bg-surface p-6"
               >
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-accent">
@@ -73,34 +218,39 @@ export default function LandingPage() {
                 </div>
                 <h2 className="text-base font-bold">{feature.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{feature.description}</p>
-              </article>
+              </motion.article>
             );
           })}
         </section>
 
-        <section className="mt-14 rounded-2xl border border-border bg-surface p-6 sm:p-8">
-          <h2 className="text-xl font-bold">Cómo funciona</h2>
-          <ol className="mt-5 grid gap-5 text-sm text-muted sm:grid-cols-3">
-            <li>
-              <span className="mb-2 block text-2xl font-extrabold text-accent">01</span>
-              Completá tu perfil con Riot ID, rango, roles y horarios.
-            </li>
-            <li>
-              <span className="mb-2 block text-2xl font-extrabold text-accent">02</span>
-              Buscá duo por afinidad o activá Disponible ya.
-            </li>
-            <li>
-              <span className="mb-2 block text-2xl font-extrabold text-accent">03</span>
-              Con interés mutuo se revela el contacto y coordinan.
-            </li>
-          </ol>
+        <section className="mt-14 rounded-3xl border border-border bg-surface p-6 sm:p-10">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-extrabold">
+                Tu próximo duo está a un perfil de distancia.
+              </h2>
+              <p className="mt-2 text-sm text-muted">
+                Completá tu perfil, verificá tu email y empezá a ver jugadores compatibles.
+              </p>
+            </div>
+            <Link
+              to="/register"
+              className="shrink-0 rounded-xl bg-accent px-6 py-3.5 text-center text-sm font-bold text-bg"
+            >
+              Crear cuenta gratis
+            </Link>
+          </div>
         </section>
       </main>
 
       <footer className="border-t border-border px-5 py-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Duo LAS</span>
-          <span>No afiliado ni avalado por Riot Games.</span>
+          <div className="flex items-center gap-4">
+            <Link to="/terminos">Términos</Link>
+            <Link to="/privacidad">Privacidad</Link>
+            <span>No afiliado ni avalado por Riot Games.</span>
+          </div>
         </div>
       </footer>
     </div>

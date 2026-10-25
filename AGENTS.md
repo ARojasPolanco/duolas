@@ -293,6 +293,7 @@ Una tarea se considera terminada cuando:
 ```bash
 npm run docker:up        # PostgreSQL en localhost:5433
 npm run docker:down
+npm run docker:app       # PostgreSQL + API + web en Docker
 npm run dev              # API en http://localhost:3000
 npm run dev:web          # Web en http://localhost:5173
 npm test                 # Vitest + Supertest

@@ -16,5 +16,56 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile.api.dev
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      CORS_ORIGIN: http://localhost:5173
+      APP_URL: http://localhost:5173
+      DB_URI: postgresql://duo_lol:duo_lol123@postgres:5432/duo_lol
+      SECRET_JWT_SEED: dev_duo_las_secret_0123456789abcdef0123456789abcdef
+      JWT_EXPIRE_IN: 1d
+      SUPPORT_EMAIL: soporte@duolas.app
+      VAPID_SUBJECT: mailto:soporte@duolas.app
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX: 100
+      LOG_LEVEL: info
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./apps/api/src:/app/apps/api/src
+      - ./apps/api/migrations:/app/apps/api/migrations
+      - ./apps/api/seeders:/app/apps/api/seeders
+      - ./packages/shared/src:/app/packages/shared/src
+    working_dir: /app/apps/api
+    command: node --watch src/index.js
+
+  web:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile.web.dev
+    environment:
+      VITE_API_PROXY_TARGET: http://api:3000
+      CHOKIDAR_USEPOLLING: 'true'
+    ports:
+      - '5173:5173'
+    depends_on:
+      - api
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+      - ./apps/web/public:/app/apps/web/public
+      - ./apps/web/index.html:/app/apps/web/index.html
+      - ./packages/shared/src:/app/packages/shared/src
+    working_dir: /app/apps/web
+    command: npx vite --host 0.0.0.0 --port 5173
+
 volumes:
   postgres_data:

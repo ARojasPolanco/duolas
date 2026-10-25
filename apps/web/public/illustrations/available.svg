@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Jugador disponible ahora con radar de invitaciones">
+  <defs>
+    <linearGradient id="now-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#111a2c"/>
+    </linearGradient>
+    <radialGradient id="now-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#00c2b8" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#00c2b8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="now-sweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" rx="28" fill="url(#now-bg)"/>
+  <circle cx="320" cy="180" r="160" fill="url(#now-glow)"/>
+  <g fill="none" stroke="#22304d" stroke-width="2">
+    <circle cx="320" cy="180" r="150"/>
+    <circle cx="320" cy="180" r="108"/>
+    <circle cx="320" cy="180" r="66"/>
+  </g>
+  <path d="M320 180L320 30A150 150 0 0 1 450 105Z" fill="url(#now-sweep)" opacity=".45"/>
+  <path d="M320 180L320 30" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="320" cy="180" r="30" fill="#0b1220" stroke="#00c2b8" stroke-width="4"/>
+  <path d="M320 164v20M314 174h12M310 196h20" stroke="#00c2b8" stroke-width="4" stroke-linecap="round"/>
+  <g>
+    <circle cx="178" cy="112" r="28" fill="#16213a" stroke="#60a5fa" stroke-width="3"/>
+    <circle cx="178" cy="104" r="9" fill="#60a5fa"/>
+    <path d="M162 126c4-10 24-10 32 0" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="456" cy="96" r="24" fill="#16213a" stroke="#f5c451" stroke-width="3"/>
+    <circle cx="456" cy="89" r="8" fill="#f5c451"/>
+    <path d="M442 108c3-9 25-9 28 0" fill="none" stroke="#f5c451" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="472" cy="252" r="26" fill="#16213a" stroke="#34d399" stroke-width="3"/>
+    <circle cx="472" cy="244" r="8" fill="#34d399"/>
+    <path d="M457 265c4-10 26-10 30 0" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="202" cy="266" r="22" fill="#16213a" stroke="#a855f7" stroke-width="3"/>
+    <circle cx="202" cy="259" r="7" fill="#a855f7"/>
+    <path d="M190 277c3-8 21-8 24 0" fill="none" stroke="#a855f7" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+  <g fill="#00c2b8">
+    <circle cx="320" cy="30" r="5"/>
+    <circle cx="470" cy="180" r="5"/>
+  </g>
+</svg>

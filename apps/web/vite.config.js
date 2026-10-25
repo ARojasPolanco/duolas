@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
+const apiProxyTarget = process.env.VITE_API_PROXY_TARGET || 'http://localhost:3000';
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
@@ -15,8 +17,20 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: apiProxyTarget,
         changeOrigin: true,
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          motion: ['framer-motion'],
+          icons: ['lucide-react'],
+          http: ['axios'],
+        },
       },
     },
   },

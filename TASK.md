@@ -7,6 +7,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - **Fase:** Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
 - **Código:** monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
 - **Demo:** `npm run seed` crea 4 cuentas verificadas, un match activo y likes pendientes para probar la UI.
+- **Dev:** `npm run docker:app` levanta PostgreSQL, API y web en contenedores persistentes.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
@@ -101,6 +102,9 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Archivar y reactivar conexión.
 - [x] Bloqueo básico excluyente de candidatos.
 - [x] Pantallas Match y Matches.
+- [x] Home interactivo con carrusel, perfil propio, jugadores compatibles y matches.
+- [x] Docker de desarrollo para API y web.
+- [x] Toggle de contraseña y enlace de recuperación en el login.
 - [x] Tests unitarios de matching y de integración de likes.
 
 **DoD técnico cumplido:** 74 tests pasando, lint y build verdes, migración 006 down/up verificado y flujo API de candidatos, like mutuo, contacto, archivo, bloqueo y notificaciones verificado. El smoke visual interactivo en navegador queda pendiente para la revisión manual antes del release.

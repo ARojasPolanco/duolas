@@ -38,6 +38,12 @@ export default [
     },
   },
   {
+    files: ['apps/web/*.config.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+  {
     files: ['packages/shared/**/*.js'],
     languageOptions: {
       globals: globals.node,
