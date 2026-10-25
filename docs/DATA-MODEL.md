@@ -130,7 +130,7 @@ Sin `updated_at`.
 | `primary_role`             | VARCHAR(10)  | NOT NULL, check                               |
 | `secondary_role`           | VARCHAR(10)  | NOT NULL, check, distinto del principal       |
 | `rank_tier`                | VARCHAR(12)  | NOT NULL, check                               |
-| `rank_division`            | VARCHAR(2)   | NULL, check; obligatorio hasta Diamante       |
+| `rank_division`            | VARCHAR(3)   | NULL, check; obligatorio hasta Diamante       |
 | `rank_lp`                  | INTEGER      | NULL, check >= 0                              |
 | `rank_index`               | SMALLINT     | NOT NULL, check >= 0                          |
 | `play_style`               | VARCHAR(10)  | NOT NULL, check                               |

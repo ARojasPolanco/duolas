@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import MatchPage from './pages/MatchPage.jsx';
+import MatchesPage from './pages/MatchesPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import PlaceholderPage from './pages/PlaceholderPage.jsx';
@@ -51,6 +53,22 @@ function App() {
         element={
           <ProtectedRoute>
             <HomePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/match"
+        element={
+          <ProtectedRoute>
+            <MatchPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/matches"
+        element={
+          <ProtectedRoute>
+            <MatchesPage />
           </ProtectedRoute>
         }
       />

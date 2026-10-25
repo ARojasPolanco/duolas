@@ -68,3 +68,20 @@ export const completeProfile = async (token, overrides = {}) => {
 
   return { res, payload };
 };
+
+export const createMatchUser = async (profileOverrides = {}, { verify = true } = {}) => {
+  const { token, user } = await registerUser();
+  if (verify) {
+    await markEmailVerified(user.id);
+  }
+
+  const profileResult = await completeProfile(token, profileOverrides);
+
+  return {
+    token,
+    user,
+    profile: profileResult.res.body.profile,
+    payload: profileResult.payload,
+    profileResponse: profileResult.res,
+  };
+};

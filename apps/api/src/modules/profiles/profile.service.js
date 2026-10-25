@@ -237,4 +237,4 @@ export class ProfileService {
 }
 
 export const profileService = new ProfileService();
-export { computeRankIndex, missingFields };
+export { computeRankIndex, missingFields, toPublicProfile };

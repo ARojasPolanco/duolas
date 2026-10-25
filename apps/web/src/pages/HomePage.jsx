@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Pencil, UserRoundCheck } from 'lucide-react';
+import { LogOut, Pencil, Swords, UserRoundCheck, Users } from 'lucide-react';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -72,12 +72,27 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-border bg-surface p-6">
-          <h2 className="text-lg font-bold">Próximamente</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            En la Fase 2 vas a poder ver candidatos, dar like y concretar tu primer duo. Por ahora
-            dejá tu perfil completo y tu email verificado.
-          </p>
+        <section className="grid gap-3 sm:grid-cols-2">
+          <Link
+            to="/match"
+            className="rounded-2xl border border-border bg-surface p-6 transition hover:border-accent"
+          >
+            <Swords className="text-accent" size={24} aria-hidden="true" />
+            <h2 className="mt-4 text-lg font-bold">Buscar duo</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Candidatos por afinidad, listos para dar el primer paso.
+            </p>
+          </Link>
+          <Link
+            to="/matches"
+            className="rounded-2xl border border-border bg-surface p-6 transition hover:border-accent"
+          >
+            <Users className="text-accent" size={24} aria-hidden="true" />
+            <h2 className="mt-4 text-lg font-bold">Mis matches</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Revisá tus conexiones y copiá el contacto para coordinar.
+            </p>
+          </Link>
         </section>
       </div>
     </div>

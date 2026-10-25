@@ -4,8 +4,8 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** Fase 1 (cuenta y perfil) completada. Siguiente: Fase 2 (match de duo).
-- **Código:** monorepo con auth, verificación de email, reset, perfiles públicos/privados y onboarding.
+- **Fase:** Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
+- **Código:** monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
@@ -87,29 +87,29 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 **Objetivo:** candidatos por afinidad, likes y conexión con contacto revelado.
 
-- [ ] `config/matching.js` con tolerancias y pesos.
-- [ ] Funciones puras de rango, roles, horarios y score.
-- [ ] Migraciones `004_matching` y `005_notifications`.
-- [ ] Modelo `Notification` y endpoints básicos del centro de notificaciones.
-- [ ] Modelo `Block` y endpoints de bloquear/desbloquear.
-- [ ] Endpoint de candidatos con filtros duros y orden por score.
-- [ ] Like, retiro e idempotencia.
-- [ ] Like mutuo transaccional y creación de conexión.
-- [ ] Notificación al crear un match.
-- [ ] Listado y detalle de matches con contacto.
-- [ ] Archivar y reactivar conexión.
-- [ ] Bloqueo básico excluyente de candidatos.
-- [ ] Pantallas Match y Matches.
-- [ ] Tests unitarios de matching y de integración de likes.
+- [x] `config/matching.js` con tolerancias y pesos.
+- [x] Funciones puras de rango, roles, horarios y score.
+- [x] Migraciones `004_matching`, `005_notifications` y `006_fix_rank_division_length`.
+- [x] Modelo `Notification` y endpoints básicos del centro de notificaciones.
+- [x] Modelo `Block` y endpoints de bloquear/desbloquear.
+- [x] Endpoint de candidatos con filtros duros y orden por score.
+- [x] Like, retiro e idempotencia.
+- [x] Like mutuo transaccional y creación de conexión.
+- [x] Notificación al crear un match.
+- [x] Listado y detalle de matches con contacto.
+- [x] Archivar y reactivar conexión.
+- [x] Bloqueo básico excluyente de candidatos.
+- [x] Pantallas Match y Matches.
+- [x] Tests unitarios de matching y de integración de likes.
 
-**DoD:** los filtros duros se respetan; el like mutuo es idempotente; el contacto solo se ve entre los dos; un bloqueo corta el match.
+**DoD técnico cumplido:** 74 tests pasando, lint y build verdes, migración 006 down/up verificado y flujo API de candidatos, like mutuo, contacto, archivo, bloqueo y notificaciones verificado. El smoke visual interactivo en navegador queda pendiente para la revisión manual antes del release.
 
 ## Fase 3 — Disponible ya y Busco 1
 
 **Objetivo:** disponibilidad inmediata, invitaciones y publicaciones de grupo.
 
 - [ ] Modelo y servicio de `AvailabilitySession` con TTL 30/60.
-- [ ] Migraciones `006_availability_invites` y `007_duo_posts_applications`.
+- [ ] Migraciones `007_availability_invites` y `008_duo_posts_applications`.
 - [ ] Una sola sesión activa por usuario y cierre por expiración/manual/match.
 - [ ] Cierre perezoso de disponibilidades vencidas.
 - [ ] Listado de disponibles con `nowScore`.
@@ -130,7 +130,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** feedback, reputación, reportes, bloqueos y sanciones.
 
 - [ ] Modelo `Feedback` con `visible_at` y unique por conexión/autor.
-- [ ] Migración `008_trust_safety`.
+- [ ] Migración `009_trust_safety`.
 - [ ] Feedback doble ciego y revelado a los 7 días o cuando ambos envían.
 - [ ] Job de revelado vencido cada 5 minutos.
 - [ ] Cálculo y cache de reputación (Laplace).
@@ -150,7 +150,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** notificaciones en vivo y push con la app cerrada.
 
 - [ ] Modelo `PushSubscription` y endpoints.
-- [ ] Migración `009_push_subscriptions`.
+- [ ] Migración `010_push_subscriptions`.
 - [ ] Ticket SSE de 60 s y stream con heartbeat.
 - [ ] Bus de eventos interno y máximo de conexiones.
 - [ ] Limpieza periódica de tickets vencidos.
@@ -169,7 +169,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 **Objetivo:** medir los KPIs, endurecer abuso y dejar documentación final.
 
 - [ ] Modelo `MetricsEvent` y registro en los flujos.
-- [ ] Migración `010_metrics_events`.
+- [ ] Migración `011_metrics_events`.
 - [ ] Resumen admin de los 4 KPIs.
 - [ ] Rate limits por usuario en likes, invitaciones, posts, postulaciones, reportes y tickets.
 - [ ] Seeds idempotentes: 12 jugadores LAS + admin.
@@ -231,6 +231,6 @@ Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.productio
 
 ## Próxima acción
 
-1. Iniciar Fase 2 (match de duo).
-2. Implementar motor de afinidad, candidatos, likes y conexiones.
+1. Iniciar Fase 3 (Disponible ya y Busco 1).
+2. Implementar disponibilidad con TTL, invitaciones y postulaciones.
 3. Actualizar `TASK.md` al cerrar cada tarea.

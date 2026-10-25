@@ -12,8 +12,8 @@ La propuesta original está en `Propuesta plataforma de duos para League of Lege
 
 ## 2. Estado del repositorio
 
-- Fase actual: Fase 1 (cuenta y perfil) completada. Siguiente: Fase 2 (match de duo).
-- Código: monorepo con auth, verificación de email, reset, perfiles y onboarding.
+- Fase actual: Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
+- Código: monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
 - No hay credenciales, claves ni secretos en el repositorio.
 - Toda decisión de producto y técnica está registrada en `docs/DECISIONS.md`.
 

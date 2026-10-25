@@ -51,7 +51,7 @@ PlayerProfile.init(
       field: 'rank_tier',
     },
     rankDivision: {
-      type: DataTypes.STRING(2),
+      type: DataTypes.STRING(3),
       allowNull: true,
       field: 'rank_division',
     },
