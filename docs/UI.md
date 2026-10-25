@@ -1,0 +1,359 @@
+# UI — Duo LAS
+
+Mapa de rutas, pantallas, componentes y reglas de interacción. Mobile-first, tema oscuro y copy en español rioplatense.
+
+## 1. Rutas
+
+### Públicas
+
+| Ruta               | Pantalla               |
+| ------------------ | ---------------------- |
+| `/`                | Landing                |
+| `/login`           | Iniciar sesión         |
+| `/register`        | Registro               |
+| `/verify-email`    | Verificación de email  |
+| `/forgot-password` | Pedir reset            |
+| `/reset-password`  | Nueva contraseña       |
+| `/terminos`        | Términos de uso        |
+| `/privacidad`      | Política de privacidad |
+
+### Protegidas
+
+| Ruta              | Pantalla                          |
+| ----------------- | --------------------------------- |
+| `/inicio`         | Hub del jugador                   |
+| `/onboarding`     | Completar perfil                  |
+| `/match`          | Candidatos y likes                |
+| `/disponible`     | Disponibilidad inmediata          |
+| `/busco-1`        | Posts de grupo                    |
+| `/matches`        | Conexiones y contacto             |
+| `/invitaciones`   | Invitaciones recibidas y enviadas |
+| `/notificaciones` | Centro de notificaciones          |
+| `/perfil`         | Perfil propio                     |
+| `/perfil/:id`     | Perfil público                    |
+| `/admin/reportes` | Moderación                        |
+| `/admin/metrics`  | KPIs                              |
+
+Reglas:
+
+- Sin sesión, una ruta protegida redirige a `/login` sin loops.
+- Con sesión y perfil incompleto, `/match`, `/disponible` y `/busco-1` redirigen a `/onboarding`.
+- `/admin/*` requiere rol admin.
+- La landing redirige a `/inicio` si hay sesión.
+
+## 2. Navegación
+
+### Mobile
+
+Bottom nav fija con cinco ítems:
+
+1. Inicio
+2. Match
+3. Disponible
+4. Busco 1
+5. Matches
+
+La campana de notificaciones y el acceso a perfil viven en el header. Los ítems de admin no se muestran en la bottom nav.
+
+### Desktop
+
+Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches, campana y menú de perfil. En mobile, el perfil se abre desde el avatar del header.
+
+## 3. Pantallas
+
+### 3.1 Landing `/`
+
+- Hero: "Encontrá tu duo en LAS y subí de elo".
+- Dos CTAs: "Crear cuenta" y "Ya tengo cuenta".
+- Tres bloques: match por afinidad, Disponible ya, Busco 1.
+- Aviso +18.
+- Footer con términos, privacidad y "no avalado por Riot Games".
+
+### 3.2 Login `/login`
+
+- Email o username + contraseña.
+- Link a registro y a olvidé mi contraseña.
+- Mensaje de suspensión si corresponde.
+- Sin redirect loop.
+
+### 3.3 Registro `/register`
+
+- Username, email, contraseña.
+- Checkbox obligatorio +18.
+- Checkbox obligatorio de términos y privacidad.
+- hCaptcha si está configurado.
+- Link a login.
+
+### 3.4 Verificación `/verify-email`
+
+- Estado: verificando, verificado, inválido o expirado.
+- Botón para reenviar si hay sesión.
+- CTA a onboarding si se verificó.
+
+### 3.5 Onboarding `/onboarding`
+
+Seis pasos con barra de progreso:
+
+1. Riot ID y servidor LAS.
+2. Rol principal y secundario.
+3. Rango y LP.
+4. Horarios en grilla semanal.
+5. Estilo, idiomas y micrófono.
+6. Bio, Discord opcional y resumen.
+
+Reglas:
+
+- Validación por paso.
+- Se puede volver.
+- Al terminar, `profile_completed_at` y CTA a Match.
+- Si se edita después y queda incompleto, se avisa y se bloquean las acciones sociales.
+
+### 3.6 Inicio `/inicio`
+
+- Saludo y rango.
+- Banner de perfil incompleto si aplica.
+- Card de disponibilidad activa con countdown o CTA para activarla.
+- Matches recientes.
+- Feedback pendiente.
+- Accesos rápidos a Match y Busco 1.
+- Estado vacío con CTA.
+
+### 3.7 Match `/match`
+
+- Filtros: cola (Solo/Dúo, Flex) y rol opcional.
+- Card de candidato:
+  - Iniciales, username, rango, roles, estilo, idiomas, mic.
+  - Score con anillo y motivos.
+  - Botón "Me interesa" y "Pasar".
+  - Indicador de disponibilidad activa.
+- Lista de likes enviados.
+- Estado vacío: "No encontramos duos compatibles todavía. Probá ampliar horarios o volver más tarde."
+- Optimistic UI al likear con rollback.
+
+### 3.8 Disponible ya `/disponible`
+
+- Toggle grande para activar/desactivar.
+- Selector de TTL 30 o 60.
+- Roles (1-2) y cola.
+- Nota opcional.
+- Countdown visible.
+- Aviso: "Mientras estás disponible, no entres a cola".
+- Lista de jugadores disponibles con score y botón invitar.
+- Modal de invitación con rol requerido y mensaje.
+- Invitaciones recibidas con countdown.
+
+### 3.9 Busco 1 `/busco-1`
+
+- Tabs: Explorar y Mis posts.
+- Explorar:
+  - Filtros por cola y rol.
+  - Cards con dueño, rango requerido, roles, nota y vencimiento.
+  - Botón postular con mensaje.
+- Mis posts:
+  - Crear post con cola, roles, rango y nota.
+  - Estado y vencimiento.
+  - Postulaciones con perfil, score y acciones aceptar/rechazar.
+  - Cancelar post.
+
+### 3.10 Matches `/matches`
+
+- Lista de conexiones con la otra persona.
+- Card con rango, roles, reputación y fecha.
+- Panel de contacto: Riot ID con botón copiar y Discord con link.
+- Botón de feedback si está pendiente.
+- Archivar conexión.
+- Estado vacío con CTA a Match.
+
+### 3.11 Invitaciones `/invitaciones`
+
+- Tabs Recibidas y Enviadas.
+- Card con contraparte, rol, mensaje, vencimiento y estado.
+- Acciones: aceptar/rechazar (recibidas) o cancelar (enviadas).
+- Expiradas en gris.
+
+### 3.12 Notificaciones `/notificaciones`
+
+- Lista con icono por tipo, título, mensaje, fecha y estado leído.
+- Marcar todas como leídas.
+- Click navega a `data.url`.
+- Estado vacío.
+
+### 3.13 Perfil `/perfil`
+
+- Editar perfil con los mismos campos del onboarding. Username y email no son editables en el MVP.
+- Reputación con porcentaje y conteos.
+- Estado de verificación de email.
+- Toggle de push con explicación.
+- Lista de bloqueados con desbloquear.
+- Links a términos y privacidad.
+- Cerrar sesión.
+
+### 3.14 Perfil público `/perfil/:id`
+
+- Iniciales, username, rango, roles, estilo, idiomas, mic, bio.
+- Reputación y cantidad de conexiones.
+- Badge "Disponible ahora".
+- Botón reportar y bloquear.
+- Nunca muestra email, Riot ID ni Discord.
+
+### 3.15 Admin reportes `/admin/reportes`
+
+- Tabla con fecha, reportero, reportado, motivo, prioridad y estado.
+- Filtros por estado, motivo y prioridad.
+- Detalle con contexto.
+- Acciones: descartar, advertir, suspender 7 días, 30 días o permanente.
+- Nota obligatoria para sanciones.
+
+### 3.16 Admin métricas `/admin/metrics`
+
+- Cuatro cards: tiempo al primer duo, match a partida, retención 7d, simultáneos.
+- Selector de rango de fechas.
+- Estado vacío si no hay datos.
+
+## 4. Componentes
+
+| Componente           | Uso                                   |
+| -------------------- | ------------------------------------- |
+| `RankBadge`          | Tier, división y color                |
+| `RoleIcon`           | Icono SVG propio por rol              |
+| `PlayerAvatar`       | Iniciales con color determinístico    |
+| `AffinityCard`       | Card de candidato con score y motivos |
+| `ScoreRing`          | Anillo de afinidad                    |
+| `ScheduleGrid`       | Grilla semanal de bloques             |
+| `AvailabilityToggle` | Activar/desactivar con countdown      |
+| `InviteSheet`        | Modal de invitación                   |
+| `PostCard`           | Post de Busco 1                       |
+| `ApplicationCard`    | Postulación                           |
+| `FeedbackDialog`     | Feedback positivo/negativo con tags   |
+| `ReportDialog`       | Motivo y detalle                      |
+| `BlockButton`        | Bloquear/desbloquear                  |
+| `PushPrompt`         | Pedir permiso con gesto explícito     |
+| `NotificationBell`   | Campana con contador                  |
+| `EmptyState`         | Estado vacío con CTA                  |
+| `ErrorState`         | Error con reintento                   |
+| `LoadingSkeleton`    | Carga                                 |
+| `ProtectedRoute`     | Guard de sesión                       |
+| `AdminRoute`         | Guard de rol                          |
+| `ErrorBoundary`      | Evitar pantalla blanca                |
+
+## 5. Hooks
+
+| Hook                 | Responsabilidad                 |
+| -------------------- | ------------------------------- |
+| `useAuth`            | Sesión, login, registro, logout |
+| `useProfile`         | Perfil propio y completitud     |
+| `usePublicProfile`   | Perfil ajeno                    |
+| `useMatchCandidates` | Candidatos y filtros            |
+| `useLikes`           | Like, retiro y salientes        |
+| `useMatches`         | Conexiones y archivo            |
+| `useAvailability`    | Sesión propia y listado         |
+| `useInvites`         | Recibidas, enviadas y acciones  |
+| `useDuoPosts`        | Posts, postulaciones y acciones |
+| `useFeedback`        | Pendiente y envío               |
+| `useNotifications`   | Lista, no leídas y acciones     |
+| `useSSE`             | Stream y fallback a polling     |
+| `usePush`            | Suscripción y permiso           |
+| `useBlocks`          | Lista y acciones                |
+| `useReports`         | Crear reporte                   |
+
+Todos los hooks que hacen fetch chequean `localStorage.getItem('token')` antes de llamar a la API.
+
+## 6. Estados
+
+Cada pantalla contempla:
+
+- **Loading:** skeleton, no spinner de pantalla completa.
+- **Empty:** mensaje claro y CTA.
+- **Error:** mensaje, reintento y sin romper la sesión.
+- **Optimistic:** likes, invitaciones y postulaciones con rollback.
+- **Offline:** si SSE falla, polling; si la red falla, aviso y reintento.
+
+## 7. Copy
+
+- Español rioplatense, voseo y tono directo.
+- Ejemplos:
+  - "Encontrá tu duo en LAS".
+  - "Me interesa".
+  - "No entres a cola mientras estás disponible".
+  - "Ya pueden coordinar".
+  - "No pudimos cargar esto. Probá de nuevo".
+- Evitar tecnicismos de Riot en la UI.
+- Mensajes de error claros, sin códigos internos.
+
+## 8. Diseño
+
+### Tokens
+
+```css
+--color-bg: #0b1220;
+--color-surface: #111a2c;
+--color-surface-2: #16213a;
+--color-border: #22304d;
+--color-text: #e6edf7;
+--color-muted: #94a3b8;
+--color-accent: #00c2b8;
+--color-accent-strong: #22d3ee;
+--color-gold: #f5c451;
+--color-danger: #f87171;
+--color-success: #34d399;
+```
+
+- Tipografía: Montserrat, con fallback a system-ui.
+- Radios: 12 px en cards, 999 px en chips.
+- Sombras suaves, sin exceso de glow.
+- Iconos Lucide.
+- Animaciones con Framer Motion, respetando `prefers-reduced-motion`.
+
+### Colores de rango
+
+| Tier         | Color     |
+| ------------ | --------- |
+| Hierro       | `#8b8f98` |
+| Bronce       | `#cd7f32` |
+| Plata        | `#c0c0c0` |
+| Oro          | `#f5c451` |
+| Platino      | `#4fd1c5` |
+| Esmeralda    | `#34d399` |
+| Diamante     | `#60a5fa` |
+| Maestro      | `#a855f7` |
+| Gran Maestro | `#ef4444` |
+| Challenger   | `#f59e0b` |
+
+Los iconos de rango y rol son SVG propios. No se usan assets oficiales de Riot.
+
+## 9. Responsive
+
+- Mobile: 360-430 px, una columna, bottom nav.
+- Tablet: 768 px, dos columnas en listados.
+- Desktop: 1200-1440 px, contenedor máximo 1200 px, top nav.
+- Touch targets de al menos 44 px.
+- Modales como bottom sheet en mobile y diálogo centrado en desktop.
+
+## 10. Accesibilidad
+
+- Foco visible en todos los interactivos.
+- `aria-label` en iconos y botones sin texto.
+- Contraste mínimo AA.
+- No se depende solo del color para estado.
+- Formularios con label y mensaje de error asociado.
+- Navegación por teclado.
+- `prefers-reduced-motion`.
+- Textos alternativos en iconos decorativos vacíos.
+
+## 11. PWA
+
+- `manifest.json` con nombre Duo LAS, iconos 192/512, `display: standalone`, `start_url: /inicio`, tema `#0b1220`.
+- `sw.js` solo para push y click.
+- Registro del service worker en producción.
+- Prompt de instalación no invasivo.
+- En iOS, aviso de que push requiere instalar la PWA.
+
+## 12. Reglas críticas
+
+- Ningún componente global llama endpoints sin token.
+- El interceptor 401 no redirige en bucle.
+- No se usa `dangerouslySetInnerHTML`.
+- No se muestran datos de contacto antes de una conexión.
+- No se muestran emails en perfiles.
+- Fechas y countdowns en ART con `Intl`.
+- Toda acción destructiva pide confirmación.
