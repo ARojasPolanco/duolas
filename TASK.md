@@ -32,6 +32,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Crear `docs/ARCHITECTURE.md`.
 - [x] Crear `docs/DATA-MODEL.md`.
 - [x] Crear `docs/API.md`.
+- [x] Crear `docs/ROUTES.md`.
 - [x] Crear `docs/MATCHING.md`.
 - [x] Crear `docs/METRICS.md`.
 - [x] Crear `docs/TESTING.md`.

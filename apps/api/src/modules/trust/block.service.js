@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import Block from './block.model.js';
 import DuoConnection from '../matching/duoConnection.model.js';
+import DuoLike from '../matching/duoLike.model.js';
 import User from '../auth/auth.model.js';
 import { AppError } from '../../errors/appError.js';
 import { orderedPair } from '../matching/matching.utils.js';
@@ -38,6 +39,19 @@ export class BlockService {
       },
       {
         where: { userLowId: low, userHighId: high, status: 'active' },
+      }
+    );
+
+    await DuoLike.update(
+      { status: 'cancelled' },
+      {
+        where: {
+          status: 'pending',
+          [Op.or]: [
+            { fromUserId: blockerId, toUserId: blockedId },
+            { fromUserId: blockedId, toUserId: blockerId },
+          ],
+        },
       }
     );
 

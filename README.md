@@ -39,6 +39,7 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 | `docs/ARCHITECTURE.md` | Arquitectura técnica, errores, realtime, push y operación |
 | `docs/DATA-MODEL.md`   | Tablas, enums, índices y migraciones                      |
 | `docs/API.md`          | Contrato de endpoints y catálogo de errores               |
+| `docs/ROUTES.md`       | Rutas web/API y flujos de prueba                          |
 | `docs/MATCHING.md`     | Fórmulas, filtros y pesos del match                       |
 | `docs/METRICS.md`      | Eventos, KPIs y consultas SQL                             |
 | `docs/TESTING.md`      | Plan de pruebas y smoke manual                            |

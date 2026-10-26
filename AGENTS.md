@@ -24,13 +24,14 @@ La propuesta original está en `Propuesta plataforma de duos para League of Lege
 3. `docs/ARCHITECTURE.md`
 4. `docs/DATA-MODEL.md`
 5. `docs/API.md`
-6. `docs/MATCHING.md`
-7. `docs/METRICS.md`
-8. `docs/TESTING.md`
-9. `docs/PRODUCTION.md`
-10. `docs/UI.md`
-11. `docs/DECISIONS.md`
-12. `TASK.md`
+6. `docs/ROUTES.md`
+7. `docs/MATCHING.md`
+8. `docs/METRICS.md`
+9. `docs/TESTING.md`
+10. `docs/PRODUCTION.md`
+11. `docs/UI.md`
+12. `docs/DECISIONS.md`
+13. `TASK.md`
 
 ## 4. Stack
 
@@ -309,6 +310,7 @@ npm run seed:admin       # admin desde variables de entorno
 - `docs/DECISIONS.md` es el registro de decisiones; toda decisión nueva se agrega como ADR.
 - `docs/SPEC.md` describe el producto; no se implementa nada que lo contradiga.
 - `docs/API.md` es el contrato; si cambia un endpoint, se actualiza antes o junto con el código.
+- `docs/ROUTES.md` concentra rutas web/API y flujos de prueba.
 - `docs/DATA-MODEL.md` es la fuente del esquema; las migraciones deben reflejarlo.
 - `docs/MATCHING.md` concentra fórmulas y pesos.
 - `docs/METRICS.md` concentra eventos, definiciones de KPIs y consultas SQL.

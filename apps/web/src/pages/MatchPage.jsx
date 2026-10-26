@@ -24,6 +24,7 @@ export default function MatchPage() {
   const [queue, setQueue] = useState('solo_duo');
   const [role, setRole] = useState('');
   const [candidates, setCandidates] = useState([]);
+  const [outgoing, setOutgoing] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionId, setActionId] = useState(null);
@@ -54,9 +55,24 @@ export default function MatchPage() {
     }
   }, [canInteract, queue, role]);
 
+  const loadOutgoing = useCallback(async () => {
+    if (!localStorage.getItem('token') || !canInteract) {
+      setOutgoing([]);
+      return;
+    }
+
+    try {
+      const res = await api.get('/v1/matching/likes');
+      setOutgoing(res.data.outgoing || []);
+    } catch (_error) {
+      setOutgoing([]);
+    }
+  }, [canInteract]);
+
   useEffect(() => {
     load();
-  }, [load]);
+    loadOutgoing();
+  }, [load, loadOutgoing]);
 
   const removeCandidate = (userId) => {
     setCandidates((current) => current.filter((item) => item.profile.id !== userId));
@@ -76,6 +92,7 @@ export default function MatchPage() {
       } else {
         removeCandidate(candidate.profile.id);
         toast.success('Interés enviado.');
+        await loadOutgoing();
       }
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos registrar el interés.');
@@ -86,6 +103,20 @@ export default function MatchPage() {
 
   const handlePass = (candidate) => {
     removeCandidate(candidate.profile.id);
+  };
+
+  const handleUnlike = async (targetUserId) => {
+    setActionId(targetUserId);
+    try {
+      await api.delete(`/v1/matching/likes/${targetUserId}`);
+      setOutgoing((current) => current.filter((item) => item.target.id !== targetUserId));
+      toast.success('Interés retirado.');
+      await load();
+    } catch (requestError) {
+      toast.error(requestError.response?.data?.message || 'No pudimos retirar el interés.');
+    } finally {
+      setActionId(null);
+    }
   };
 
   const handleBlock = async (candidate) => {
@@ -99,6 +130,7 @@ export default function MatchPage() {
     try {
       await api.post('/v1/blocks', { userId: candidate.profile.id });
       removeCandidate(candidate.profile.id);
+      setOutgoing((current) => current.filter((item) => item.target.id !== candidate.profile.id));
       toast.success('Usuario bloqueado.');
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos bloquear al usuario.');
@@ -325,6 +357,51 @@ export default function MatchPage() {
                   );
                 })}
               </div>
+            ) : null}
+
+            {outgoing.length ? (
+              <section className="rounded-2xl border border-border bg-surface p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-lg font-bold">Likes enviados</h2>
+                    <p className="text-xs text-muted">
+                      Podés retirar un interés mientras esperás que sea mutuo.
+                    </p>
+                  </div>
+                  <span className="rounded-full border border-border px-2 py-1 text-xs text-muted">
+                    {outgoing.length}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {outgoing.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-border bg-bg px-3 py-2.5"
+                    >
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-[11px] font-extrabold text-accent">
+                          {initialsOf(item.target.username)}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold">{item.target.username}</p>
+                          <p className="truncate text-[11px] text-muted">
+                            {formatRank(item.target)} · {formatRoles(item.target)}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleUnlike(item.target.id)}
+                        disabled={actionId === item.target.id}
+                        className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-[11px] font-semibold text-danger disabled:opacity-60"
+                      >
+                        Retirar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </section>
             ) : null}
           </>
         )}
