@@ -4,7 +4,10 @@ export default function AuthShell({ title, subtitle, children, footer }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg px-5 py-10 text-text">
       <div className="w-full max-w-md">
-        <Link to="/" className="mb-8 block text-center text-2xl font-extrabold tracking-tight">
+        <Link
+          to="/"
+          className="mx-auto mb-8 flex min-h-11 w-fit items-center text-2xl font-extrabold tracking-tight"
+        >
           Duo<span className="text-accent">LAS</span>
         </Link>
         <div className="rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-black/20 sm:p-8">

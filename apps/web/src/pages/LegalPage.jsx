@@ -4,7 +4,10 @@ export default function LegalPage({ title, intro, sections }) {
   return (
     <div className="min-h-screen bg-bg px-5 py-10 text-text">
       <div className="mx-auto max-w-3xl">
-        <Link to="/" className="text-xl font-extrabold tracking-tight">
+        <Link
+          to="/"
+          className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-tight"
+        >
           Duo<span className="text-accent">LAS</span>
         </Link>
 
@@ -29,17 +32,20 @@ export default function LegalPage({ title, intro, sections }) {
           </p>
         </div>
 
-        <nav className="mt-6 flex flex-wrap gap-4 text-xs font-semibold text-muted">
-          <Link to="/terminos" className="hover:text-text">
+        <nav className="mt-4 flex flex-wrap gap-x-4 text-xs font-semibold text-muted">
+          <Link to="/terminos" className="inline-flex min-h-11 items-center hover:text-text">
             Términos
           </Link>
-          <Link to="/privacidad" className="hover:text-text">
+          <Link to="/privacidad" className="inline-flex min-h-11 items-center hover:text-text">
             Privacidad
           </Link>
-          <Link to="/aviso-riot" className="hover:text-text">
+          <Link to="/aviso-riot" className="inline-flex min-h-11 items-center hover:text-text">
             Aviso de Riot
           </Link>
-          <Link to="/" className="hover:text-text">
+          <Link
+            to="/"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-text"
+          >
             Volver
           </Link>
         </nav>

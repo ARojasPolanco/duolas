@@ -190,7 +190,7 @@ export default function InvitesPage() {
                 </div>
                 <Link
                   to="/matches"
-                  className="mt-3 inline-block text-xs font-semibold text-accent hover:underline"
+                  className="mt-2 inline-flex min-h-11 items-center text-xs font-semibold text-accent hover:underline"
                 >
                   Ver en Matches
                 </Link>

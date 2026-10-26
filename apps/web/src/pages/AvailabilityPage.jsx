@@ -348,11 +348,11 @@ export default function AvailabilityPage() {
                   </p>
                   <h2 className="mt-1 text-2xl font-extrabold">Jugadores disponibles</h2>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
                   <select
                     value={filterQueue}
                     onChange={(event) => setFilterQueue(event.target.value)}
-                    className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+                    className="w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
                   >
                     <option value="">Todas las colas</option>
                     {queueOptions.map((option) => (
@@ -364,7 +364,7 @@ export default function AvailabilityPage() {
                   <select
                     value={filterRole}
                     onChange={(event) => setFilterRole(event.target.value)}
-                    className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+                    className="w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
                   >
                     <option value="">Todos los roles</option>
                     {roleOptions.map((role) => (
@@ -376,7 +376,7 @@ export default function AvailabilityPage() {
                   <button
                     type="button"
                     onClick={loadPlayers}
-                    className="rounded-lg border border-border p-2 text-muted"
+                    className="col-span-2 inline-flex items-center justify-center rounded-lg border border-border p-2 text-muted sm:w-11"
                     aria-label="Recargar jugadores"
                   >
                     <RefreshCw size={16} aria-hidden="true" />
@@ -462,13 +462,13 @@ export default function AvailabilityPage() {
                           </p>
                         ) : (
                           <div className="mt-4 space-y-2">
-                            <div className="flex gap-2">
+                            <div className="grid gap-2 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
                               <select
                                 value={draft.role}
                                 onChange={(event) =>
                                   updateDraft(player.session.id, { role: event.target.value })
                                 }
-                                className="rounded-xl border border-border bg-bg px-3 py-2.5 text-xs text-text"
+                                className="w-full min-w-0 rounded-xl border border-border bg-bg px-3 py-2.5 text-xs text-text"
                               >
                                 {player.session.roles.map((role) => (
                                   <option key={role} value={role}>
@@ -483,7 +483,7 @@ export default function AvailabilityPage() {
                                 }
                                 maxLength={140}
                                 placeholder="Mensaje corto"
-                                className="min-w-0 flex-1 rounded-xl border border-border bg-bg px-3 py-2.5 text-xs text-text placeholder:text-muted/60"
+                                className="w-full min-w-0 rounded-xl border border-border bg-bg px-3 py-2.5 text-xs text-text placeholder:text-muted/60"
                               />
                             </div>
                             <button

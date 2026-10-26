@@ -75,7 +75,7 @@ export default function RegisterPage() {
       footer={
         <p>
           ¿Ya tenés cuenta?{' '}
-          <Link to="/login" className="font-semibold text-accent">
+          <Link to="/login" className="inline-flex min-h-11 items-center font-semibold text-accent">
             Iniciar sesión
           </Link>
         </p>

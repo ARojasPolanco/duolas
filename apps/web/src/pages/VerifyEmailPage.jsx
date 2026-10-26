@@ -58,7 +58,7 @@ export default function VerifyEmailPage() {
       title="Verificación de email"
       subtitle="Confirmamos que el email sea tuyo para habilitar las funciones sociales."
       footer={
-        <Link to="/login" className="font-semibold text-accent">
+        <Link to="/login" className="inline-flex min-h-11 items-center font-semibold text-accent">
           Volver a iniciar sesión
         </Link>
       }

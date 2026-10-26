@@ -84,10 +84,13 @@ export default function LandingPage() {
           Duo<span className="text-accent">LAS</span>
         </span>
         <div className="flex items-center gap-3 text-sm font-semibold">
-          <Link to="/login" className="text-muted">
+          <Link to="/login" className="inline-flex min-h-11 items-center text-muted">
             Iniciar sesión
           </Link>
-          <Link to="/register" className="rounded-lg bg-accent px-4 py-2 text-xs font-bold text-bg">
+          <Link
+            to="/register"
+            className="inline-flex min-h-11 items-center rounded-lg bg-accent px-4 text-xs font-bold text-bg"
+          >
             Crear cuenta
           </Link>
         </div>
@@ -246,9 +249,13 @@ export default function LandingPage() {
       <footer className="border-t border-border px-5 py-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Duo LAS</span>
-          <div className="flex items-center gap-4">
-            <Link to="/terminos">Términos</Link>
-            <Link to="/privacidad">Privacidad</Link>
+          <div className="flex flex-wrap items-center gap-x-4">
+            <Link to="/terminos" className="inline-flex min-h-11 items-center">
+              Términos
+            </Link>
+            <Link to="/privacidad" className="inline-flex min-h-11 items-center">
+              Privacidad
+            </Link>
             <span>No afiliado ni avalado por Riot Games.</span>
           </div>
         </div>

@@ -538,11 +538,11 @@ export default function DuoPostsPage() {
 
             {tab === 'explore' ? (
               <section className="space-y-4">
-                <div className="flex flex-wrap items-center justify-end gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
                   <select
                     value={filterQueue}
                     onChange={(event) => setFilterQueue(event.target.value)}
-                    className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+                    className="w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
                   >
                     <option value="">Todas las colas</option>
                     {queueOptions.map((option) => (
@@ -554,7 +554,7 @@ export default function DuoPostsPage() {
                   <select
                     value={filterRole}
                     onChange={(event) => setFilterRole(event.target.value)}
-                    className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+                    className="w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
                   >
                     <option value="">Todos los roles</option>
                     {roleOptions.map((role) => (
@@ -566,7 +566,7 @@ export default function DuoPostsPage() {
                   <button
                     type="button"
                     onClick={loadPosts}
-                    className="rounded-lg border border-border p-2 text-muted"
+                    className="col-span-2 inline-flex items-center justify-center rounded-lg border border-border p-2 text-muted sm:w-11"
                     aria-label="Recargar publicaciones"
                   >
                     <RefreshCw size={16} aria-hidden="true" />

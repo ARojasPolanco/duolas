@@ -83,11 +83,11 @@ export default function AdminReportsPage() {
           </p>
         </div>
 
-        <section className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-surface p-4">
+        <section className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-surface p-4 sm:flex sm:flex-wrap sm:items-center">
           <select
             value={status}
             onChange={(event) => setStatus(event.target.value)}
-            className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+            className="w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
           >
             <option value="">Todos los estados</option>
             {statusOptions.map((value) => (
@@ -99,7 +99,7 @@ export default function AdminReportsPage() {
           <select
             value={reason}
             onChange={(event) => setReason(event.target.value)}
-            className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+            className="w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
           >
             <option value="">Todos los motivos</option>
             {reasonOptions.map((value) => (
@@ -111,7 +111,7 @@ export default function AdminReportsPage() {
           <select
             value={priority}
             onChange={(event) => setPriority(event.target.value)}
-            className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+            className="col-span-2 w-full min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:col-auto sm:w-auto"
           >
             <option value="">Todas las prioridades</option>
             <option value="true">Prioritarios</option>
@@ -120,7 +120,7 @@ export default function AdminReportsPage() {
           <button
             type="button"
             onClick={load}
-            className="rounded-lg border border-border p-2 text-muted"
+            className="col-span-2 inline-flex items-center justify-center rounded-lg border border-border p-2 text-muted sm:w-11"
             aria-label="Recargar reportes"
           >
             <RefreshCw size={16} aria-hidden="true" />

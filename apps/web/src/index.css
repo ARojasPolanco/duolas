@@ -52,3 +52,16 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+@media (max-width: 1023px) {
+  #root button,
+  #root select,
+  #root input:not([type='checkbox']):not([type='radio']),
+  #root textarea {
+    min-height: 44px;
+  }
+
+  #root button[aria-label] {
+    min-width: 44px;
+  }
+}

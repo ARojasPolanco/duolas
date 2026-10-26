@@ -50,7 +50,7 @@ export default function ResetPasswordPage() {
       title="Nueva contraseña"
       subtitle="Elegí una contraseña de al menos 8 caracteres."
       footer={
-        <Link to="/login" className="font-semibold text-accent">
+        <Link to="/login" className="inline-flex min-h-11 items-center font-semibold text-accent">
           Volver a iniciar sesión
         </Link>
       }

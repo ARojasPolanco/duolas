@@ -123,7 +123,7 @@ export default function HowItWorksCarousel({ compact = false }) {
           </div>
 
           <div className="mt-6 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5" role="tablist" aria-label="Slides">
+            <div className="flex items-center" role="tablist" aria-label="Slides">
               {slides.map((item, itemIndex) => (
                 <button
                   key={item.title}
@@ -132,10 +132,14 @@ export default function HowItWorksCarousel({ compact = false }) {
                   aria-label={`Ir a ${item.title}`}
                   aria-selected={itemIndex === index}
                   role="tab"
-                  className={`h-1.5 rounded-full transition-all ${
-                    itemIndex === index ? 'w-7 bg-accent' : 'w-3 bg-border hover:bg-muted'
-                  }`}
-                />
+                  className="group flex h-11 w-11 items-center justify-center"
+                >
+                  <span
+                    className={`block h-1.5 rounded-full transition-all ${
+                      itemIndex === index ? 'w-7 bg-accent' : 'w-3 bg-border group-hover:bg-muted'
+                    }`}
+                  />
+                </button>
               ))}
             </div>
 

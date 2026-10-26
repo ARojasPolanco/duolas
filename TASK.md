@@ -190,7 +190,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 ## Mejoras visuales post-F6
 
 - [x] Batch 1: `AppShell` responsive, bottom nav mobile, menú de cuenta, campana, logout y headers unificados.
-- [ ] Batch 2: corregir overflow de Disponible, touch targets de 44 px y filtros mobile.
+- [x] Batch 2: overflow de Disponible corregido, touch targets de 44 px y filtros mobile sin desbordes.
 - [ ] Batch 3: simplificar cards, grid desktop y unificar spacing/tipografía.
 - [ ] Batch 4: pulir admin, métricas y legales; QA visual 360/390/768/1440.
 

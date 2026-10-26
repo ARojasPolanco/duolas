@@ -57,7 +57,10 @@ export default function LoginPage() {
       footer={
         <p>
           ¿No tenés cuenta?{' '}
-          <Link to="/register" className="font-semibold text-accent">
+          <Link
+            to="/register"
+            className="inline-flex min-h-11 items-center font-semibold text-accent"
+          >
             Crear cuenta
           </Link>
         </p>
@@ -86,7 +89,10 @@ export default function LoginPage() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           action={
-            <Link to="/forgot-password" className="text-xs font-semibold text-accent">
+            <Link
+              to="/forgot-password"
+              className="inline-flex min-h-11 items-center text-xs font-semibold text-accent"
+            >
               ¿Has olvidado tu contraseña?
             </Link>
           }
