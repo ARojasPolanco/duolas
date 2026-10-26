@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Ban, Heart, Lock, Mic, MicOff } from 'lucide-react';
+import { Ban, Check, Heart, Languages, Mic, MicOff, Star } from 'lucide-react';
 import {
   LANGUAGE_LABELS,
   STYLE_LABELS,
@@ -45,34 +45,37 @@ export default function PlayerPreviewCard({
         ) : null}
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-semibold text-muted">
-        <span className="rounded-full border border-border px-2 py-1">
-          {STYLE_LABELS[player.playStyle] || player.playStyle}
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-1">
+      <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] text-muted">
+        <span className="truncate">{STYLE_LABELS[player.playStyle] || player.playStyle}</span>
+        <span className="inline-flex min-w-0 items-center gap-1">
           {player.hasMic ? (
-            <Mic size={11} aria-hidden="true" />
+            <Mic size={12} aria-hidden="true" />
           ) : (
-            <MicOff size={11} aria-hidden="true" />
+            <MicOff size={12} aria-hidden="true" />
           )}
-          {player.hasMic ? 'Con mic' : 'Sin mic'}
+          <span className="truncate">{player.hasMic ? 'Con mic' : 'Sin mic'}</span>
         </span>
-        {(player.languages || []).map((language) => (
-          <span key={language} className="rounded-full border border-border px-2 py-1">
-            {LANGUAGE_LABELS[language] || language}
+        <span className="inline-flex min-w-0 items-center gap-1">
+          <Languages size={12} className="shrink-0" aria-hidden="true" />
+          <span className="truncate">
+            {(player.languages || [])
+              .map((language) => LANGUAGE_LABELS[language] || language)
+              .join(' · ')}
           </span>
-        ))}
-        {player.reputation?.label ? (
-          <span className="rounded-full border border-border px-2 py-1">
-            Reputación {player.reputation.label}
-          </span>
-        ) : null}
+        </span>
+        <span className="inline-flex min-w-0 items-center gap-1">
+          <Star size={12} className="shrink-0" aria-hidden="true" />
+          <span className="truncate">Reputación {player.reputation?.label || 'Nuevo'}</span>
+        </span>
       </div>
 
       {reasons.length ? (
-        <ul className="mt-4 space-y-1 text-xs text-muted">
-          {reasons.slice(0, 3).map((reason) => (
-            <li key={reason}>· {reason}</li>
+        <ul className="mt-3 grid gap-1 text-[11px] text-muted">
+          {reasons.slice(0, 2).map((reason) => (
+            <li key={reason} className="flex items-start gap-1.5">
+              <Check size={12} className="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
+              <span>{reason}</span>
+            </li>
           ))}
         </ul>
       ) : null}
@@ -80,11 +83,6 @@ export default function PlayerPreviewCard({
       {player.bio ? (
         <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-muted">{player.bio}</p>
       ) : null}
-
-      <p className="mt-4 flex items-center gap-1.5 text-[11px] text-muted">
-        <Lock size={11} aria-hidden="true" />
-        Riot ID y Discord se revelan cuando hay match.
-      </p>
 
       {showActions ? (
         <div className="mt-4 flex items-center gap-2">

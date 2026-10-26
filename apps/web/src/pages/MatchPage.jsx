@@ -1,6 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Ban, Heart, RefreshCw, Swords, X } from 'lucide-react';
+import {
+  Ban,
+  Check,
+  Heart,
+  Languages,
+  Mic,
+  MicOff,
+  RefreshCw,
+  Star,
+  Swords,
+  X,
+} from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -264,43 +275,61 @@ export default function MatchPage() {
                       className="rounded-2xl border border-border bg-surface p-5"
                     >
                       <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-2 text-sm font-extrabold text-accent">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-sm font-extrabold text-accent">
                             {initialsOf(profile.username)}
                           </div>
-                          <div>
-                            <h3 className="font-bold">{profile.username}</h3>
-                            <p className="text-xs text-muted">
+                          <div className="min-w-0">
+                            <h3 className="truncate font-bold">{profile.username}</h3>
+                            <p className="truncate text-xs text-muted">
                               {formatRank(profile)} · {formatRoles(profile)}
                             </p>
                           </div>
                         </div>
-                        <div className="rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
+                        <div className="shrink-0 rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
                           {candidate.score} pts
                         </div>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-semibold text-muted">
-                        <span className="rounded-full border border-border px-2 py-1">
+                      <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] text-muted">
+                        <span className="truncate">
                           {STYLE_LABELS[profile.playStyle] || profile.playStyle}
                         </span>
-                        <span className="rounded-full border border-border px-2 py-1">
-                          {profile.hasMic ? 'Con mic' : 'Sin mic'}
+                        <span className="inline-flex min-w-0 items-center gap-1">
+                          {profile.hasMic ? (
+                            <Mic size={12} aria-hidden="true" />
+                          ) : (
+                            <MicOff size={12} aria-hidden="true" />
+                          )}
+                          <span className="truncate">{profile.hasMic ? 'Con mic' : 'Sin mic'}</span>
                         </span>
-                        {profile.languages.map((language) => (
-                          <span
-                            key={language}
-                            className="rounded-full border border-border px-2 py-1"
-                          >
-                            {LANGUAGE_LABELS[language] || language}
+                        <span className="inline-flex min-w-0 items-center gap-1">
+                          <Languages size={12} className="shrink-0" aria-hidden="true" />
+                          <span className="truncate">
+                            {profile.languages
+                              .map((language) => LANGUAGE_LABELS[language] || language)
+                              .join(' · ')}
                           </span>
-                        ))}
+                        </span>
+                        <span className="inline-flex min-w-0 items-center gap-1">
+                          <Star size={12} className="shrink-0" aria-hidden="true" />
+                          <span className="truncate">
+                            Reputación {profile.reputation?.label || 'Nuevo'}
+                          </span>
+                        </span>
                       </div>
 
                       {candidate.reasons?.length ? (
-                        <ul className="mt-4 space-y-1 text-xs text-muted">
-                          {candidate.reasons.map((reason) => (
-                            <li key={reason}>· {reason}</li>
+                        <ul className="mt-3 grid gap-1 text-[11px] text-muted">
+                          {candidate.reasons.slice(0, 3).map((reason) => (
+                            <li key={reason} className="flex items-start gap-1.5">
+                              <Check
+                                size={12}
+                                className="mt-0.5 shrink-0 text-accent"
+                                aria-hidden="true"
+                              />
+                              <span>{reason}</span>
+                            </li>
                           ))}
                         </ul>
                       ) : null}

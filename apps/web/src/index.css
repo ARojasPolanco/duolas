@@ -34,6 +34,16 @@ body {
   min-height: 100vh;
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
 ::selection {
   background-color: var(--color-accent);
   color: var(--color-bg);

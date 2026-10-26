@@ -116,7 +116,7 @@ Reglas:
 - Card de perfil propio con Riot ID y Discord visibles solo para el dueño.
 - Accesos rápidos a Match, Matches y edición de perfil.
 - Carrusel compacto "Cómo funciona".
-- Sección "Jugadores para vos" con hasta 4 cards de candidatos, score, motivos, like y bloqueo.
+- Sección "Jugadores para vos" con hasta 3 cards de candidatos, score, motivos, like y bloqueo.
 - Sección "Tus matches" con hasta 2 conexiones y contacto disponible para copiar.
 - Banner de email sin verificar y CTA de onboarding si falta perfil.
 - Estados de carga, vacío y error.

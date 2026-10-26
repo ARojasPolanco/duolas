@@ -3,6 +3,7 @@ import request from 'supertest';
 import app from '../app.js';
 import sequelize from '../config/database/database.js';
 import { runMigrations } from '../config/database/migrator.js';
+import User from '../modules/auth/auth.model.js';
 import {
   authHeader,
   createMatchUser,
@@ -54,7 +55,7 @@ const compatibleTarget = (scheduleBlocks) =>
     primaryRole: 'jungle',
     secondaryRole: 'top',
     rankTier: 'diamond',
-    rankDivision: 'iii',
+    rankDivision: 'ii',
   });
 
 describe('Matching', () => {
@@ -62,10 +63,13 @@ describe('Matching', () => {
     it('devuelve candidatos compatibles con score, breakdown y motivos', async () => {
       const viewer = await createMatchUser({ scheduleBlocks: ['sun_early'] });
       const target = await compatibleTarget(['sun_early']);
+      await User.update(
+        { lastActiveAt: new Date(Date.now() + 60_000) },
+        { where: { id: target.user.id } }
+      );
 
       const res = await candidates(viewer.token, '?limit=50');
       const card = res.body.candidates.find((item) => item.profile.id === target.user.id);
-
       expect(res.status).toBe(200);
       expect(card).toBeTruthy();
       expect(card.score).toBeGreaterThan(0);

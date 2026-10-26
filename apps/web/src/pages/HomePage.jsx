@@ -64,7 +64,7 @@ export default function HomePage() {
 
     setCandidatesLoading(true);
     try {
-      const res = await api.get('/v1/matching/candidates', { params: { limit: 4 } });
+      const res = await api.get('/v1/matching/candidates', { params: { limit: 3 } });
       setCandidates(res.data.candidates || []);
     } catch (_error) {
       setCandidates([]);
@@ -309,7 +309,9 @@ export default function HomePage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Match</p>
               <h2 className="mt-2 text-2xl font-extrabold">Jugadores para vos</h2>
-              <p className="mt-1 text-sm text-muted">Ordenados por afinidad según tu perfil.</p>
+              <p className="mt-1 text-sm text-muted">
+                Ordenados por afinidad. El contacto aparece cuando hay match.
+              </p>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -337,7 +339,7 @@ export default function HomePage() {
               Verificá tu email y completá tu perfil para empezar a ver jugadores compatibles.
             </div>
           ) : candidatesLoading ? (
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {[0, 1, 2].map((item) => (
                 <div
                   key={item}
@@ -346,7 +348,7 @@ export default function HomePage() {
               ))}
             </div>
           ) : candidates.length ? (
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {candidates.map((candidate) => (
                 <PlayerPreviewCard
                   key={candidate.profile.id}
