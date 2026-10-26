@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Clock, Copy, Inbox, Lock, X } from 'lucide-react';
-import AppHeader from '../components/AppHeader.jsx';
+import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -117,10 +117,8 @@ export default function InvitesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-4xl space-y-6">
-        <AppHeader />
-
+    <AppShell maxWidth="max-w-4xl">
+      <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Invitaciones
@@ -356,6 +354,6 @@ export default function InvitesPage() {
           </>
         )}
       </div>
-    </div>
+    </AppShell>
   );
 }

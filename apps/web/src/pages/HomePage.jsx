@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Bell,
   ClipboardList,
   Copy,
   Inbox,
-  LogOut,
   Pencil,
   Radio,
   RefreshCw,
@@ -14,11 +12,11 @@ import {
   UserRoundCheck,
   Users,
 } from 'lucide-react';
+import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import { useNotifications } from '../context/NotificationsContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import { formatRank, formatRoles, initialsOf } from '../utils/labels.js';
@@ -28,10 +26,8 @@ const actionLink =
   'inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition';
 
 export default function HomePage() {
-  const { user, logout } = useAuth();
-  const { unreadCount } = useNotifications();
+  const { user } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [candidates, setCandidates] = useState([]);
@@ -104,11 +100,6 @@ export default function HomePage() {
     loadMatches();
   }, [loadCandidates, loadMatches]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login', { replace: true });
-  };
-
   const copy = async (value, label) => {
     if (!value) return;
 
@@ -161,61 +152,8 @@ export default function HomePage() {
   const ownDiscord = profile?.discordTag;
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-6xl space-y-6">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <Link to="/" className="text-xl font-extrabold tracking-tight">
-            Duo<span className="text-accent">LAS</span>
-          </Link>
-          <nav className="flex flex-wrap items-center gap-3 text-sm font-semibold">
-            <Link to="/match" className="text-muted hover:text-text">
-              Match
-            </Link>
-            <Link to="/disponible" className="text-muted hover:text-text">
-              Disponible
-            </Link>
-            <Link to="/busco-1" className="text-muted hover:text-text">
-              Busco 1
-            </Link>
-            <Link to="/invitaciones" className="text-muted hover:text-text">
-              Invitaciones
-            </Link>
-            <Link to="/matches" className="text-muted hover:text-text">
-              Matches
-            </Link>
-            {user?.role === 'admin' ? (
-              <>
-                <Link to="/admin/reportes" className="text-muted hover:text-text">
-                  Reportes
-                </Link>
-                <Link to="/admin/metrics" className="text-muted hover:text-text">
-                  Métricas
-                </Link>
-              </>
-            ) : null}
-            <Link
-              to="/notificaciones"
-              className="relative rounded-lg border border-border p-2 text-muted hover:text-text"
-              aria-label={`Notificaciones${unreadCount ? `: ${unreadCount} sin leer` : ''}`}
-            >
-              <Bell size={15} aria-hidden="true" />
-              {unreadCount ? (
-                <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              ) : null}
-            </Link>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs text-muted"
-            >
-              <LogOut size={15} aria-hidden="true" />
-              Salir
-            </button>
-          </nav>
-        </header>
-
+    <AppShell>
+      <div className="space-y-6">
         <EmailVerificationBanner />
 
         {error ? (
@@ -497,6 +435,6 @@ export default function HomePage() {
           )}
         </section>
       </div>
-    </div>
+    </AppShell>
   );
 }

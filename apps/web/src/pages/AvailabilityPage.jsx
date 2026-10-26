@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, Lock, Radio, RefreshCw, Send, Users } from 'lucide-react';
-import AppHeader from '../components/AppHeader.jsx';
+import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -181,10 +181,8 @@ export default function AvailabilityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-6xl space-y-6">
-        <AppHeader />
-
+    <AppShell>
+      <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Disponible ya
@@ -517,6 +515,6 @@ export default function AvailabilityPage() {
           </>
         )}
       </div>
-    </div>
+    </AppShell>
   );
 }

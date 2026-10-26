@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Ban, Heart, RefreshCw, Swords, X } from 'lucide-react';
+import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -140,31 +141,8 @@ export default function MatchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <Link to="/inicio" className="text-xl font-extrabold tracking-tight">
-            Duo<span className="text-accent">LAS</span>
-          </Link>
-          <nav className="flex items-center gap-3 text-sm font-semibold">
-            <Link to="/inicio" className="text-muted">
-              Inicio
-            </Link>
-            <Link to="/disponible" className="text-muted">
-              Disponible
-            </Link>
-            <Link to="/busco-1" className="text-muted">
-              Busco 1
-            </Link>
-            <Link to="/invitaciones" className="text-muted">
-              Invitaciones
-            </Link>
-            <Link to="/matches" className="text-muted">
-              Matches
-            </Link>
-          </nav>
-        </header>
-
+    <AppShell>
+      <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Match</p>
           <h1 className="mt-2 text-3xl font-extrabold">Encontrá tu duo</h1>
@@ -415,6 +393,6 @@ export default function MatchPage() {
           </>
         )}
       </div>
-    </div>
+    </AppShell>
   );
 }

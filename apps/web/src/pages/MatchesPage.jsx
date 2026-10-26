@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Archive, Ban, Copy, Flag, MessageSquare, Swords } from 'lucide-react';
+import AppShell from '../components/AppShell.jsx';
 import FeedbackPanel from '../components/FeedbackPanel.jsx';
 import ReportDialog from '../components/ReportDialog.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -96,31 +97,8 @@ export default function MatchesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <Link to="/inicio" className="text-xl font-extrabold tracking-tight">
-            Duo<span className="text-accent">LAS</span>
-          </Link>
-          <nav className="flex items-center gap-3 text-sm font-semibold">
-            <Link to="/inicio" className="text-muted">
-              Inicio
-            </Link>
-            <Link to="/match" className="text-muted">
-              Match
-            </Link>
-            <Link to="/disponible" className="text-muted">
-              Disponible
-            </Link>
-            <Link to="/busco-1" className="text-muted">
-              Busco 1
-            </Link>
-            <Link to="/invitaciones" className="text-muted">
-              Invitaciones
-            </Link>
-          </nav>
-        </header>
-
+    <AppShell maxWidth="max-w-4xl">
+      <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Matches</p>
           <h1 className="mt-2 text-3xl font-extrabold">Tus conexiones</h1>
@@ -290,6 +268,6 @@ export default function MatchesPage() {
           onReported={handleReported}
         />
       ) : null}
-    </div>
+    </AppShell>
   );
 }

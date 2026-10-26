@@ -1,0 +1,231 @@
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+  BarChart3,
+  Bell,
+  ChevronDown,
+  ClipboardList,
+  Home,
+  LogOut,
+  Radio,
+  ShieldAlert,
+  Swords,
+  UserRound,
+  Users,
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useNotifications } from '../context/NotificationsContext.jsx';
+import { initialsOf } from '../utils/labels.js';
+
+const primaryLinks = [
+  { to: '/inicio', label: 'Inicio', icon: Home },
+  { to: '/match', label: 'Match', icon: Swords },
+  { to: '/disponible', label: 'Disponible', icon: Radio },
+  { to: '/busco-1', label: 'Busco 1', icon: ClipboardList },
+  { to: '/matches', label: 'Matches', icon: Users },
+];
+
+const desktopLinkClass = ({ isActive }) =>
+  `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+    isActive ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-surface-2 hover:text-text'
+  }`;
+
+const mobileLinkClass = ({ isActive }) =>
+  `flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-semibold transition ${
+    isActive ? 'text-accent' : 'text-muted'
+  }`;
+
+export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
+  const { user, logout } = useAuth();
+  const { unreadCount } = useNotifications();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const menuRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, left: 0 });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const closeOnOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+
+    document.addEventListener('mousedown', closeOnOutside);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutside);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [menuOpen]);
+
+  const handleLogout = () => {
+    setMenuOpen(false);
+    logout();
+    navigate('/login', { replace: true });
+  };
+
+  return (
+    <div className="min-h-screen bg-bg text-text">
+      <header className="sticky top-0 z-40 border-b border-border/70 bg-bg/90 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:px-6">
+          <Link
+            to="/inicio"
+            className="flex min-h-11 shrink-0 items-center text-xl font-extrabold tracking-tight"
+          >
+            Duo<span className="text-accent">LAS</span>
+          </Link>
+
+          <nav className="ml-4 hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
+            {primaryLinks.map((link) => (
+              <NavLink key={link.to} to={link.to} className={desktopLinkClass}>
+                {link.label}
+              </NavLink>
+            ))}
+            <NavLink to="/invitaciones" className={desktopLinkClass}>
+              Invitaciones
+            </NavLink>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2">
+            <Link
+              to="/notificaciones"
+              className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-border text-muted transition hover:border-accent/50 hover:text-text"
+              aria-label={`Notificaciones${unreadCount ? `: ${unreadCount} sin leer` : ''}`}
+            >
+              <Bell size={18} aria-hidden="true" />
+              {unreadCount ? (
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              ) : null}
+            </Link>
+
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((current) => !current)}
+                className="flex h-11 items-center gap-2 rounded-xl border border-border px-2 transition hover:border-accent/50"
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                aria-label="Menú de cuenta"
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-2 text-[10px] font-extrabold text-accent">
+                  {initialsOf(user?.username)}
+                </span>
+                <span className="hidden max-w-24 truncate text-xs font-semibold sm:block">
+                  {user?.username}
+                </span>
+                <ChevronDown
+                  size={14}
+                  className={`hidden text-muted transition sm:block ${menuOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+
+              {menuOpen ? (
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl shadow-black/40"
+                >
+                  <div className="border-b border-border px-4 py-3">
+                    <p className="truncate text-sm font-bold">{user?.username}</p>
+                    <p className="truncate text-xs text-muted">{user?.email}</p>
+                  </div>
+
+                  <div className="p-1.5">
+                    <Link
+                      to="/onboarding"
+                      role="menuitem"
+                      className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
+                    >
+                      <UserRound size={16} aria-hidden="true" />
+                      Mi perfil
+                    </Link>
+                    <Link
+                      to="/invitaciones"
+                      role="menuitem"
+                      className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
+                    >
+                      <ClipboardList size={16} aria-hidden="true" />
+                      Invitaciones
+                    </Link>
+                    <Link
+                      to="/notificaciones"
+                      role="menuitem"
+                      className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
+                    >
+                      <Bell size={16} aria-hidden="true" />
+                      Notificaciones
+                    </Link>
+                  </div>
+
+                  {user?.role === 'admin' ? (
+                    <div className="border-t border-border p-1.5">
+                      <Link
+                        to="/admin/reportes"
+                        role="menuitem"
+                        className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
+                      >
+                        <ShieldAlert size={16} aria-hidden="true" />
+                        Reportes
+                      </Link>
+                      <Link
+                        to="/admin/metrics"
+                        role="menuitem"
+                        className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
+                      >
+                        <BarChart3 size={16} aria-hidden="true" />
+                        Métricas
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  <div className="border-t border-border p-1.5">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-semibold text-danger transition hover:bg-danger/10"
+                    >
+                      <LogOut size={16} aria-hidden="true" />
+                      Cerrar sesión
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className={`mx-auto px-4 pb-28 pt-6 sm:px-6 lg:pb-12 ${maxWidth}`}>{children}</main>
+
+      <nav
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+        aria-label="Navegación mobile"
+      >
+        <div className="mx-auto flex max-w-2xl items-stretch">
+          {primaryLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <NavLink key={link.to} to={link.to} className={mobileLinkClass}>
+                <Icon size={19} aria-hidden="true" />
+                <span>{link.label}</span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
+  );
+}

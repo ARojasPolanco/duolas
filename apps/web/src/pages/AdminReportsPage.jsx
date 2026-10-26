@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AlertTriangle, Check, RefreshCw, ShieldAlert, UserX } from 'lucide-react';
-import AppHeader from '../components/AppHeader.jsx';
+import AppShell from '../components/AppShell.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import { REPORT_REASON_LABELS, REPORT_STATUS_LABELS } from '../utils/labels.js';
@@ -73,10 +73,8 @@ export default function AdminReportsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <AppHeader />
-
+    <AppShell>
+      <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Admin</p>
           <h1 className="mt-2 text-3xl font-extrabold">Reportes y sanciones</h1>
@@ -277,6 +275,6 @@ export default function AdminReportsPage() {
           </div>
         )}
       </div>
-    </div>
+    </AppShell>
   );
 }

@@ -43,21 +43,18 @@ Reglas:
 
 ## 2. Navegación
 
+Todas las pantallas protegidas usan `AppShell`, salvo onboarding, que mantiene un layout enfocado.
+
 ### Mobile
 
-Bottom nav fija con cinco ítems:
-
-1. Inicio
-2. Match
-3. Disponible
-4. Busco 1
-5. Matches
-
-La campana de notificaciones y el acceso a perfil viven en el header. Los ítems de admin no se muestran en la bottom nav.
+- Top bar fija con logo, campana y avatar.
+- Bottom nav fija con cinco ítems: Inicio, Match, Disponible, Busco 1 y Matches.
+- El avatar abre el menú de cuenta: Mi perfil, Invitaciones, Notificaciones, accesos admin y Cerrar sesión.
+- Los ítems de admin no se muestran en la bottom nav.
 
 ### Desktop
 
-Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches, campana y menú de perfil. En mobile, el perfil se abre desde el avatar del header.
+Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A la derecha viven la campana y el menú de avatar con perfil, notificaciones, accesos admin y logout.
 
 ## 3. Pantallas
 
@@ -220,6 +217,7 @@ Reglas:
 
 | Componente           | Uso                                   |
 | -------------------- | ------------------------------------- |
+| `AppShell`           | Shell responsive con nav y menú       |
 | `RankBadge`          | Tier, división y color                |
 | `RoleIcon`           | Icono SVG propio por rol              |
 | `PlayerAvatar`       | Iniciales con color determinístico    |

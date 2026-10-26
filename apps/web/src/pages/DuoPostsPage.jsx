@@ -15,7 +15,7 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import AppHeader from '../components/AppHeader.jsx';
+import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -307,10 +307,8 @@ export default function DuoPostsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <AppHeader />
-
+    <AppShell maxWidth="max-w-5xl">
+      <div className="space-y-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Busco 1</p>
@@ -861,6 +859,6 @@ export default function DuoPostsPage() {
           </>
         )}
       </div>
-    </div>
+    </AppShell>
   );
 }

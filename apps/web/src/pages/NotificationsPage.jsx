@@ -11,7 +11,7 @@ import {
   Swords,
   Trash2,
 } from 'lucide-react';
-import AppHeader from '../components/AppHeader.jsx';
+import AppShell from '../components/AppShell.jsx';
 import { useNotifications } from '../context/NotificationsContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import usePush from '../hooks/usePush.js';
@@ -88,10 +88,8 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg px-5 py-8 text-text">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <AppHeader />
-
+    <AppShell maxWidth="max-w-4xl">
+      <div className="space-y-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
@@ -263,6 +261,6 @@ export default function NotificationsPage() {
           </section>
         )}
       </div>
-    </div>
+    </AppShell>
   );
 }

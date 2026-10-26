@@ -187,6 +187,13 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 **DoD técnico cumplido:** 103 tests pasando, lint y build verdes, migración 011 down/up verificada, KPIs disponibles en API/admin, rate limits activos y seed con 12 jugadores idempotente. Queda el smoke completo desktop/mobile y la pasada visual final antes del release.
 
+## Mejoras visuales post-F6
+
+- [x] Batch 1: `AppShell` responsive, bottom nav mobile, menú de cuenta, campana, logout y headers unificados.
+- [ ] Batch 2: corregir overflow de Disponible, touch targets de 44 px y filtros mobile.
+- [ ] Batch 3: simplificar cards, grid desktop y unificar spacing/tipografía.
+- [ ] Batch 4: pulir admin, métricas y legales; QA visual 360/390/768/1440.
+
 ## Decisiones cerradas
 
 Todas en `docs/DECISIONS.md`. Resumen:
