@@ -7,6 +7,7 @@ import User from '../auth/auth.model.js';
 import { toPublicProfile } from '../profiles/profile.service.js';
 import { notificationService } from '../notifications/notification.service.js';
 import { reputationService } from './reputation.service.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { AppError } from '../../errors/appError.js';
 import {
   FEEDBACK_WINDOW_MS,
@@ -90,6 +91,13 @@ export class FeedbackService {
           { transaction }
         );
 
+        await metricsService.track(
+          'feedback_submitted',
+          viewerId,
+          { connectionId: connection.id, sentiment: data.sentiment },
+          transaction
+        );
+
         const reciprocal = await Feedback.findOne({
           where: { connectionId: connection.id, authorId: targetId },
           lock: transaction.LOCK.UPDATE,
@@ -105,6 +113,12 @@ export class FeedbackService {
         await feedback.update({ visibleAt }, { transaction });
         await reputationService.recalculateMany([targetId, reciprocal.targetId], transaction);
         await this.notifyRevealed(connection, transaction);
+        await metricsService.track(
+          'feedback_revealed',
+          viewerId,
+          { connectionId: connection.id },
+          transaction
+        );
 
         return { feedback, revealed: true };
       });
@@ -259,6 +273,12 @@ export class FeedbackService {
           transaction
         );
         await this.notifyRevealed(connection, transaction);
+        await metricsService.track(
+          'feedback_revealed',
+          feedbacks[0].authorId,
+          { connectionId: connection.id },
+          transaction
+        );
 
         return updated;
       });

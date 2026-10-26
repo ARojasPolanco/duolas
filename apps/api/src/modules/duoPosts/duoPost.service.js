@@ -11,6 +11,7 @@ import { toPublicProfile } from '../profiles/profile.service.js';
 import { blockService } from '../trust/block.service.js';
 import { connectionService } from '../matching/connection.service.js';
 import { notificationService } from '../notifications/notification.service.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { AppError } from '../../errors/appError.js';
 import { computePostFitScore } from '../matching/matching.utils.js';
 
@@ -211,7 +212,7 @@ export class DuoPostService {
           throw new AppError('Ya tenés una publicación activa para esa cola.', 409);
         }
 
-        return DuoPost.create(
+        const post = await DuoPost.create(
           {
             ownerId,
             queue: data.queue,
@@ -226,6 +227,14 @@ export class DuoPostService {
           },
           { transaction }
         );
+
+        void metricsService.track('post_created', ownerId, {
+          postId: post.id,
+          queue: post.queue,
+          rolesNeeded: post.rolesNeeded,
+        });
+
+        return post;
       });
     } catch (error) {
       if (error.name === 'SequelizeUniqueConstraintError') {
@@ -447,6 +456,11 @@ export class DuoPostService {
       },
     });
 
+    void metricsService.track('application_sent', applicantId, {
+      postId: post.id,
+      applicationId: application.id,
+    });
+
     return application;
   }
 
@@ -576,6 +590,17 @@ export class DuoPostService {
         source: 'post',
         transaction,
       });
+
+      await metricsService.track(
+        'application_accepted',
+        ownerId,
+        {
+          postId,
+          applicationId,
+          connectionId: connection.id,
+        },
+        transaction
+      );
 
       await notificationService.create(
         {

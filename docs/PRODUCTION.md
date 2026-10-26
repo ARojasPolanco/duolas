@@ -132,7 +132,7 @@ La API key de Resend y las claves de hCaptcha se copian desde sus dashboards. El
 - [ ] Forgot/reset envía email y permite cambiar la contraseña.
 - [ ] Una request sin token devuelve 401 y no genera loops.
 - [ ] La web carga en mobile y desktop.
-- [ ] Push llega con la PWA instalada (cuando F5 esté cerrada).
+- [ ] Push llega con la PWA instalada.
 
 ## 8. Notas de seguridad
 

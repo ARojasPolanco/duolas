@@ -8,6 +8,7 @@ import { toPublicProfile } from '../profiles/profile.service.js';
 import { blockService } from '../trust/block.service.js';
 import { connectionService } from '../matching/connection.service.js';
 import { notificationService } from '../notifications/notification.service.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { AppError } from '../../errors/appError.js';
 
 const USER_ATTRIBUTES = [
@@ -148,6 +149,13 @@ export class InviteService {
         source: 'availability',
         transaction,
       });
+
+      await metricsService.track(
+        'invite_accepted',
+        userId,
+        { inviteId: locked.id, connectionId: connection.id },
+        transaction
+      );
 
       const user = await User.findByPk(userId, { attributes: ['id', 'username'] });
 

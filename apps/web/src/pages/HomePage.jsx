@@ -184,9 +184,14 @@ export default function HomePage() {
               Matches
             </Link>
             {user?.role === 'admin' ? (
-              <Link to="/admin/reportes" className="text-muted hover:text-text">
-                Reportes
-              </Link>
+              <>
+                <Link to="/admin/reportes" className="text-muted hover:text-text">
+                  Reportes
+                </Link>
+                <Link to="/admin/metrics" className="text-muted hover:text-text">
+                  Métricas
+                </Link>
+              </>
             ) : null}
             <Link
               to="/notificaciones"

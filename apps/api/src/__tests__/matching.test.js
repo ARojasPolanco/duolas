@@ -63,7 +63,7 @@ describe('Matching', () => {
       const viewer = await createMatchUser({ scheduleBlocks: ['sun_early'] });
       const target = await compatibleTarget(['sun_early']);
 
-      const res = await candidates(viewer.token);
+      const res = await candidates(viewer.token, '?limit=50');
       const card = res.body.candidates.find((item) => item.profile.id === target.user.id);
 
       expect(res.status).toBe(200);

@@ -9,6 +9,7 @@ import DuoConnection from './duoConnection.model.js';
 import Feedback from '../trust/feedback.model.js';
 import { blockService } from '../trust/block.service.js';
 import { feedbackService } from '../trust/feedback.service.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { buildFeedbackStatus } from '../trust/feedback.utils.js';
 import { connectionService } from './connection.service.js';
 import { AppError } from '../../errors/appError.js';
@@ -264,6 +265,7 @@ export class MatchingService {
           { transaction }
         );
         created = true;
+        await metricsService.track('like_sent', viewerId, { targetUserId: targetId }, transaction);
       } else if (like.status === 'cancelled') {
         await like.update({ status: 'pending' }, { transaction });
       }

@@ -21,7 +21,13 @@ export default function AppHeader() {
   const { user } = useAuth();
   const { unreadCount } = useNotifications();
   const visibleLinks =
-    user?.role === 'admin' ? [...links, { to: '/admin/reportes', label: 'Reportes' }] : links;
+    user?.role === 'admin'
+      ? [
+          ...links,
+          { to: '/admin/reportes', label: 'Reportes' },
+          { to: '/admin/metrics', label: 'Métricas' },
+        ]
+      : links;
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-3">

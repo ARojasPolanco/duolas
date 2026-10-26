@@ -170,7 +170,7 @@ describe('Disponible ya', () => {
 });
 
 describe('Invitaciones', () => {
-  it('permite rechazar y cancelar con notificación', async () => {
+  it('permite rechazar y cancelar, y limita reenviar a la misma persona', async () => {
     const target = await createMatchUser({
       primaryRole: 'support',
       secondaryRole: 'top',
@@ -191,12 +191,20 @@ describe('Invitaciones', () => {
       senderNotifications.body.notifications.some((item) => item.type === 'invite_declined')
     ).toBe(true);
 
-    const second = await sendInvite(viewer.token, opened.body.session.id);
+    const tooSoon = await sendInvite(viewer.token, opened.body.session.id);
+    expect(tooSoon.status).toBe(429);
+
+    const secondTarget = await createMatchUser({
+      primaryRole: 'support',
+      secondaryRole: 'top',
+    });
+    const secondOpened = await openAvailability(secondTarget.token);
+    const second = await sendInvite(viewer.token, secondOpened.body.session.id);
     const cancelled = await respondInvite(viewer.token, second.body.invite.id, 'cancel');
 
     expect(cancelled.status).toBe(200);
 
-    const recipientNotifications = await notifications(target.token);
+    const recipientNotifications = await notifications(secondTarget.token);
     expect(
       recipientNotifications.body.notifications.some((item) => item.type === 'invite_cancelled')
     ).toBe(true);

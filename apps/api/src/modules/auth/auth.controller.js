@@ -6,6 +6,7 @@ import { AppError } from '../../errors/appError.js';
 import { generateJWT } from '../../config/plugins/generate-jwt.js';
 import { comparePassword } from '../../config/plugins/encrypted-password.js';
 import { mailService } from '../../config/resend/resend.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { verifyCaptcha } from '../../utils/captcha.js';
 import logger from '../../config/logger.js';
 import {
@@ -86,6 +87,8 @@ export const register = catchAsync(async (req, res, next) => {
     () => mailService.sendVerificationEmail(user.email, verificationToken),
     user.id
   );
+
+  void metricsService.track('user_registered', user.id);
 
   const token = generateJWT({ id: user.id, role: user.role });
 
@@ -186,11 +189,17 @@ export const verifyEmail = catchAsync(async (req, res, next) => {
     return next(new AppError('El enlace de verificación expiró. Pedí uno nuevo.', 400));
   }
 
+  const wasVerified = user.emailVerified;
+
   await user.update({
     emailVerified: true,
     emailVerificationToken: null,
     emailVerificationExpires: null,
   });
+
+  if (!wasVerified) {
+    void metricsService.track('email_verified', user.id);
+  }
 
   res.status(200).json({
     status: 'success',

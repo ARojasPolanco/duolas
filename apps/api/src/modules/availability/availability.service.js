@@ -7,6 +7,7 @@ import User from '../auth/auth.model.js';
 import { toPublicProfile } from '../profiles/profile.service.js';
 import { blockService } from '../trust/block.service.js';
 import { notificationService } from '../notifications/notification.service.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { AppError } from '../../errors/appError.js';
 import {
   areRolesComplementary,
@@ -114,7 +115,7 @@ export class AvailabilityService {
         }
       );
 
-      return AvailabilitySession.create(
+      const session = await AvailabilitySession.create(
         {
           userId,
           roles,
@@ -126,10 +127,22 @@ export class AvailabilityService {
         },
         { transaction }
       );
+
+      void metricsService.track('availability_opened', userId, {
+        queue,
+        roles,
+        ttlMinutes,
+      });
+
+      return session;
     });
   }
 
   async close(userId) {
+    const session = await AvailabilitySession.findOne({
+      where: { userId, status: 'active' },
+    });
+
     await AvailabilitySession.update(
       {
         status: 'closed',
@@ -140,6 +153,13 @@ export class AvailabilityService {
         where: { userId, status: 'active' },
       }
     );
+
+    if (session) {
+      void metricsService.track('availability_closed', userId, {
+        reason: 'manual',
+        queue: session.queue,
+      });
+    }
   }
 
   async getMine(userId) {
@@ -327,6 +347,18 @@ export class AvailabilityService {
       await pending.update({ status: 'expired', respondedAt: new Date() });
     }
 
+    const recent = await Invite.findOne({
+      where: {
+        fromUserId: viewerId,
+        toUserId: session.userId,
+        createdAt: { [Op.gte]: new Date(Date.now() - 10 * 60 * 1000) },
+      },
+    });
+
+    if (recent) {
+      throw new AppError('Esperá 10 minutos antes de volver a invitar a este jugador.', 429);
+    }
+
     const invite = await Invite.create({
       fromUserId: viewerId,
       toUserId: session.userId,
@@ -343,6 +375,12 @@ export class AvailabilityService {
       title: 'Nueva invitación',
       message: `${viewerUser?.username || 'Un jugador'} te invitó a jugar como ${role}.`,
       data: { inviteId: invite.id, url: '/invitaciones' },
+    });
+
+    void metricsService.track('invite_sent', viewerId, {
+      inviteId: invite.id,
+      targetUserId: session.userId,
+      role,
     });
 
     return { invite, target };

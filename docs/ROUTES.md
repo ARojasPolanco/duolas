@@ -1,6 +1,6 @@
 # ROUTES — Duo LAS
 
-Mapa de rutas disponibles para probar la app y la API. Estado al cierre de F5.
+Mapa de rutas disponibles para probar la app y la API. Estado al cierre de F6.
 
 ## URLs
 
@@ -22,16 +22,17 @@ npm run seed
 
 ### Públicas
 
-| Ruta               | Estado      | Qué probar                                                |
-| ------------------ | ----------- | --------------------------------------------------------- |
-| `/`                | Lista       | Hero, carrusel de 4 slides, cards de ejemplo y CTAs       |
-| `/login`           | Lista       | Login, toggle de contraseña y link de recuperación        |
-| `/register`        | Lista       | Registro, +18, términos y campos de contraseña con toggle |
-| `/verify-email`    | Lista       | Verificación con `?token=...`                             |
-| `/forgot-password` | Lista       | Pedido de reset                                           |
-| `/reset-password`  | Lista       | Reset con `?token=...`                                    |
-| `/terminos`        | Placeholder | Página legal provisoria                                   |
-| `/privacidad`      | Placeholder | Página legal provisoria                                   |
+| Ruta               | Estado | Qué probar                                                |
+| ------------------ | ------ | --------------------------------------------------------- |
+| `/`                | Lista  | Hero, carrusel de 4 slides, cards de ejemplo y CTAs       |
+| `/login`           | Lista  | Login, toggle de contraseña y link de recuperación        |
+| `/register`        | Lista  | Registro, +18, términos y campos de contraseña con toggle |
+| `/verify-email`    | Lista  | Verificación con `?token=...`                             |
+| `/forgot-password` | Lista  | Pedido de reset                                           |
+| `/reset-password`  | Lista  | Reset con `?token=...`                                    |
+| `/terminos`        | Lista  | Términos de uso                                           |
+| `/privacidad`      | Lista  | Política de privacidad                                    |
+| `/aviso-riot`      | Lista  | Aviso de no afiliación con Riot                           |
 
 ### Protegidas
 
@@ -46,6 +47,7 @@ npm run seed
 | `/matches`        | Lista  | Contacto, feedback doble ciego, reportar, archivar       |
 | `/notificaciones` | Lista  | Lista, contador, SSE, push y marcar leídas               |
 | `/admin/reportes` | Admin  | Reportes abiertos, advertencias y suspensiones           |
+| `/admin/metrics`  | Admin  | Los 4 KPIs con filtro de fechas                          |
 | `*`               | Lista  | Página 404                                               |
 
 ### Todavía no implementadas
@@ -54,9 +56,8 @@ Estas rutas están en el plan pero hoy caen en 404:
 
 - `/perfil`
 - `/perfil/:id`
-- `/admin/metrics`
 
-La API de perfiles públicos, bloqueos y notificaciones ya existe; las pantallas de perfil y métricas quedan para F6.
+La API de perfiles públicos y bloqueos ya existe; las pantallas de perfil quedan para una fase posterior.
 
 ## 2. API
 
@@ -180,9 +181,13 @@ Requiere rol `admin`.
 | POST   | `/push/subscribe`           | Registrar suscripción push       |
 | DELETE | `/push/unsubscribe`         | Desactivar suscripción propia    |
 
-### Pendientes de F6+
+### Métricas
 
-Todavía no existen endpoints para métricas ni panel admin de KPIs.
+Requiere rol `admin`.
+
+| Método | Ruta                               | Descripción          |
+| ------ | ---------------------------------- | -------------------- |
+| GET    | `/admin/metrics/summary?from=&to=` | Los 4 KPIs del rango |
 
 ## 3. Flujos para testear
 
@@ -327,6 +332,15 @@ Todavía no existen endpoints para métricas ni panel admin de KPIs.
 7. Instalar la PWA desde el navegador y repetir el push.
 8. En iOS, instalar primero la PWA y probar desde ahí.
 
+### Flujo 17 - Métricas admin
+
+1. Entrar con `demo_admin`.
+2. Abrir `/admin/metrics`.
+3. Confirmar las cuatro cards: tiempo al primer duo, match a partida, retención 7d y simultáneos.
+4. Cambiar el rango de fechas y actualizar.
+5. Confirmar que un usuario normal recibe `403` en la API y no puede abrir la ruta.
+6. Revisar `GET /api/v1/admin/metrics/summary` por API.
+
 ## 4. Push en desarrollo
 
 Generar claves VAPID:
@@ -361,7 +375,7 @@ docker compose up -d --force-recreate api
 | `demo_support@duolas.app` | `Demo12345!` | Candidato adicional             |
 | `demo_admin@duolas.app`   | `Demo12345!` | Admin de reportes y sanciones   |
 
-`npm run seed` reinicia perfiles, likes, matches, bloqueos, notificaciones, suscripciones push, disponibilidades, invitaciones, publicaciones, postulaciones, feedbacks, reportes y sanciones de estas cuentas. También deja una disponibilidad de `demo_support`, una invitación de `demo_adc` a `demo_support`, un Busco 1 de `demo_adc` con postulación de `demo_mid`, un feedback pendiente de `demo_jungle` a `demo_mid` y un reporte abierto de `demo_support` contra `demo_jungle`.
+`npm run seed` reinicia perfiles, likes, matches, bloqueos, notificaciones, suscripciones push, disponibilidades, invitaciones, publicaciones, postulaciones, feedbacks, reportes y sanciones de estas cuentas. También deja una disponibilidad de `demo_support`, una invitación de `demo_adc` a `demo_support`, un Busco 1 de `demo_adc` con postulación de `demo_mid`, un feedback pendiente de `demo_jungle` a `demo_mid` y un reporte abierto de `demo_support` contra `demo_jungle`. El seed completo crea **12 jugadores** con perfiles variados y `demo_admin`.
 
 ## 6. Tokens sin Resend
 

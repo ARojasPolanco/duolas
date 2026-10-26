@@ -6,6 +6,7 @@ import User from '../auth/auth.model.js';
 import { blockService } from './block.service.js';
 import { notificationService } from '../notifications/notification.service.js';
 import { mailService } from '../../config/resend/resend.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import logger from '../../config/logger.js';
 import { AppError } from '../../errors/appError.js';
 
@@ -90,6 +91,13 @@ export class ReportService {
         );
 
         await blockService.block(reporterId, reportedUserId, { transaction });
+
+        await metricsService.track(
+          'report_created',
+          reporterId,
+          { reportId: report.id, reason, priority: report.priority },
+          transaction
+        );
 
         return report;
       });
@@ -340,6 +348,13 @@ export class ReportService {
         message: `Tu cuenta fue suspendida. Motivo: ${reason}`,
         data: { url: '/login' },
       },
+      transaction
+    );
+
+    await metricsService.track(
+      'user_suspended',
+      target.id,
+      { days, permanent: days === null },
       transaction
     );
 

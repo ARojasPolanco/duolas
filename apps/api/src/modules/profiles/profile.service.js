@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import { RANK_DIVISION_INDEX, RANK_TIER_INDEX, normalizeRiotId } from '@duo-las/shared';
 import PlayerProfile from './profile.model.js';
 import User from '../auth/auth.model.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { AppError } from '../../errors/appError.js';
 
 const APEX_TIERS = ['master', 'grandmaster', 'challenger'];
@@ -201,10 +202,14 @@ export class ProfileService {
     };
 
     try {
-      if (current) {
-        return await current.update(payload);
+      const wasCompleted = Boolean(current?.profileCompletedAt);
+      const profile = current ? await current.update(payload) : await PlayerProfile.create(payload);
+
+      if (!wasCompleted) {
+        void metricsService.track('profile_completed', userId, { rankTier: merged.rankTier });
       }
-      return await PlayerProfile.create(payload);
+
+      return profile;
     } catch (error) {
       if (error.name === 'SequelizeUniqueConstraintError') {
         throw new AppError('Ese Riot ID ya está en uso.', 409);

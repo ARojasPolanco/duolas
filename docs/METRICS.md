@@ -51,9 +51,9 @@ WITH first_connection AS (
     ON u.users_id IN (c.user_low_id, c.user_high_id)
   WHERE u.role = 'player'
     AND u.is_deleted = false
-    AND c.created_at >= $1
-    AND c.created_at < $2
   GROUP BY u.users_id, u.created_at
+  HAVING MIN(c.created_at) >= $1
+    AND MIN(c.created_at) < $2
 )
 SELECT
   percentile_cont(0.5) WITHIN GROUP (
@@ -90,7 +90,7 @@ FROM eligible;
 
 ## 5. KPI 3 — Retención a 7 días
 
-**Definición:** de los jugadores registrados en la cohorte, cuántos tuvieron actividad entre el día 7 y el 13 inclusive.
+**Definición:** de los jugadores registrados en la cohorte, cuántos tuvieron actividad entre el día 7 y el 13 inclusive. Solo se incluyen cohortes que ya completaron la ventana de 14 días.
 
 ```sql
 WITH cohort AS (
@@ -100,6 +100,7 @@ WITH cohort AS (
     AND is_deleted = false
     AND created_at >= $1
     AND created_at < $2
+    AND created_at <= now() - interval '14 days'
 ),
 active AS (
   SELECT DISTINCT c.users_id

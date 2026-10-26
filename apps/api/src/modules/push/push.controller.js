@@ -1,5 +1,6 @@
 import { pushService } from './push.service.js';
 import { validateSubscribe, validateUnsubscribe } from './push.schema.js';
+import { hashEndpoint, metricsService } from '../metrics/metrics.service.js';
 import { catchAsync } from '../../errors/catchAsync.js';
 
 export const getPublicKey = catchAsync(async (_req, res) => {
@@ -19,6 +20,10 @@ export const subscribe = catchAsync(async (req, res) => {
   }
 
   const subscription = await pushService.subscribe(req.sessionUser.id, data);
+
+  void metricsService.track('push_subscribed', req.sessionUser.id, {
+    endpointHash: hashEndpoint(data.endpoint),
+  });
 
   res.status(201).json({
     status: 'success',

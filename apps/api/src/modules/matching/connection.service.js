@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import DuoConnection from './duoConnection.model.js';
 import AvailabilitySession from '../availability/availability.model.js';
 import { notificationService } from '../notifications/notification.service.js';
+import { metricsService } from '../metrics/metrics.service.js';
 import { orderedPair } from './matching.utils.js';
 
 export class ConnectionService {
@@ -64,6 +65,24 @@ export class ConnectionService {
           },
           transaction,
         }
+      );
+    }
+
+    if (created) {
+      await metricsService.track(
+        'match_created',
+        userAId,
+        { connectionId: connection.id, source, otherUserId: userBId },
+        transaction
+      );
+    }
+
+    if (created || reactivated) {
+      await metricsService.track(
+        'contact_revealed',
+        userAId,
+        { connectionId: connection.id, reactivated },
+        transaction
       );
     }
 

@@ -4,14 +4,14 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** Fase 5 (realtime y push) completada. Siguiente: Fase 6 (métricas, hardening y cierre).
-- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, conexiones, bloqueos y notificaciones persistidas.
-- **Demo:** `npm run seed` crea 4 cuentas demo, una cuenta admin, un match activo, likes pendientes, disponibilidad, invitación, Busco 1, feedback pendiente y un reporte abierto.
+- **Fase:** Fase 6 (métricas, hardening y cierre) implementada. Pendiente: smoke manual final y pasada visual.
+- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
+- **Demo:** `npm run seed` crea 12 jugadores demo, una cuenta admin, un match activo, likes pendientes, disponibilidad, invitación, Busco 1, feedback pendiente y un reporte abierto.
 - **Dev:** `npm run docker:app` levanta PostgreSQL, API y web en contenedores persistentes.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
-- **Última actualización:** 2026-10-25.
+- **Última actualización:** 2026-10-26.
 
 ## Leyenda
 
@@ -174,18 +174,18 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 **Objetivo:** medir los KPIs, endurecer abuso y dejar documentación final.
 
-- [ ] Modelo `MetricsEvent` y registro en los flujos.
-- [ ] Migración `011_metrics_events`.
-- [ ] Resumen admin de los 4 KPIs.
-- [ ] Rate limits por usuario en likes, invitaciones, posts, postulaciones, reportes y tickets.
-- [ ] Seeds idempotentes: 12 jugadores LAS + admin.
-- [ ] `seed:admin` desde envs.
-- [ ] Páginas de términos, privacidad y aviso de Riot.
-- [ ] README final con comandos y deploy.
-- [ ] Actualizar docs y `TASK.md`.
+- [x] Modelo `MetricsEvent` y registro en los flujos.
+- [x] Migración `011_metrics_events`.
+- [x] Resumen admin de los 4 KPIs.
+- [x] Rate limits por usuario en likes, invitaciones, posts, postulaciones, reportes y tickets.
+- [x] Seeds idempotentes: 12 jugadores LAS + admin.
+- [x] `seed:admin` desde envs.
+- [x] Páginas de términos, privacidad y aviso de Riot.
+- [x] README final con comandos y deploy.
+- [x] Actualizar docs y `TASK.md`.
 - [ ] Smoke completo desktop/mobile.
 
-**DoD:** los 4 KPIs se consultan; los límites funcionan; los seeds corren dos veces sin duplicar; lint y tests verdes; checklist manual completo.
+**DoD técnico cumplido:** 103 tests pasando, lint y build verdes, migración 011 down/up verificada, KPIs disponibles en API/admin, rate limits activos y seed con 12 jugadores idempotente. Queda el smoke completo desktop/mobile y la pasada visual final antes del release.
 
 ## Decisiones cerradas
 
@@ -237,6 +237,6 @@ Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.productio
 
 ## Próxima acción
 
-1. Iniciar Fase 6 (métricas, hardening y cierre).
-2. Implementar métricas, rate limits por usuario, seeds finales y documentación de release.
-3. Actualizar `TASK.md` al cerrar cada tarea.
+1. Correr el smoke completo desktop/mobile.
+2. Hacer la pasada visual final.
+3. Preparar el release en `main`.
