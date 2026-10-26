@@ -13,6 +13,7 @@ import Block from '../src/modules/trust/block.model.js';
 import Feedback from '../src/modules/trust/feedback.model.js';
 import Report from '../src/modules/trust/report.model.js';
 import Sanction from '../src/modules/trust/sanction.model.js';
+import PushSubscription from '../src/modules/push/pushSubscription.model.js';
 import AvailabilitySession from '../src/modules/availability/availability.model.js';
 import Invite from '../src/modules/invites/invite.model.js';
 import DuoPost from '../src/modules/duoPosts/duoPost.model.js';
@@ -263,6 +264,7 @@ const main = async () => {
       },
     });
     await Notification.destroy({ where: { userId: { [Op.in]: demoIds } } });
+    await PushSubscription.destroy({ where: { userId: { [Op.in]: demoIds } } });
     await Block.destroy({
       where: {
         blockerId: { [Op.in]: demoIds },

@@ -669,19 +669,25 @@ Protegido.
 ### `GET /events/stream?ticket=...`
 
 SSE. No usa JWT en query. Headers: `text/event-stream`, `no-cache`, `no-transform`, `X-Accel-Buffering: no`. Heartbeat cada 25 s.
-
 Eventos:
 
 ```text
 event: notification.created
-data: {"type":"notification.created","data":{"notificationId":"uuid","notificationType":"match_created","url":"/matches"}}
+data:
+{"type":"notification.created","data":{"notificationId":"uuid","notificationType":"match_created","title":"Es un match","message":"Ya pueden coordinar su duo.","url":"/matches"}}
 ```
+
+También emite eventos específicos: `match.created`, `invite.updated` y `application.updated`.
+
+### `GET /events/stats`
+
+Solo admin. `200` con `{ users, connections, tickets }`.
 
 ## 13. Push
 
 ### `GET /push/public-key`
 
-`200` con `{ publicKey }`.
+`200` con `{ publicKey, enabled }`. Si VAPID no está configurado, `publicKey` es `null` y `enabled` es `false`.
 
 ### `POST /push/subscribe`
 

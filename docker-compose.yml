@@ -30,7 +30,9 @@ services:
       SECRET_JWT_SEED: dev_duo_las_secret_0123456789abcdef0123456789abcdef
       JWT_EXPIRE_IN: 1d
       SUPPORT_EMAIL: soporte@duolas.app
-      VAPID_SUBJECT: mailto:soporte@duolas.app
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:soporte@duolas.app}
       RATE_LIMIT_WINDOW_MS: 900000
       RATE_LIMIT_MAX: 100
       LOG_LEVEL: info

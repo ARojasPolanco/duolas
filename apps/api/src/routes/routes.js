@@ -10,6 +10,8 @@ import duoPostsRouter from '../modules/duoPosts/duoPost.route.js';
 import feedbackRouter from '../modules/trust/feedback.route.js';
 import reportsRouter from '../modules/trust/report.route.js';
 import adminRouter from '../modules/admin/admin.route.js';
+import eventsRouter from '../modules/events/events.route.js';
+import pushRouter from '../modules/push/push.route.js';
 
 const router = Router();
 
@@ -31,5 +33,7 @@ router.use('/duo-posts', duoPostsRouter);
 router.use('/feedback', feedbackRouter);
 router.use('/reports', reportsRouter);
 router.use('/admin', adminRouter);
+router.use('/events', eventsRouter);
+router.use('/push', pushRouter);
 
 export default router;

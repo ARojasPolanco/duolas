@@ -4,8 +4,8 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** Fase 4 (confianza y moderación) completada. Siguiente: Fase 5 (realtime y push).
-- **Código:** monorepo con auth, perfiles, matching, likes, disponibilidad, invitaciones, Busco 1, feedback, reputación, reportes, sanciones, conexiones, bloqueos y notificaciones persistidas.
+- **Fase:** Fase 5 (realtime y push) completada. Siguiente: Fase 6 (métricas, hardening y cierre).
+- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, conexiones, bloqueos y notificaciones persistidas.
 - **Demo:** `npm run seed` crea 4 cuentas demo, una cuenta admin, un match activo, likes pendientes, disponibilidad, invitación, Busco 1, feedback pendiente y un reporte abierto.
 - **Dev:** `npm run docker:app` levanta PostgreSQL, API y web en contenedores persistentes.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
@@ -155,20 +155,20 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 **Objetivo:** notificaciones en vivo y push con la app cerrada.
 
-- [ ] Modelo `PushSubscription` y endpoints.
-- [ ] Migración `010_push_subscriptions`.
-- [ ] Ticket SSE de 60 s y stream con heartbeat.
-- [ ] Bus de eventos interno y máximo de conexiones.
-- [ ] Limpieza periódica de tickets vencidos.
-- [ ] Integrar SSE con las notificaciones ya persistidas.
-- [ ] Persistir notificación antes de emitir y pushear.
-- [ ] Fallback de polling a 20 s.
-- [ ] web-push con VAPID y poda 404/410.
-- [ ] `manifest.json`, `sw.js`, iconos e instalación PWA.
-- [ ] Hook `useSSE`, `useNotifications`, `usePush`.
-- [ ] Tests de ownership y suscripción; smoke manual de SSE y push.
+- [x] Modelo `PushSubscription` y endpoints.
+- [x] Migración `010_push_subscriptions`.
+- [x] Ticket SSE de 60 s y stream con heartbeat.
+- [x] Bus de eventos interno y máximo de conexiones.
+- [x] Limpieza periódica de tickets vencidos.
+- [x] Integrar SSE con las notificaciones ya persistidas.
+- [x] Persistir notificación antes de emitir y pushear.
+- [x] Fallback de polling a 20 s.
+- [x] web-push con VAPID y poda 404/410.
+- [x] `manifest.json`, `sw.js`, iconos e instalación PWA.
+- [x] Hook `useSSE`, `useNotifications`, `usePush`.
+- [x] Tests de ownership y suscripción; smoke manual de SSE y push.
 
-**DoD:** el evento llega en vivo; si el cliente estaba offline lo recupera por API; el push llega con la pestaña cerrada; si SSE falla, cae a polling sin loops.
+**DoD técnico cumplido:** 100 tests pasando, lint y build verdes, migración 010 down/up verificada, SSE en vivo probado con curl y suscripciones push probadas contra PostgreSQL. El push real con navegador/PWA y el smoke visual completo quedan pendientes para la revisión manual antes del release.
 
 ## Fase 6 — Métricas, hardening y cierre
 
@@ -237,6 +237,6 @@ Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.productio
 
 ## Próxima acción
 
-1. Iniciar Fase 5 (realtime y push).
-2. Implementar SSE con ticket, fallback de polling y web push.
+1. Iniciar Fase 6 (métricas, hardening y cierre).
+2. Implementar métricas, rate limits por usuario, seeds finales y documentación de release.
 3. Actualizar `TASK.md` al cerrar cada tarea.

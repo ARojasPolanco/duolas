@@ -179,7 +179,9 @@ Reglas:
 ### 3.12 Notificaciones `/notificaciones`
 
 - Lista con icono por tipo, título, mensaje, fecha y estado leído.
-- Marcar todas como leídas.
+- Indicador de conexión SSE: en vivo, reconectando o polling.
+- Toggle de push con permiso explícito y aviso para iOS.
+- Marcar todas como leídas y eliminar.
 - Click navega a `data.url`.
 - Estado vacío.
 
@@ -188,7 +190,6 @@ Reglas:
 - Editar perfil con los mismos campos del onboarding. Username y email no son editables en el MVP.
 - Reputación con porcentaje y conteos.
 - Estado de verificación de email.
-- Toggle de push con explicación.
 - Lista de bloqueados con desbloquear.
 - Links a términos y privacidad.
 - Cerrar sesión.
@@ -351,9 +352,9 @@ Los iconos de rango y rol son SVG propios. No se usan assets oficiales de Riot.
 ## 11. PWA
 
 - `manifest.json` con nombre Duo LAS, iconos 192/512, `display: standalone`, `start_url: /inicio`, tema `#0b1220`.
-- `sw.js` solo para push y click.
-- Registro del service worker en producción.
-- Prompt de instalación no invasivo.
+- `sw.js` solo para push y click, sin cache de la app.
+- Registro del service worker al cargar la app.
+- Iconos PNG 192/512 en `/icons`.
 - En iOS, aviso de que push requiere instalar la PWA.
 
 ## 12. Reglas críticas

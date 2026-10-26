@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import MatchPage from './pages/MatchPage.jsx';
 import MatchesPage from './pages/MatchesPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import NotificationsPage from './pages/NotificationsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import PlaceholderPage from './pages/PlaceholderPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
@@ -97,6 +98,14 @@ function App() {
         element={
           <ProtectedRoute>
             <DuoPostsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notificaciones"
+        element={
+          <ProtectedRoute>
+            <NotificationsPage />
           </ProtectedRoute>
         }
       />

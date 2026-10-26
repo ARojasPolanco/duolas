@@ -4,8 +4,12 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { NotificationsProvider } from './context/NotificationsContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
+import { registerServiceWorker } from './utils/pwa.js';
 import './index.css';
+
+registerServiceWorker();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,7 +17,9 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <AuthProvider>
           <ToastProvider>
-            <App />
+            <NotificationsProvider>
+              <App />
+            </NotificationsProvider>
           </ToastProvider>
         </AuthProvider>
       </BrowserRouter>

@@ -6,8 +6,8 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 
 ## Estado
 
-- **Fase actual:** Fase 4 (confianza y moderación) completada. Siguiente: Fase 5 (realtime y push).
-- **Código:** monorepo con auth, perfiles, matching, likes, disponibilidad, invitaciones, Busco 1, feedback, reputación, reportes, sanciones, conexiones, bloqueos y notificaciones persistidas.
+- **Fase actual:** Fase 5 (realtime y push) completada. Siguiente: Fase 6 (métricas, hardening y cierre).
+- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, conexiones, bloqueos y notificaciones persistidas.
 - **Rama principal:** `dev`. `main` se reserva para el release final.
 - **Fuente de verdad:** los documentos de `docs/`.
 - **Propuesta original:** `Propuesta plataforma de duos para League of Legends.pdf`.

@@ -1,6 +1,6 @@
 # ROUTES — Duo LAS
 
-Mapa de rutas disponibles para probar la app y la API. Estado al cierre de F4.
+Mapa de rutas disponibles para probar la app y la API. Estado al cierre de F5.
 
 ## URLs
 
@@ -44,6 +44,7 @@ npm run seed
 | `/invitaciones`   | Lista  | Recibidas/enviadas, aceptar, rechazar y cancelar         |
 | `/busco-1`        | Lista  | Publicar, explorar, postularse y gestionar postulaciones |
 | `/matches`        | Lista  | Contacto, feedback doble ciego, reportar, archivar       |
+| `/notificaciones` | Lista  | Lista, contador, SSE, push y marcar leídas               |
 | `/admin/reportes` | Admin  | Reportes abiertos, advertencias y suspensiones           |
 | `*`               | Lista  | Página 404                                               |
 
@@ -51,12 +52,11 @@ npm run seed
 
 Estas rutas están en el plan pero hoy caen en 404:
 
-- `/notificaciones`
 - `/perfil`
 - `/perfil/:id`
 - `/admin/metrics`
 
-Las funcionalidades de la API para notificaciones, bloqueos y perfiles públicos ya existen, pero no todas tienen pantalla propia.
+La API de perfiles públicos, bloqueos y notificaciones ya existe; las pantallas de perfil y métricas quedan para F6.
 
 ## 2. API
 
@@ -169,9 +169,20 @@ Requiere rol `admin`.
 | POST   | `/admin/users/:id/warn`                    | Advertencia directa                |
 | POST   | `/admin/users/:id/suspend`                 | Suspensión 7/30 días o permanente  |
 
-### Pendientes de F5+
+### Realtime y push
 
-Todavía no existen endpoints para SSE, push y métricas.
+| Método | Ruta                        | Descripción                      |
+| ------ | --------------------------- | -------------------------------- |
+| POST   | `/events/ticket`            | Ticket SSE de 60 s, requiere JWT |
+| GET    | `/events/stream?ticket=...` | Stream SSE con heartbeat         |
+| GET    | `/events/stats`             | Conexiones activas, solo admin   |
+| GET    | `/push/public-key`          | Clave pública VAPID y estado     |
+| POST   | `/push/subscribe`           | Registrar suscripción push       |
+| DELETE | `/push/unsubscribe`         | Desactivar suscripción propia    |
+
+### Pendientes de F6+
+
+Todavía no existen endpoints para métricas ni panel admin de KPIs.
 
 ## 3. Flujos para testear
 
@@ -231,7 +242,7 @@ Todavía no existen endpoints para SSE, push y métricas.
 
 1. Abrir `/forgot-password` con el email de una cuenta.
 2. Confirmar la respuesta genérica.
-3. Sin Resend configurado no llega email; usar el token de prueba de la sección 5.
+3. Sin Resend configurado no llega email; usar el token de prueba de la sección 6.
 4. Abrir `/reset-password?token=...`, cambiar la contraseña y entrar con la nueva.
 5. Correr `npm run seed` para restaurar la contraseña demo.
 
@@ -288,7 +299,59 @@ Todavía no existen endpoints para SSE, push y métricas.
 4. Probar descartar, advertir, suspender 7/30 días y suspensión permanente.
 5. Confirmar que el usuario reportado recibe notificación y no puede operar si fue suspendido.
 
-## 4. Cuentas demo
+### Flujo 14 - Notificaciones y SSE
+
+1. Entrar con `demo_mid` y abrir `/notificaciones`.
+2. Confirmar el estado “En vivo” y el contador de no leídas.
+3. En otra ventana, con `demo_adc`, aceptar o generar una acción que notifique a `demo_mid`.
+4. Confirmar que la notificación aparece sin recargar y que el badge se actualiza.
+5. Marcar una como leída, marcar todas y eliminar una.
+6. Confirmar que el click navega a la URL de la notificación.
+
+### Flujo 15 - Polling de respaldo
+
+1. Abrir DevTools → Network → condiciones offline.
+2. Esperar dos fallos de SSE.
+3. Confirmar el estado “Polling cada 20 s”.
+4. Volver online y confirmar que SSE se recupera.
+5. Probar en otra pestaña que el heartbeat mantiene la conexión sin cerrarse.
+
+### Flujo 16 - Push y PWA
+
+1. Generar claves VAPID y cargarlas en el entorno de la API.
+2. Abrir `/notificaciones` en Chrome/Edge por `localhost` o HTTPS.
+3. Tocar “Activar push” y aceptar el permiso.
+4. Confirmar la suscripción en `push_subscriptions`.
+5. Cerrar la pestaña, generar una notificación y confirmar el push.
+6. Tocar la notificación y verificar que abre la URL correcta.
+7. Instalar la PWA desde el navegador y repetir el push.
+8. En iOS, instalar primero la PWA y probar desde ahí.
+
+## 4. Push en desarrollo
+
+Generar claves VAPID:
+
+```bash
+npx web-push generate-vapid-keys
+```
+
+Crear un `.env` en la raíz (ignorado por git) con:
+
+```env
+VAPID_PUBLIC_KEY=...
+VAPID_PRIVATE_KEY=...
+VAPID_SUBJECT=mailto:soporte@duolas.app
+```
+
+Recrear la API:
+
+```bash
+docker compose up -d --force-recreate api
+```
+
+`GET /api/v1/push/public-key` debe devolver `enabled: true`. Si falta VAPID, la app sigue funcionando y el push queda deshabilitado.
+
+## 5. Cuentas demo
 
 | Cuenta                    | Contraseña   | Rol en la demo                  |
 | ------------------------- | ------------ | ------------------------------- |
@@ -298,9 +361,9 @@ Todavía no existen endpoints para SSE, push y métricas.
 | `demo_support@duolas.app` | `Demo12345!` | Candidato adicional             |
 | `demo_admin@duolas.app`   | `Demo12345!` | Admin de reportes y sanciones   |
 
-`npm run seed` reinicia perfiles, likes, matches, bloqueos, notificaciones, disponibilidades, invitaciones, publicaciones, postulaciones, feedbacks, reportes y sanciones de estas cuentas. También deja una disponibilidad de `demo_support`, una invitación de `demo_adc` a `demo_support`, un Busco 1 de `demo_adc` con postulación de `demo_mid`, un feedback pendiente de `demo_jungle` a `demo_mid` y un reporte abierto de `demo_support` contra `demo_jungle`.
+`npm run seed` reinicia perfiles, likes, matches, bloqueos, notificaciones, suscripciones push, disponibilidades, invitaciones, publicaciones, postulaciones, feedbacks, reportes y sanciones de estas cuentas. También deja una disponibilidad de `demo_support`, una invitación de `demo_adc` a `demo_support`, un Busco 1 de `demo_adc` con postulación de `demo_mid`, un feedback pendiente de `demo_jungle` a `demo_mid` y un reporte abierto de `demo_support` contra `demo_jungle`.
 
-## 5. Tokens sin Resend
+## 6. Tokens sin Resend
 
 Verificación de email de una cuenta registrada:
 

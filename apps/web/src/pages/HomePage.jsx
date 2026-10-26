@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
+  Bell,
   ClipboardList,
   Copy,
   Inbox,
@@ -17,6 +18,7 @@ import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useNotifications } from '../context/NotificationsContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import { formatRank, formatRoles, initialsOf } from '../utils/labels.js';
@@ -27,6 +29,7 @@ const actionLink =
 
 export default function HomePage() {
   const { user, logout } = useAuth();
+  const { unreadCount } = useNotifications();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
@@ -185,6 +188,18 @@ export default function HomePage() {
                 Reportes
               </Link>
             ) : null}
+            <Link
+              to="/notificaciones"
+              className="relative rounded-lg border border-border p-2 text-muted hover:text-text"
+              aria-label={`Notificaciones${unreadCount ? `: ${unreadCount} sin leer` : ''}`}
+            >
+              <Bell size={15} aria-hidden="true" />
+              {unreadCount ? (
+                <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              ) : null}
+            </Link>
             <button
               type="button"
               onClick={handleLogout}
