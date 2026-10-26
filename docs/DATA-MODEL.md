@@ -375,7 +375,31 @@ Checks:
 
 Sin `updated_at`: es inmutable.
 
-### 3.13 `notifications`
+### 3.13 `sanctions`
+
+| Columna        | Tipo         | Restricciones                          |
+| -------------- | ------------ | -------------------------------------- |
+| `sanctions_id` | UUID         | PK                                     |
+| `user_id`      | UUID         | NOT NULL, FK `users`                   |
+| `admin_id`     | UUID         | NOT NULL, FK `users`                   |
+| `report_id`    | UUID         | NULL, FK `reports` ON DELETE SET NULL  |
+| `action`       | VARCHAR(24)  | NOT NULL, check                        |
+| `reason`       | VARCHAR(500) | NOT NULL                               |
+| `expires_at`   | TIMESTAMPTZ  | NULL; NULL en permanente o advertencia |
+| `created_at`   | TIMESTAMPTZ  | NOT NULL                               |
+
+Checks:
+
+- `action IN ('warned','suspended_7d','suspended_30d','suspended_permanent')`.
+
+Índices:
+
+- `(user_id, created_at)`.
+- `(admin_id)`.
+
+Sin `updated_at`: es inmutable. Registra cada advertencia o suspensión aplicada por un admin.
+
+### 3.14 `notifications`
 
 | Columna            | Tipo         | Restricciones           |
 | ------------------ | ------------ | ----------------------- |
@@ -394,7 +418,7 @@ Sin `updated_at`: es inmutable.
 - `(user_id, is_read)`.
 - `(user_id, created_at)`.
 
-### 3.14 `push_subscriptions`
+### 3.15 `push_subscriptions`
 
 | Columna                 | Tipo         | Restricciones          |
 | ----------------------- | ------------ | ---------------------- |
@@ -414,7 +438,7 @@ Sin `updated_at`: es inmutable.
 - Único `(endpoint)`.
 - `(user_id, is_active)`.
 
-### 3.15 `metrics_events`
+### 3.16 `metrics_events`
 
 | Columna             | Tipo        | Restricciones                       |
 | ------------------- | ----------- | ----------------------------------- |
@@ -444,6 +468,7 @@ users 1─N invites (from / to)
 users 1─N blocks (blocker / blocked)
 users 1─N reports (reporter / reported / admin)
 users 1─N feedbacks (author / target)
+users 1─N sanctions (user / admin)
 users 1─N notifications
 users 1─N push_subscriptions
 users 1─N metrics_events
@@ -451,6 +476,7 @@ users 1─N metrics_events
 duo_posts 1─N post_applications
 availability_sessions 1─N invites
 duo_connections 1─N feedbacks
+reports 1─N sanctions
 ```
 
 ## 5. Derivados e invariantes
@@ -513,6 +539,7 @@ Se setea cuando el perfil se crea o actualiza con todos los campos obligatorios.
 | `blocks`                | `is_deleted = true` al desbloquear                   |
 | `reports`               | No se borra; se resuelve                             |
 | `feedbacks`             | Inmutable; no se borra                               |
+| `sanctions`             | Inmutable; no se borra                               |
 | `notifications`         | Puede borrarse físicamente a pedido del usuario      |
 | `metrics_events`        | Inmutable; retención agregada                        |
 | `errors`                | Retención operativa; no se expone al cliente         |

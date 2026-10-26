@@ -1,7 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Copy, LogOut, Pencil, RefreshCw, Swords, UserRoundCheck, Users } from 'lucide-react';
+import {
+  ClipboardList,
+  Copy,
+  Inbox,
+  LogOut,
+  Pencil,
+  Radio,
+  RefreshCw,
+  Swords,
+  UserRoundCheck,
+  Users,
+} from 'lucide-react';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
@@ -157,9 +168,23 @@ export default function HomePage() {
             <Link to="/match" className="text-muted hover:text-text">
               Match
             </Link>
+            <Link to="/disponible" className="text-muted hover:text-text">
+              Disponible
+            </Link>
+            <Link to="/busco-1" className="text-muted hover:text-text">
+              Busco 1
+            </Link>
+            <Link to="/invitaciones" className="text-muted hover:text-text">
+              Invitaciones
+            </Link>
             <Link to="/matches" className="text-muted hover:text-text">
               Matches
             </Link>
+            {user?.role === 'admin' ? (
+              <Link to="/admin/reportes" className="text-muted hover:text-text">
+                Reportes
+              </Link>
+            ) : null}
             <button
               type="button"
               onClick={handleLogout}
@@ -232,6 +257,18 @@ export default function HomePage() {
                 <Link to="/matches" className={`${actionLink} border border-border text-text`}>
                   <Users size={16} aria-hidden="true" />
                   Ver matches
+                </Link>
+                <Link to="/disponible" className={`${actionLink} border border-border text-text`}>
+                  <Radio size={16} aria-hidden="true" />
+                  Disponible ya
+                </Link>
+                <Link to="/busco-1" className={`${actionLink} border border-border text-text`}>
+                  <ClipboardList size={16} aria-hidden="true" />
+                  Busco 1
+                </Link>
+                <Link to="/invitaciones" className={`${actionLink} border border-border text-text`}>
+                  <Inbox size={16} aria-hidden="true" />
+                  Invitaciones
                 </Link>
                 <Link to="/onboarding" className={`${actionLink} border border-border text-muted`}>
                   <Pencil size={16} aria-hidden="true" />

@@ -12,8 +12,8 @@ Plan de pruebas del MVP. Sin tests E2E automatizados: el smoke manual es obligat
 
 ### Estado actual
 
-- F0, F1 y F2 cerrados con **74 tests pasando**.
-- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, perfiles, Riot ID, roles, rango, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos y notificaciones.
+- F0, F1, F2, F3 y F4 cerrados con **91 tests pasando**.
+- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, perfiles, Riot ID, roles, rango, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias y suspensiones.
 - Smoke técnico: flujo API contra PostgreSQL y rutas web respondiendo 200.
 - Pendiente: smoke visual interactivo en navegador antes del release.
 

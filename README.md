@@ -6,8 +6,8 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 
 ## Estado
 
-- **Fase actual:** Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
-- **Código:** monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
+- **Fase actual:** Fase 4 (confianza y moderación) completada. Siguiente: Fase 5 (realtime y push).
+- **Código:** monorepo con auth, perfiles, matching, likes, disponibilidad, invitaciones, Busco 1, feedback, reputación, reportes, sanciones, conexiones, bloqueos y notificaciones persistidas.
 - **Rama principal:** `dev`. `main` se reserva para el release final.
 - **Fuente de verdad:** los documentos de `docs/`.
 - **Propuesta original:** `Propuesta plataforma de duos para League of Legends.pdf`.
@@ -102,14 +102,16 @@ npm run dev:web
 | `demo_jungle@duolas.app`  | `Demo12345!` | Tiene un match activo con `demo_mid`          |
 | `demo_adc@duolas.app`     | `Demo12345!` | Candidato con like pendiente hacia `demo_mid` |
 | `demo_support@duolas.app` | `Demo12345!` | Candidato compatible adicional                |
+| `demo_admin@duolas.app`   | `Demo12345!` | Admin de reportes y sanciones                 |
 
 Flujo rápido:
 
 1. Abrí `http://localhost:5173/login` e iniciá sesión con `demo_mid@duolas.app`.
 2. En `/match` vas a ver `demo_adc` y `demo_support`.
 3. Si le das like a `demo_adc`, como ya existe un like pendiente suyo, el match se concreta al instante y aparece en `/matches`.
-4. En `/matches` vas a ver el contacto de `demo_jungle` y podés probar copiar, archivar y bloquear.
-5. Si querés reiniciar el escenario, volvé a correr `npm run seed`.
+4. En `/matches` vas a ver el contacto de `demo_jungle` y podés probar feedback, reportar, copiar, archivar y bloquear.
+5. Con `demo_admin@duolas.app` entrás directo a `/admin/reportes`.
+6. Si querés reiniciar el escenario, volvé a correr `npm run seed`.
 
 > Las cuentas demo son solo para desarrollo local. No usarlas en producción.
 

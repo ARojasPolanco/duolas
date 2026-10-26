@@ -384,7 +384,7 @@ Mismo shape. 404 si no es participante.
 
 ### `GET /availability`
 
-Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo ni bloqueados.
+Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo, bloqueados ni conexiones activas.
 
 ```json
 {
@@ -406,7 +406,7 @@ Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo ni bloque
         "expiresAt": "2026-10-25T19:00:00.000Z"
       },
       "score": 78,
-      "reasons": ["Mismo rango", "Mismo estilo"]
+      "breakdown": { "rank": 24, "style": 25, "language": 12, "mic": 10, "reputation": 7 }
     }
   ],
   "total": 8
@@ -614,7 +614,7 @@ Conexiones activas o recientes sin feedback propio y dentro de la ventana.
 }
 ```
 
-Si está revelado, `theirs` incluye el feedback de la otra persona.
+También devuelve `windowOpen` y `expiresAt`. Si está revelado, `theirs` incluye el feedback de la otra persona.
 
 ## 11. Notificaciones
 

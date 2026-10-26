@@ -7,7 +7,7 @@ import { AppError } from '../../errors/appError.js';
 import { orderedPair } from '../matching/matching.utils.js';
 
 export class BlockService {
-  async block(blockerId, blockedId) {
+  async block(blockerId, blockedId, { transaction } = {}) {
     if (blockerId === blockedId) {
       throw new AppError('No podés bloquearte a vos mismo.', 400);
     }
@@ -15,19 +15,20 @@ export class BlockService {
     const target = await User.findOne({
       where: { id: blockedId, isDeleted: false },
       attributes: ['id'],
+      transaction,
     });
     if (!target) {
       throw new AppError('No encontramos ese usuario.', 404);
     }
 
-    let block = await Block.findOne({ where: { blockerId, blockedId } });
+    let block = await Block.findOne({ where: { blockerId, blockedId }, transaction });
 
     if (block) {
       if (block.isDeleted) {
-        await block.update({ isDeleted: false });
+        await block.update({ isDeleted: false }, { transaction });
       }
     } else {
-      block = await Block.create({ blockerId, blockedId });
+      block = await Block.create({ blockerId, blockedId }, { transaction });
     }
 
     const [low, high] = orderedPair(blockerId, blockedId);
@@ -39,6 +40,7 @@ export class BlockService {
       },
       {
         where: { userLowId: low, userHighId: high, status: 'active' },
+        transaction,
       }
     );
 
@@ -52,6 +54,7 @@ export class BlockService {
             { fromUserId: blockedId, toUserId: blockerId },
           ],
         },
+        transaction,
       }
     );
 

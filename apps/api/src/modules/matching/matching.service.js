@@ -6,8 +6,11 @@ import User from '../auth/auth.model.js';
 import { toPublicProfile } from '../profiles/profile.service.js';
 import DuoLike from './duoLike.model.js';
 import DuoConnection from './duoConnection.model.js';
+import Feedback from '../trust/feedback.model.js';
 import { blockService } from '../trust/block.service.js';
-import { notificationService } from '../notifications/notification.service.js';
+import { feedbackService } from '../trust/feedback.service.js';
+import { buildFeedbackStatus } from '../trust/feedback.utils.js';
+import { connectionService } from './connection.service.js';
 import { AppError } from '../../errors/appError.js';
 import {
   areRolesComplementary,
@@ -49,7 +52,7 @@ const toConnectionView = (connection, contact) => ({
   },
 });
 
-const toMatchView = (connection, profile) => ({
+const toMatchView = (connection, profile, feedback) => ({
   id: connection.id,
   source: connection.source,
   createdAt: connection.createdAt,
@@ -58,11 +61,7 @@ const toMatchView = (connection, profile) => ({
     discordTag: profile.discordTag,
   },
   other: toPublicProfile(profile, profile.user),
-  feedback: {
-    mine: 'pending',
-    theirs: 'pending',
-    revealed: false,
-  },
+  feedback: feedback || buildFeedbackStatus(null, null),
 });
 
 const lastActiveMs = (user) => (user?.lastActiveAt ? new Date(user.lastActiveAt).getTime() : 0);
@@ -284,61 +283,14 @@ export class MatchingService {
         return { created, matched: false, like, connection: null, contact: null };
       }
 
-      let connection = await DuoConnection.findOne({
-        where: { userLowId: low, userHighId: high },
-        lock: transaction.LOCK.UPDATE,
+      const { connection } = await connectionService.createConnection({
+        userIds: [viewerId, targetId],
+        source: 'like',
         transaction,
       });
 
-      if (connection) {
-        if (connection.status === 'archived') {
-          await connection.update(
-            {
-              status: 'active',
-              archivedAt: null,
-              archivedBy: null,
-              contactRevealedAt: new Date(),
-            },
-            { transaction }
-          );
-        }
-      } else {
-        connection = await DuoConnection.create(
-          {
-            userLowId: low,
-            userHighId: high,
-            source: 'like',
-            status: 'active',
-            contactRevealedAt: new Date(),
-          },
-          { transaction }
-        );
-      }
-
       await like.update({ status: 'matched' }, { transaction });
       await reciprocal.update({ status: 'matched' }, { transaction });
-
-      await notificationService.create(
-        {
-          userId: viewerId,
-          type: 'match_created',
-          title: 'Es un match',
-          message: 'Ya pueden coordinar su duo.',
-          data: { connectionId: connection.id, url: '/matches' },
-        },
-        transaction
-      );
-
-      await notificationService.create(
-        {
-          userId: targetId,
-          type: 'match_created',
-          title: 'Es un match',
-          message: 'Ya pueden coordinar su duo.',
-          data: { connectionId: connection.id, url: '/matches' },
-        },
-        transaction
-      );
 
       return { created, matched: true, like, connection, contact };
     });
@@ -400,6 +352,8 @@ export class MatchingService {
   }
 
   async getMatches(viewerId) {
+    await feedbackService.revealDueFeedbacks();
+
     const connections = await DuoConnection.findAll({
       where: {
         status: 'active',
@@ -430,18 +384,35 @@ export class MatchingService {
 
     const profilesByUser = new Map(profiles.map((profile) => [profile.userId, profile]));
 
+    const feedbacks = await Feedback.findAll({
+      where: {
+        connectionId: { [Op.in]: connections.map((connection) => connection.id) },
+      },
+    });
+
+    const feedbackByConnection = new Map();
+    for (const feedback of feedbacks) {
+      const current = feedbackByConnection.get(feedback.connectionId) || {};
+      if (feedback.authorId === viewerId) current.mine = feedback;
+      else current.theirs = feedback;
+      feedbackByConnection.set(feedback.connectionId, current);
+    }
+
     return connections
       .map((connection) => {
         const otherId =
           connection.userLowId === viewerId ? connection.userHighId : connection.userLowId;
         const profile = profilesByUser.get(otherId);
         if (!profile) return null;
-        return toMatchView(connection, profile);
+        const current = feedbackByConnection.get(connection.id) || {};
+        return toMatchView(connection, profile, buildFeedbackStatus(current.mine, current.theirs));
       })
       .filter(Boolean);
   }
 
   async getMatchDetail(viewerId, connectionId) {
+    await feedbackService.revealDueFeedbacks();
+
     const connection = await DuoConnection.findOne({
       where: {
         id: connectionId,
@@ -474,7 +445,14 @@ export class MatchingService {
       throw new AppError('No encontramos ese match.', 404);
     }
 
-    return toMatchView(connection, profile);
+    const feedbacks = await Feedback.findAll({
+      where: { connectionId: connection.id },
+    });
+
+    const mine = feedbacks.find((feedback) => feedback.authorId === viewerId) || null;
+    const theirs = feedbacks.find((feedback) => feedback.authorId !== viewerId) || null;
+
+    return toMatchView(connection, profile, buildFeedbackStatus(mine, theirs));
   }
 
   async archiveMatch(viewerId, connectionId) {

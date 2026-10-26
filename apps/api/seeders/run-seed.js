@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import { RANK_TIER_INDEX } from '@duo-las/shared';
 import { envs } from '../src/config/enviroments.js';
 import sequelize from '../src/config/database/database.js';
 import { runMigrations } from '../src/config/database/migrator.js';
@@ -9,6 +10,13 @@ import DuoConnection from '../src/modules/matching/duoConnection.model.js';
 import DuoLike from '../src/modules/matching/duoLike.model.js';
 import Notification from '../src/modules/notifications/notification.model.js';
 import Block from '../src/modules/trust/block.model.js';
+import Feedback from '../src/modules/trust/feedback.model.js';
+import Report from '../src/modules/trust/report.model.js';
+import Sanction from '../src/modules/trust/sanction.model.js';
+import AvailabilitySession from '../src/modules/availability/availability.model.js';
+import Invite from '../src/modules/invites/invite.model.js';
+import DuoPost from '../src/modules/duoPosts/duoPost.model.js';
+import PostApplication from '../src/modules/duoPosts/postApplication.model.js';
 import { orderedPair } from '../src/modules/matching/matching.utils.js';
 
 const DEMO_PASSWORD = 'Demo12345!';
@@ -158,6 +166,37 @@ const createOrUpdateDemoUser = async (player) => {
   return user;
 };
 
+const createOrUpdateDemoAdmin = async () => {
+  const now = new Date();
+  const [admin, created] = await User.findOrCreate({
+    where: { email: 'demo_admin@duolas.app' },
+    defaults: {
+      username: 'demo_admin',
+      password: DEMO_PASSWORD,
+      role: 'admin',
+      emailVerified: true,
+      ageConfirmedAt: now,
+      termsAcceptedAt: now,
+      lastActiveAt: now,
+    },
+  });
+
+  if (!created) {
+    await admin.update({
+      password: DEMO_PASSWORD,
+      role: 'admin',
+      emailVerified: true,
+      status: 'active',
+      suspendedUntil: null,
+      suspensionReason: null,
+      isDeleted: false,
+      lastActiveAt: now,
+    });
+  }
+
+  return admin;
+};
+
 const main = async () => {
   if (envs.NODE_ENV === 'production') {
     throw new Error('El seed de demo no se puede ejecutar en producción.');
@@ -173,7 +212,43 @@ const main = async () => {
       users[player.key] = await createOrUpdateDemoUser(player);
     }
 
+    await createOrUpdateDemoAdmin();
     const demoIds = Object.values(users).map((user) => user.id);
+    const demoPostIds = (
+      await DuoPost.findAll({
+        where: { ownerId: { [Op.in]: demoIds } },
+        attributes: ['id'],
+      })
+    ).map((post) => post.id);
+
+    await PostApplication.destroy({
+      where: { postId: { [Op.in]: demoPostIds } },
+    });
+    await DuoPost.destroy({ where: { ownerId: { [Op.in]: demoIds } } });
+    await Invite.destroy({
+      where: {
+        [Op.or]: [{ fromUserId: { [Op.in]: demoIds } }, { toUserId: { [Op.in]: demoIds } }],
+      },
+    });
+    await AvailabilitySession.destroy({
+      where: { userId: { [Op.in]: demoIds } },
+    });
+
+    await Sanction.destroy({
+      where: {
+        [Op.or]: [{ userId: { [Op.in]: demoIds } }, { adminId: { [Op.in]: demoIds } }],
+      },
+    });
+    await Feedback.destroy({
+      where: {
+        [Op.or]: [{ authorId: { [Op.in]: demoIds } }, { targetId: { [Op.in]: demoIds } }],
+      },
+    });
+    await Report.destroy({
+      where: {
+        [Op.or]: [{ reporterId: { [Op.in]: demoIds } }, { reportedId: { [Op.in]: demoIds } }],
+      },
+    });
 
     await DuoLike.destroy({
       where: {
@@ -221,13 +296,101 @@ const main = async () => {
     await Notification.create({ userId: users.mid.id, ...notificationData });
     await Notification.create({ userId: users.jungle.id, ...notificationData });
 
+    await Feedback.create({
+      connectionId: connection.id,
+      authorId: users.jungle.id,
+      targetId: users.mid.id,
+      sentiment: 'positive',
+      tags: ['good_vibes', 'communicative'],
+      comment: 'Buen duo, buena comunicación.',
+      visibleAt: null,
+    });
+
+    const now = new Date();
+    const availability = await AvailabilitySession.create({
+      userId: users.support.id,
+      roles: ['support'],
+      queue: 'solo_duo',
+      note: 'Disponible para jugar ahora.',
+      status: 'active',
+      startedAt: now,
+      expiresAt: new Date(now.getTime() + 30 * 60 * 1000),
+    });
+
+    const invite = await Invite.create({
+      fromUserId: users.adc.id,
+      toUserId: users.support.id,
+      availabilityId: availability.id,
+      role: 'support',
+      message: '¿Jugamos unas ranked?',
+      status: 'pending',
+      expiresAt: new Date(now.getTime() + 10 * 60 * 1000),
+    });
+
+    await Notification.create({
+      userId: users.support.id,
+      type: 'invite_received',
+      title: 'Nueva invitación',
+      message: 'demo_adc te invitó a jugar como support.',
+      data: { inviteId: invite.id, url: '/invitaciones' },
+    });
+
+    const diamondIndex = RANK_TIER_INDEX.diamond;
+    const post = await DuoPost.create({
+      ownerId: users.adc.id,
+      queue: 'flex',
+      rolesNeeded: ['jungle'],
+      rankMinTier: 'diamond',
+      rankMaxTier: 'diamond',
+      rankMinIndex: diamondIndex * 4,
+      rankMaxIndex: diamondIndex * 4 + 3,
+      note: 'Somos 4, falta jungla para flex.',
+      status: 'active',
+      expiresAt: new Date(now.getTime() + 2 * 60 * 60 * 1000),
+    });
+
+    const application = await PostApplication.create({
+      postId: post.id,
+      applicantId: users.mid.id,
+      message: 'Puedo jungla.',
+      status: 'pending',
+    });
+
+    await Notification.create({
+      userId: users.adc.id,
+      type: 'application_received',
+      title: 'Nueva postulación',
+      message: 'demo_mid se postuló a tu Busco 1.',
+      data: { postId: post.id, applicationId: application.id, url: '/busco-1' },
+    });
+
+    await Report.create({
+      reporterId: users.support.id,
+      reportedId: users.jungle.id,
+      reason: 'toxicity',
+      details: 'Insultos durante la partida.',
+      status: 'open',
+      priority: false,
+    });
+
+    await Block.create({
+      blockerId: users.support.id,
+      blockedId: users.jungle.id,
+    });
+
     console.log('Seed de demo listo.');
     console.log('Cuentas:');
     for (const player of demoPlayers) {
       console.log(`- ${player.email} / ${DEMO_PASSWORD}`);
     }
+    console.log(`- demo_admin@duolas.app / ${DEMO_PASSWORD} (admin)`);
     console.log('Match activo: demo_mid <-> demo_jungle');
     console.log('Like pendiente: demo_adc -> demo_mid');
+    console.log('Disponible ya: demo_support');
+    console.log('Invitación pendiente: demo_adc -> demo_support');
+    console.log('Busco 1: demo_adc (flex, jungla) con postulación de demo_mid');
+    console.log('Feedback pendiente: demo_jungle -> demo_mid');
+    console.log('Reporte abierto: demo_support -> demo_jungle');
   } finally {
     await sequelize.close();
   }

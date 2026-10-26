@@ -43,6 +43,35 @@ export const QUEUE_LABELS = {
   flex: 'Flex',
 };
 
+export const FEEDBACK_TAG_LABELS = {
+  good_vibes: 'Buena onda',
+  communicative: 'Comunicativo',
+  tryhard: 'Tryhard',
+  punctual: 'Puntual',
+  good_game: 'Jugó bien',
+  toxicity: 'Toxicidad',
+  abandonment: 'Abandonó',
+  fake_rank: 'Rango falso',
+  no_communication: 'Sin comunicación',
+  other: 'Otro',
+};
+
+export const REPORT_REASON_LABELS = {
+  toxicity: 'Toxicidad',
+  fake_rank: 'Rango falso',
+  abandonment: 'Abandono',
+  spam: 'Spam',
+  underage: 'Menor de edad',
+  other: 'Otro',
+};
+
+export const REPORT_STATUS_LABELS = {
+  open: 'Abierto',
+  reviewing: 'En revisión',
+  resolved: 'Resuelto',
+  dismissed: 'Descartado',
+};
+
 export const formatRank = (profile) => {
   const tier = RANK_LABELS[profile?.rankTier];
   if (!tier) return 'Sin rango';

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Archive, Ban, Copy, Swords } from 'lucide-react';
+import { Archive, Ban, Copy, Flag, MessageSquare, Swords } from 'lucide-react';
+import FeedbackPanel from '../components/FeedbackPanel.jsx';
+import ReportDialog from '../components/ReportDialog.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
@@ -13,6 +15,8 @@ export default function MatchesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionId, setActionId] = useState(null);
+  const [feedbackOpenId, setFeedbackOpenId] = useState(null);
+  const [reportTarget, setReportTarget] = useState(null);
 
   const canInteract = Boolean(user?.emailVerified && user?.profileCompleted);
 
@@ -84,6 +88,13 @@ export default function MatchesPage() {
     }
   };
 
+  const handleReported = () => {
+    if (reportTarget) {
+      setMatches((current) => current.filter((item) => item.other.id !== reportTarget.id));
+    }
+    setReportTarget(null);
+  };
+
   return (
     <div className="min-h-screen bg-bg px-5 py-8 text-text">
       <div className="mx-auto max-w-3xl space-y-6">
@@ -97,6 +108,15 @@ export default function MatchesPage() {
             </Link>
             <Link to="/match" className="text-muted">
               Match
+            </Link>
+            <Link to="/disponible" className="text-muted">
+              Disponible
+            </Link>
+            <Link to="/busco-1" className="text-muted">
+              Busco 1
+            </Link>
+            <Link to="/invitaciones" className="text-muted">
+              Invitaciones
             </Link>
           </nav>
         </header>
@@ -201,7 +221,17 @@ export default function MatchesPage() {
                     )}
                   </p>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFeedbackOpenId((current) => (current === match.id ? null : match.id))
+                      }
+                      className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-accent"
+                    >
+                      <MessageSquare size={14} aria-hidden="true" />
+                      {match.feedback?.mine === 'submitted' ? 'Ver feedback' : 'Dejar feedback'}
+                    </button>
                     <button
                       type="button"
                       onClick={() => archive(match)}
@@ -210,6 +240,15 @@ export default function MatchesPage() {
                     >
                       <Archive size={14} aria-hidden="true" />
                       Archivar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReportTarget(match.other)}
+                      disabled={busy}
+                      className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-danger disabled:opacity-60"
+                    >
+                      <Flag size={14} aria-hidden="true" />
+                      Reportar
                     </button>
                     <button
                       type="button"
@@ -222,11 +261,35 @@ export default function MatchesPage() {
                     </button>
                   </div>
                 </div>
+
+                {feedbackOpenId === match.id ? (
+                  <FeedbackPanel
+                    match={match}
+                    onClose={() => setFeedbackOpenId(null)}
+                    onSubmitted={() =>
+                      setMatches((current) =>
+                        current.map((item) =>
+                          item.id === match.id
+                            ? { ...item, feedback: { ...item.feedback, mine: 'submitted' } }
+                            : item
+                        )
+                      )
+                    }
+                  />
+                ) : null}
               </article>
             );
           })}
         </div>
       </div>
+
+      {reportTarget ? (
+        <ReportDialog
+          target={reportTarget}
+          onClose={() => setReportTarget(null)}
+          onReported={handleReported}
+        />
+      ) : null}
     </div>
   );
 }

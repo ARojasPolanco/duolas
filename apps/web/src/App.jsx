@@ -1,5 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
+import AdminReportsPage from './pages/AdminReportsPage.jsx';
+import AvailabilityPage from './pages/AvailabilityPage.jsx';
+import DuoPostsPage from './pages/DuoPostsPage.jsx';
 import HomePage from './pages/HomePage.jsx';
+import InvitesPage from './pages/InvitesPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import MatchPage from './pages/MatchPage.jsx';
@@ -69,6 +73,38 @@ function App() {
         element={
           <ProtectedRoute>
             <MatchesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/disponible"
+        element={
+          <ProtectedRoute>
+            <AvailabilityPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/invitaciones"
+        element={
+          <ProtectedRoute>
+            <InvitesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/busco-1"
+        element={
+          <ProtectedRoute>
+            <DuoPostsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reportes"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminReportsPage />
           </ProtectedRoute>
         }
       />

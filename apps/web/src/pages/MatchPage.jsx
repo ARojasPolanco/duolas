@@ -150,6 +150,15 @@ export default function MatchPage() {
             <Link to="/inicio" className="text-muted">
               Inicio
             </Link>
+            <Link to="/disponible" className="text-muted">
+              Disponible
+            </Link>
+            <Link to="/busco-1" className="text-muted">
+              Busco 1
+            </Link>
+            <Link to="/invitaciones" className="text-muted">
+              Invitaciones
+            </Link>
             <Link to="/matches" className="text-muted">
               Matches
             </Link>

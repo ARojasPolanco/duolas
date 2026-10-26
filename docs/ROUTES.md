@@ -1,6 +1,6 @@
 # ROUTES — Duo LAS
 
-Mapa de rutas disponibles para probar la app y la API. Estado al cierre de F2.
+Mapa de rutas disponibles para probar la app y la API. Estado al cierre de F4.
 
 ## URLs
 
@@ -35,25 +35,25 @@ npm run seed
 
 ### Protegidas
 
-| Ruta          | Estado | Qué probar                                               |
-| ------------- | ------ | -------------------------------------------------------- |
-| `/onboarding` | Lista  | Perfil completo, edición y guardado                      |
-| `/inicio`     | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
-| `/match`      | Lista  | Filtros, candidatos, like, pasar y bloquear              |
-| `/matches`    | Lista  | Contacto Riot ID/Discord, copiar, archivar y bloquear    |
-| `*`           | Lista  | Página 404                                               |
+| Ruta              | Estado | Qué probar                                               |
+| ----------------- | ------ | -------------------------------------------------------- |
+| `/onboarding`     | Lista  | Perfil completo, edición y guardado                      |
+| `/inicio`         | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
+| `/match`          | Lista  | Filtros, candidatos, like, pasar y bloquear              |
+| `/disponible`     | Lista  | Abrir/cerrar disponibilidad, TTL, filtros e invitar      |
+| `/invitaciones`   | Lista  | Recibidas/enviadas, aceptar, rechazar y cancelar         |
+| `/busco-1`        | Lista  | Publicar, explorar, postularse y gestionar postulaciones |
+| `/matches`        | Lista  | Contacto, feedback doble ciego, reportar, archivar       |
+| `/admin/reportes` | Admin  | Reportes abiertos, advertencias y suspensiones           |
+| `*`               | Lista  | Página 404                                               |
 
 ### Todavía no implementadas
 
 Estas rutas están en el plan pero hoy caen en 404:
 
-- `/disponible`
-- `/busco-1`
-- `/invitaciones`
 - `/notificaciones`
 - `/perfil`
 - `/perfil/:id`
-- `/admin/reportes`
 - `/admin/metrics`
 
 Las funcionalidades de la API para notificaciones, bloqueos y perfiles públicos ya existen, pero no todas tienen pantalla propia.
@@ -114,16 +114,64 @@ Requieren usuario autenticado y email verificado.
 | POST   | `/blocks`         | Bloquear con `{ userId }` |
 | DELETE | `/blocks/:userId` | Desbloquear               |
 
-### Pendientes de F3+
+### Disponible ya e invitaciones
 
-Todavía no existen endpoints para:
+Requieren usuario autenticado, email verificado y perfil completo.
 
-- Disponibilidad y TTL.
-- Invitaciones.
-- Busco 1 y postulaciones.
-- Reportes y feedback.
-- SSE y push.
-- Admin y métricas.
+| Método | Ruta                         | Descripción                              |
+| ------ | ---------------------------- | ---------------------------------------- |
+| GET    | `/availability?queue=&role=` | Jugadores disponibles con score          |
+| GET    | `/availability/me`           | Sesión activa propia o `null`            |
+| POST   | `/availability`              | Abrir sesión con `roles`, `queue` y TTL  |
+| DELETE | `/availability`              | Cerrar la sesión activa                  |
+| POST   | `/availability/:id/invite`   | Invitar con `{ role, message }`          |
+| GET    | `/invites?box=incoming       | outgoing`                                | Invitaciones recibidas o enviadas |
+| POST   | `/invites/:id/accept`        | Aceptar; crea conexión y revela contacto |
+| POST   | `/invites/:id/decline`       | Rechazar una invitación recibida         |
+| POST   | `/invites/:id/cancel`        | Cancelar una invitación enviada          |
+
+### Busco 1
+
+Requieren usuario autenticado, email verificado y perfil completo.
+
+| Método | Ruta                                                | Descripción                             |
+| ------ | --------------------------------------------------- | --------------------------------------- |
+| GET    | `/duo-posts?queue=&role=`                           | Publicaciones activas y vigentes        |
+| GET    | `/duo-posts/mine`                                   | Propias, con postulaciones y estados    |
+| POST   | `/duo-posts`                                        | Publicar cola, roles y rango            |
+| GET    | `/duo-posts/:id`                                    | Detalle con perfil público del dueño    |
+| DELETE | `/duo-posts/:id`                                    | Cancelar publicación propia             |
+| POST   | `/duo-posts/:id/apply`                              | Postularse con `{ message }`            |
+| GET    | `/duo-posts/:id/applications`                       | Postulaciones, solo dueño               |
+| POST   | `/duo-posts/:id/applications/:applicationId/accept` | Aceptar; crea conexión y cierra el post |
+| POST   | `/duo-posts/:id/applications/:applicationId/reject` | Rechazar postulación, solo dueño        |
+| DELETE | `/duo-posts/:id/applications/:applicationId`        | Retirar postulación propia              |
+
+### Feedback y reportes
+
+Requieren usuario autenticado y email verificado.
+
+| Método | Ruta                                 | Descripción                                    |
+| ------ | ------------------------------------ | ---------------------------------------------- |
+| GET    | `/feedback/pending`                  | Conexiones pendientes de feedback propio       |
+| GET    | `/feedback/connection/:connectionId` | Feedback propio, del otro y estado de revelado |
+| POST   | `/feedback`                          | Enviar feedback doble ciego                    |
+| POST   | `/reports`                           | Reportar y auto-bloquear                       |
+
+### Admin
+
+Requiere rol `admin`.
+
+| Método | Ruta                                       | Descripción                        |
+| ------ | ------------------------------------------ | ---------------------------------- |
+| GET    | `/admin/reports?status=&reason=&priority=` | Reportes con reportero y reportado |
+| POST   | `/admin/reports/:id/resolve`               | Descartar, advertir o suspender    |
+| POST   | `/admin/users/:id/warn`                    | Advertencia directa                |
+| POST   | `/admin/users/:id/suspend`                 | Suspensión 7/30 días o permanente  |
+
+### Pendientes de F5+
+
+Todavía no existen endpoints para SSE, push y métricas.
 
 ## 3. Flujos para testear
 
@@ -196,6 +244,50 @@ Todavía no existen endpoints para:
 5. Probar `GET /api/v1/matching/matches`.
 6. Probar notificaciones y bloqueos.
 
+### Flujo 9 — Disponible ya e invitaciones
+
+1. Entrar con `demo_support` y confirmar que ya tiene una disponibilidad activa.
+2. Entrar con `demo_mid` en otra ventana y abrir `/disponible`.
+3. Ver a `demo_support`, elegir el rol, escribir un mensaje e invitar.
+4. Volver a `demo_support`, abrir `/invitaciones` y aceptar.
+5. Confirmar que se revela el Riot ID de `demo_mid` y que aparece en `/matches`.
+6. Correr `npm run seed` para reiniciar el escenario.
+
+### Flujo 10 — Busco 1
+
+1. Entrar con `demo_mid` y abrir `/busco-1`.
+2. Ver la publicación de `demo_adc` (Flex, busca jungla) con la postulación ya enviada.
+3. Entrar con `demo_adc`, abrir `Mis publicaciones` y ver la postulación de `demo_mid`.
+4. Aceptar la postulación y confirmar el contacto revelado.
+5. Confirmar que el post pasa a completa y que el match aparece en `/matches`.
+6. Correr `npm run seed` para reiniciar el escenario.
+
+### Flujo 11 - Feedback doble ciego
+
+1. Entrar con `demo_mid` y abrir `/matches`.
+2. Ver el match con `demo_jungle` y tocar “Dejar feedback”.
+3. Confirmar que `demo_jungle` ya envió el suyo pero el contenido sigue oculto.
+4. Enviar un feedback positivo con tags y comentario.
+5. Confirmar que se revelan ambos y que la reputación se actualiza.
+6. Correr `npm run seed` para reiniciar el escenario.
+
+### Flujo 12 - Reporte y auto-bloqueo
+
+1. Entrar con `demo_mid` y abrir `/matches`.
+2. Tocar “Reportar” en el match con `demo_jungle`.
+3. Elegir toxicidad, escribir un detalle y confirmar.
+4. Verificar que el match desaparece y que el usuario queda bloqueado.
+5. Abrir `/admin/reportes` con `demo_admin` y ver el reporte.
+6. Resolver con advertencia o suspensión y confirmar el estado del reportado.
+
+### Flujo 13 - Admin
+
+1. Entrar con `demo_admin`; el login redirige a `/admin/reportes`.
+2. Filtrar por estado, motivo y prioridad.
+3. Abrir un reporte y agregar una nota.
+4. Probar descartar, advertir, suspender 7/30 días y suspensión permanente.
+5. Confirmar que el usuario reportado recibe notificación y no puede operar si fue suspendido.
+
 ## 4. Cuentas demo
 
 | Cuenta                    | Contraseña   | Rol en la demo                  |
@@ -204,8 +296,9 @@ Todavía no existen endpoints para:
 | `demo_jungle@duolas.app`  | `Demo12345!` | Match activo con `demo_mid`     |
 | `demo_adc@duolas.app`     | `Demo12345!` | Like pendiente hacia `demo_mid` |
 | `demo_support@duolas.app` | `Demo12345!` | Candidato adicional             |
+| `demo_admin@duolas.app`   | `Demo12345!` | Admin de reportes y sanciones   |
 
-`npm run seed` reinicia perfiles, likes, matches, bloqueos y notificaciones de estas cuentas.
+`npm run seed` reinicia perfiles, likes, matches, bloqueos, notificaciones, disponibilidades, invitaciones, publicaciones, postulaciones, feedbacks, reportes y sanciones de estas cuentas. También deja una disponibilidad de `demo_support`, una invitación de `demo_adc` a `demo_support`, un Busco 1 de `demo_adc` con postulación de `demo_mid`, un feedback pendiente de `demo_jungle` a `demo_mid` y un reporte abierto de `demo_support` contra `demo_jungle`.
 
 ## 5. Tokens sin Resend
 

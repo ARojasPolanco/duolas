@@ -32,7 +32,14 @@ export default function LoginPage() {
     try {
       const user = await login(identifier.trim(), password);
       const from = location.state?.from;
-      const destination = user.profileCompleted ? from || '/inicio' : '/onboarding';
+      const destination =
+        user.role === 'admin'
+          ? from?.startsWith('/admin')
+            ? from
+            : '/admin/reportes'
+          : user.profileCompleted
+            ? from || '/inicio'
+            : '/onboarding';
       navigate(destination, { replace: true });
     } catch (requestError) {
       setError(

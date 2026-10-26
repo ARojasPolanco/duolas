@@ -4,9 +4,9 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
-- **Código:** monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
-- **Demo:** `npm run seed` crea 4 cuentas verificadas, un match activo y likes pendientes para probar la UI.
+- **Fase:** Fase 4 (confianza y moderación) completada. Siguiente: Fase 5 (realtime y push).
+- **Código:** monorepo con auth, perfiles, matching, likes, disponibilidad, invitaciones, Busco 1, feedback, reputación, reportes, sanciones, conexiones, bloqueos y notificaciones persistidas.
+- **Demo:** `npm run seed` crea 4 cuentas demo, una cuenta admin, un match activo, likes pendientes, disponibilidad, invitación, Busco 1, feedback pendiente y un reporte abierto.
 - **Dev:** `npm run docker:app` levanta PostgreSQL, API y web en contenedores persistentes.
 - **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
@@ -114,42 +114,42 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 **Objetivo:** disponibilidad inmediata, invitaciones y publicaciones de grupo.
 
-- [ ] Modelo y servicio de `AvailabilitySession` con TTL 30/60.
-- [ ] Migraciones `007_availability_invites` y `008_duo_posts_applications`.
-- [ ] Una sola sesión activa por usuario y cierre por expiración/manual/match.
-- [ ] Cierre perezoso de disponibilidades vencidas.
-- [ ] Listado de disponibles con `nowScore`.
-- [ ] Invitaciones con TTL 10 min, aceptar/rechazar/cancelar.
-- [ ] Aceptar invitación crea conexión y cierra disponibilidades.
-- [ ] Modelos `DuoPost` y `PostApplication`.
-- [ ] Crear, listar, cancelar y postular.
-- [ ] Notificar a disponibles compatibles al publicar.
-- [ ] Notificaciones de invitación y postulación.
-- [ ] Aceptar postulación crea conexión y cierra el post.
-- [ ] Pantallas Disponible, Invitaciones y Busco 1.
-- [ ] Tests de TTL, invitaciones y postulaciones.
+- [x] Modelo y servicio de `AvailabilitySession` con TTL 30/60.
+- [x] Migraciones `007_availability_invites` y `008_duo_posts_applications`.
+- [x] Una sola sesión activa por usuario y cierre por expiración/manual/match.
+- [x] Cierre perezoso de disponibilidades vencidas.
+- [x] Listado de disponibles con `nowScore`.
+- [x] Invitaciones con TTL 10 min, aceptar/rechazar/cancelar.
+- [x] Aceptar invitación crea conexión y cierra disponibilidades.
+- [x] Modelos `DuoPost` y `PostApplication`.
+- [x] Crear, listar, cancelar y postular.
+- [x] Notificar a disponibles compatibles al publicar.
+- [x] Notificaciones de invitación y postulación.
+- [x] Aceptar postulación crea conexión y cierra el post.
+- [x] Pantallas Disponible, Invitaciones y Busco 1.
+- [x] Tests de TTL, invitaciones y postulaciones.
 
-**DoD:** la disponibilidad expira sola; no hay dos sesiones activas; aceptar invitación o postulación crea conexión y revela contacto; el post se cierra al llenarse.
+**DoD técnico cumplido:** 84 tests pasando, lint y build verdes, migraciones 007/008 aplicadas y flujo API de disponibilidad, invitación, aceptación, publicación, postulación y cierre transaccional verificado contra PostgreSQL. El smoke visual interactivo en navegador queda pendiente para la revisión manual antes del release.
 
 ## Fase 4 — Confianza y moderación
 
 **Objetivo:** feedback, reputación, reportes, bloqueos y sanciones.
 
-- [ ] Modelo `Feedback` con `visible_at` y unique por conexión/autor.
-- [ ] Migración `009_trust_safety`.
-- [ ] Feedback doble ciego y revelado a los 7 días o cuando ambos envían.
-- [ ] Job de revelado vencido cada 5 minutos.
-- [ ] Cálculo y cache de reputación (Laplace).
-- [ ] Modelo `Report` y auto-bloqueo usando `Block`.
-- [ ] Endpoints de reportes y feedback.
-- [ ] Sanción: advertencia, suspensión 7/30 días y permanente.
-- [ ] Email de suspensión y notificación de advertencia.
-- [ ] Notificación de feedback revelado.
-- [ ] Admin API y UI mínima de reportes/sanciones.
-- [ ] Pantallas de feedback, reputación, reporte y bloqueo.
-- [ ] Tests de doble ciego, reputación y autorización admin.
+- [x] Modelo `Feedback` con `visible_at` y unique por conexión/autor.
+- [x] Migración `009_trust_safety`.
+- [x] Feedback doble ciego y revelado a los 7 días o cuando ambos envían.
+- [x] Job de revelado vencido cada 5 minutos.
+- [x] Cálculo y cache de reputación (Laplace).
+- [x] Modelo `Report` y auto-bloqueo usando `Block`.
+- [x] Endpoints de reportes y feedback.
+- [x] Sanción: advertencia, suspensión 7/30 días y permanente.
+- [x] Email de suspensión y notificación de advertencia.
+- [x] Notificación de feedback revelado.
+- [x] Admin API y UI mínima de reportes/sanciones.
+- [x] Pantallas de feedback, reputación, reporte y bloqueo.
+- [x] Tests de doble ciego, reputación y autorización admin.
 
-**DoD:** el feedback no se ve antes de tiempo; el reporte bloquea; la suspensión se aplica en `protect`; el admin opera sin SQL.
+**DoD técnico cumplido:** 91 tests pasando, lint y build verdes, migración 009 aplicada y flujo API de feedback, revelado, reputación, reporte, auto-bloqueo, advertencia y suspensión verificado contra PostgreSQL. El smoke visual interactivo en navegador queda pendiente para la revisión manual antes del release.
 
 ## Fase 5 — Realtime y push
 
@@ -237,6 +237,6 @@ Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.productio
 
 ## Próxima acción
 
-1. Iniciar Fase 3 (Disponible ya y Busco 1).
-2. Implementar disponibilidad con TTL, invitaciones y postulaciones.
+1. Iniciar Fase 5 (realtime y push).
+2. Implementar SSE con ticket, fallback de polling y web push.
 3. Actualizar `TASK.md` al cerrar cada tarea.

@@ -138,35 +138,33 @@ Reglas:
 
 ### 3.8 Disponible ya `/disponible`
 
-- Toggle grande para activar/desactivar.
-- Selector de TTL 30 o 60.
-- Roles (1-2) y cola.
-- Nota opcional.
-- Countdown visible.
-- Aviso: "Mientras estás disponible, no entres a cola".
-- Lista de jugadores disponibles con score y botón invitar.
-- Modal de invitación con rol requerido y mensaje.
-- Invitaciones recibidas con countdown.
+- Formulario inline para abrir disponibilidad.
+- Selector de TTL 30 o 60, roles (1-2), cola y nota.
+- Panel de sesión activa con vencimiento, roles y botón cerrar.
+- Lista de jugadores disponibles con score, filtros y minutos restantes.
+- Invitación inline con rol requerido y mensaje.
+- Las invitaciones se responden en `/invitaciones`.
 
 ### 3.9 Busco 1 `/busco-1`
 
-- Tabs: Explorar y Mis posts.
+- Tabs: Explorar y Mis publicaciones.
 - Explorar:
   - Filtros por cola y rol.
   - Cards con dueño, rango requerido, roles, nota y vencimiento.
-  - Botón postular con mensaje.
-- Mis posts:
-  - Crear post con cola, roles, rango y nota.
-  - Estado y vencimiento.
+  - Postulación inline con mensaje y estado propio.
+- Mis publicaciones:
+  - Crear publicación con cola, roles, rango y nota.
+  - Estado, vencimiento y contadores de postulaciones.
   - Postulaciones con perfil, score y acciones aceptar/rechazar.
-  - Cancelar post.
+  - Cancelar publicación.
 
 ### 3.10 Matches `/matches`
 
 - Lista de conexiones con la otra persona.
 - Card con rango, roles, reputación y fecha.
 - Panel de contacto: Riot ID con botón copiar y Discord con link.
-- Botón de feedback si está pendiente.
+- Feedback inline doble ciego: formulario, estado propio y del otro, revelado.
+- Reportar con motivo y detalle; auto-bloquea y elimina el match.
 - Archivar conexión.
 - Estado vacío con CTA a Match.
 
@@ -175,6 +173,7 @@ Reglas:
 - Tabs Recibidas y Enviadas.
 - Card con contraparte, rol, mensaje, vencimiento y estado.
 - Acciones: aceptar/rechazar (recibidas) o cancelar (enviadas).
+- Al aceptar se muestra el contacto Riot ID/Discord con botón copiar.
 - Expiradas en gris.
 
 ### 3.12 Notificaciones `/notificaciones`
@@ -206,9 +205,9 @@ Reglas:
 
 - Tabla con fecha, reportero, reportado, motivo, prioridad y estado.
 - Filtros por estado, motivo y prioridad.
-- Detalle con contexto.
+- Detalle con contexto y estado del reportado.
 - Acciones: descartar, advertir, suspender 7 días, 30 días o permanente.
-- Nota obligatoria para sanciones.
+- Nota interna opcional; se usa como motivo de la sanción.
 
 ### 3.16 Admin métricas `/admin/metrics`
 

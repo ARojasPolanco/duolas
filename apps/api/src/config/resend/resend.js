@@ -92,6 +92,42 @@ export class MailService {
       ),
     });
   }
+
+  async sendSuspensionEmail(to, reason, suspendedUntil) {
+    if (!resend) {
+      logger.info('Email de suspensión omitido: falta RESEND_API_KEY', { to: '[email]' });
+      return null;
+    }
+
+    const untilText = suspendedUntil
+      ? `Hasta el ${new Intl.DateTimeFormat('es-AR', {
+          dateStyle: 'long',
+          timeZone: 'America/Argentina/Buenos_Aires',
+        }).format(new Date(suspendedUntil))}.`
+      : 'La suspensión es permanente.';
+
+    return resend.emails.send({
+      from,
+      to,
+      subject: 'Tu cuenta fue suspendida - Duo LAS',
+      text: `Tu cuenta de Duo LAS fue suspendida. Motivo: ${reason}. ${untilText}`,
+      html: layout(
+        'Cuenta suspendida',
+        `
+          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
+            Tu cuenta de Duo LAS fue suspendida por moderación.
+          </p>
+          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
+            <strong>Motivo:</strong> ${reason}<br />
+            <strong>Duración:</strong> ${untilText}
+          </p>
+          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
+            Si creés que fue un error, escribinos a ${support}.
+          </p>
+        `
+      ),
+    });
+  }
 }
 
 export const mailService = new MailService();
