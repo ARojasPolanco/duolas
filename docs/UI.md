@@ -98,7 +98,7 @@ Seis pasos con barra de progreso:
 1. Riot ID y servidor LAS.
 2. Rol principal y secundario.
 3. Rango y LP.
-4. Horarios en grilla semanal.
+4. Horarios por día con bloques de 6 horas, atajos y selección múltiple.
 5. Estilo, idiomas y micrófono.
 6. Bio, Discord opcional y resumen.
 
@@ -210,8 +210,14 @@ Reglas:
 ### 3.16 Admin métricas `/admin/metrics`
 
 - Cuatro cards: tiempo al primer duo, match a partida, retención 7d, simultáneos.
-- Selector de rango de fechas.
+- Selector de rango de fechas en ART, con formato numérico es-AR.
 - Estado vacío si no hay datos.
+
+### 3.17 Legales `/terminos`, `/privacidad`, `/aviso-riot`
+
+- Header con logo y volver al inicio.
+- Tabs para cambiar entre documentos, con estado activo.
+- Contenido numerado, última actualización y contacto de soporte.
 
 ## 4. Componentes
 

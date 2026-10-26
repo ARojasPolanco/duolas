@@ -4,13 +4,32 @@ import AppShell from '../components/AppShell.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 
-const dateInputValue = (date) => date.toISOString().slice(0, 10);
+const ART_TIME_ZONE = 'America/Argentina/Buenos_Aires';
+
+const dateInputFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: ART_TIME_ZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+const numberFormatter = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 });
+const hoursFormatter = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 });
+
+const dateInputValue = (date) => dateInputFormatter.format(date);
 
 const defaultRange = () => {
   const to = new Date();
   const from = new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000);
   return { from: dateInputValue(from), to: dateInputValue(to) };
 };
+
+const rangeBoundary = (value, endOfDay) =>
+  new Date(`${value}T${endOfDay ? '23:59:59.999' : '00:00:00.000'}-03:00`).toISOString();
+
+const formatNumber = (value) => numberFormatter.format(Number(value));
+
+const formatHours = (value) => `${hoursFormatter.format(Number(value))} h`;
 
 const percent = (value) =>
   value === null || value === undefined ? 'Sin datos' : `${Math.round(value * 100)}%`;
@@ -27,8 +46,8 @@ export default function AdminMetricsPage() {
     setError('');
 
     try {
-      const from = new Date(`${range.from}T00:00:00.000Z`).toISOString();
-      const to = new Date(`${range.to}T23:59:59.999Z`).toISOString();
+      const from = rangeBoundary(range.from, false);
+      const to = rangeBoundary(range.to, true);
       const res = await api.get('/v1/admin/metrics/summary', { params: { from, to } });
       setMetrics(res.data.metrics);
     } catch (requestError) {
@@ -49,26 +68,40 @@ export default function AdminMetricsPage() {
           value:
             metrics.timeToFirstDuo.medianHours === null
               ? 'Sin datos'
-              : `${metrics.timeToFirstDuo.medianHours} h`,
-          detail: `${metrics.timeToFirstDuo.players} jugadores`,
+              : formatHours(metrics.timeToFirstDuo.medianHours),
+          detail:
+            metrics.timeToFirstDuo.players === 0
+              ? 'Sin primeras conexiones en el rango'
+              : `${formatNumber(metrics.timeToFirstDuo.players)} jugadores`,
           icon: Clock3,
         },
         {
           title: 'Match que termina en partida',
-          value: percent(metrics.matchToGame.rate),
-          detail: `${metrics.matchToGame.played} de ${metrics.matchToGame.eligible} conexiones`,
+          value:
+            metrics.matchToGame.eligible === 0 ? 'Sin datos' : percent(metrics.matchToGame.rate),
+          detail:
+            metrics.matchToGame.eligible === 0
+              ? 'Sin conexiones elegibles todavía'
+              : `${formatNumber(metrics.matchToGame.played)} de ${formatNumber(metrics.matchToGame.eligible)} conexiones`,
           icon: Gamepad2,
         },
         {
           title: 'Retención a 7 días',
-          value: percent(metrics.retention7d.rate),
-          detail: `${metrics.retention7d.retained} de ${metrics.retention7d.cohortSize} jugadores`,
+          value:
+            metrics.retention7d.cohortSize === 0 ? 'Sin datos' : percent(metrics.retention7d.rate),
+          detail:
+            metrics.retention7d.cohortSize === 0
+              ? 'La cohorte todavía no completó 14 días'
+              : `${formatNumber(metrics.retention7d.retained)} de ${formatNumber(metrics.retention7d.cohortSize)} jugadores`,
           icon: Users,
         },
         {
           title: 'Simultáneos en Disponible',
-          value: metrics.concurrentAvailability.peak,
-          detail: `p95: ${metrics.concurrentAvailability.p95}`,
+          value: formatNumber(metrics.concurrentAvailability.peak),
+          detail:
+            metrics.concurrentAvailability.peak === 0
+              ? 'Sin disponibilidades en el rango'
+              : `p95: ${formatNumber(metrics.concurrentAvailability.p95)}`,
           icon: BarChart3,
         },
       ]
@@ -85,7 +118,7 @@ export default function AdminMetricsPage() {
           </p>
         </div>
 
-        <section className="flex flex-wrap items-end gap-3 rounded-2xl border border-border bg-surface p-4">
+        <section className="grid grid-cols-2 gap-3 rounded-2xl border border-border bg-surface p-4 sm:flex sm:flex-wrap sm:items-end">
           <label className="text-xs font-semibold text-muted">
             Desde
             <input
@@ -94,7 +127,7 @@ export default function AdminMetricsPage() {
               onChange={(event) =>
                 setRange((current) => ({ ...current, from: event.target.value }))
               }
-              className="mt-2 block rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+              className="mt-2 block w-full rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
             />
           </label>
           <label className="text-xs font-semibold text-muted">
@@ -103,13 +136,13 @@ export default function AdminMetricsPage() {
               type="date"
               value={range.to}
               onChange={(event) => setRange((current) => ({ ...current, to: event.target.value }))}
-              className="mt-2 block rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text"
+              className="mt-2 block w-full rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text sm:w-auto"
             />
           </label>
           <button
             type="button"
             onClick={load}
-            className="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-xs font-bold text-bg"
+            className="col-span-2 inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-xs font-bold text-bg sm:col-auto"
           >
             <RefreshCw size={14} aria-hidden="true" />
             Actualizar

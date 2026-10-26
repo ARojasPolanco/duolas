@@ -39,20 +39,28 @@ const DIVISION_LABELS = { iv: 'IV', iii: 'III', ii: 'II', i: 'I' };
 const STYLE_LABELS = { casual: 'Casual', ranked: 'Ranked en serio', tryhard: 'Tryhard' };
 const LANGUAGE_LABELS = { es: 'Español', en: 'Inglés', pt: 'Portugués' };
 const DAY_LABELS = {
-  mon: 'Lun',
-  tue: 'Mar',
-  wed: 'Mié',
-  thu: 'Jue',
-  fri: 'Vie',
-  sat: 'Sáb',
-  sun: 'Dom',
+  mon: 'Lunes',
+  tue: 'Martes',
+  wed: 'Miércoles',
+  thu: 'Jueves',
+  fri: 'Viernes',
+  sat: 'Sábado',
+  sun: 'Domingo',
 };
 const BLOCK_LABELS = {
-  early: '00-06',
-  morning: '06-12',
-  afternoon: '12-18',
-  night: '18-24',
+  early: 'Madrugada',
+  morning: 'Mañana',
+  afternoon: 'Tarde',
+  night: 'Noche',
 };
+const BLOCK_HOURS = {
+  early: '00–06',
+  morning: '06–12',
+  afternoon: '12–18',
+  night: '18–24',
+};
+const WEEKDAY_NIGHTS = ['mon_night', 'tue_night', 'wed_night', 'thu_night', 'fri_night'];
+const WEEKEND_BLOCKS = ['sat_afternoon', 'sat_night', 'sun_afternoon', 'sun_night'];
 
 const APEX_TIERS = ['master', 'grandmaster', 'challenger'];
 const RIOT_ID_REGEX = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,14}[\p{L}\p{N}]#[A-Za-z0-9]{3,5}$/u;
@@ -155,6 +163,17 @@ export default function OnboardingPage() {
         [field]: exists ? values.filter((item) => item !== value) : [...values, value],
       };
     });
+  };
+
+  const mergeScheduleBlocks = (blocks) => {
+    setForm((current) => ({
+      ...current,
+      scheduleBlocks: [...new Set([...current.scheduleBlocks, ...blocks])],
+    }));
+  };
+
+  const clearSchedule = () => {
+    setForm((current) => ({ ...current, scheduleBlocks: [] }));
   };
 
   const canContinue = () => {
@@ -411,48 +430,109 @@ export default function OnboardingPage() {
                 <div>
                   <h1 className="text-2xl font-bold">Tus horarios</h1>
                   <p className="mt-2 text-sm text-muted">
-                    Todos los horarios están en hora Argentina. Marcá los bloques en los que
-                    normalmente podés jugar.
+                    Tocá los momentos en los que normalmente podés jugar. Todos los horarios están
+                    en hora Argentina.
                   </p>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <div className="grid min-w-[420px] grid-cols-5 gap-2">
-                    <div />
-                    {SCHEDULE_BLOCKS.map((block) => (
-                      <div key={block} className="text-center text-[11px] font-semibold text-muted">
-                        {BLOCK_LABELS[block]}
-                      </div>
-                    ))}
-
-                    {SCHEDULE_DAYS.map((day) => (
-                      <div key={day} className="contents">
-                        <div className="flex items-center text-xs font-semibold text-muted">
-                          {DAY_LABELS[day]}
-                        </div>
-                        {SCHEDULE_BLOCKS.map((block) => {
-                          const value = `${day}_${block}`;
-                          const selected = form.scheduleBlocks.includes(value);
-                          return (
-                            <button
-                              key={value}
-                              type="button"
-                              onClick={() => toggleValue('scheduleBlocks', value)}
-                              aria-pressed={selected}
-                              aria-label={`${DAY_LABELS[day]} ${BLOCK_LABELS[block]}`}
-                              className={`h-10 rounded-lg border text-xs font-bold transition ${
-                                selected
-                                  ? 'border-accent bg-accent text-bg'
-                                  : 'border-border bg-bg text-muted hover:border-accent/50'
-                              }`}
-                            >
-                              {selected ? '✓' : ''}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ))}
+                <div className="rounded-2xl border border-border bg-bg p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold">Atajos</p>
+                      <p className="text-xs text-muted">
+                        Sumá tus horarios habituales y después ajustá día por día.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => mergeScheduleBlocks(WEEKDAY_NIGHTS)}
+                        className="inline-flex min-h-11 items-center rounded-full border border-border px-3 text-xs font-semibold text-muted transition hover:border-accent/50 hover:text-text"
+                      >
+                        Lun a Vie · noche
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => mergeScheduleBlocks(WEEKEND_BLOCKS)}
+                        className="inline-flex min-h-11 items-center rounded-full border border-border px-3 text-xs font-semibold text-muted transition hover:border-accent/50 hover:text-text"
+                      >
+                        Sáb y Dom · tarde/noche
+                      </button>
+                      {form.scheduleBlocks.length ? (
+                        <button
+                          type="button"
+                          onClick={clearSchedule}
+                          className="inline-flex min-h-11 items-center rounded-full px-2 text-xs font-semibold text-danger"
+                        >
+                          Limpiar
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
+
+                  <p className="mt-3 text-xs text-muted">
+                    {form.scheduleBlocks.length === 0
+                      ? 'Todavía no elegiste horarios.'
+                      : `${form.scheduleBlocks.length} bloque${
+                          form.scheduleBlocks.length === 1 ? '' : 's'
+                        } seleccionado${form.scheduleBlocks.length === 1 ? '' : 's'}.`}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  {SCHEDULE_DAYS.map((day) => {
+                    const selectedCount = SCHEDULE_BLOCKS.filter((block) =>
+                      form.scheduleBlocks.includes(`${day}_${block}`)
+                    ).length;
+
+                    return (
+                      <div key={day} className="rounded-2xl border border-border bg-bg p-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-sm font-bold">{DAY_LABELS[day]}</p>
+                          <span
+                            className={`text-[11px] font-semibold ${
+                              selectedCount ? 'text-accent' : 'text-muted'
+                            }`}
+                          >
+                            {selectedCount
+                              ? `${selectedCount} bloque${selectedCount === 1 ? '' : 's'}`
+                              : 'Sin horario'}
+                          </span>
+                        </div>
+
+                        <div className="mt-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                          {SCHEDULE_BLOCKS.map((block) => {
+                            const value = `${day}_${block}`;
+                            const selected = form.scheduleBlocks.includes(value);
+
+                            return (
+                              <button
+                                key={value}
+                                type="button"
+                                onClick={() => toggleValue('scheduleBlocks', value)}
+                                aria-pressed={selected}
+                                aria-label={`${DAY_LABELS[day]}, ${BLOCK_LABELS[block]} (${BLOCK_HOURS[block]})`}
+                                className={`flex min-h-11 flex-col items-center justify-center rounded-xl border px-1 py-1.5 text-[11px] font-semibold transition ${
+                                  selected
+                                    ? 'border-accent bg-accent text-bg'
+                                    : 'border-border text-muted hover:border-accent/50 hover:text-text'
+                                }`}
+                              >
+                                <span>{BLOCK_LABELS[block]}</span>
+                                <span
+                                  className={`text-[10px] font-medium ${
+                                    selected ? 'text-bg/75' : 'text-muted/70'
+                                  }`}
+                                >
+                                  {BLOCK_HOURS[block]}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}
@@ -578,7 +658,7 @@ export default function OnboardingPage() {
                     </li>
                     <li>
                       <span className="text-text">Horarios:</span> {form.scheduleBlocks.length}{' '}
-                      bloques
+                      bloque{form.scheduleBlocks.length === 1 ? '' : 's'}
                     </li>
                     <li>
                       <span className="text-text">Estilo:</span>{' '}

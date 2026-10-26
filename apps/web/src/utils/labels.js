@@ -72,6 +72,12 @@ export const REPORT_STATUS_LABELS = {
   dismissed: 'Descartado',
 };
 
+export const USER_STATUS_LABELS = {
+  active: 'Activo',
+  suspended: 'Suspendido',
+  deleted: 'Eliminado',
+};
+
 export const formatRank = (profile) => {
   const tier = RANK_LABELS[profile?.rankTier];
   if (!tier) return 'Sin rango';

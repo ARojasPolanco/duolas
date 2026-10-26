@@ -1,54 +1,82 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+
+const legalLinks = [
+  { to: '/terminos', label: 'Términos' },
+  { to: '/privacidad', label: 'Privacidad' },
+  { to: '/aviso-riot', label: 'Aviso de Riot' },
+];
+
+const tabClass = ({ isActive }) =>
+  `inline-flex min-h-11 items-center rounded-full border px-3.5 text-xs font-semibold transition ${
+    isActive
+      ? 'border-accent/40 bg-accent/15 text-accent'
+      : 'border-border text-muted hover:border-accent/40 hover:text-text'
+  }`;
 
 export default function LegalPage({ title, intro, sections }) {
   return (
-    <div className="min-h-screen bg-bg px-5 py-10 text-text">
+    <div className="min-h-screen bg-bg px-5 py-8 text-text">
       <div className="mx-auto max-w-3xl">
-        <Link
-          to="/"
-          className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-tight"
-        >
-          Duo<span className="text-accent">LAS</span>
-        </Link>
+        <header className="flex items-center justify-between gap-3">
+          <Link
+            to="/"
+            className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-tight"
+          >
+            Duo<span className="text-accent">LAS</span>
+          </Link>
+          <Link
+            to="/"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold text-muted transition hover:text-text"
+          >
+            <ArrowLeft size={14} aria-hidden="true" />
+            Volver al inicio
+          </Link>
+        </header>
 
-        <div className="mt-8 rounded-3xl border border-border bg-surface p-6 sm:p-8">
+        <nav className="mt-6 flex flex-wrap gap-2" aria-label="Documentos legales">
+          {legalLinks.map((link) => (
+            <NavLink key={link.to} to={link.to} className={tabClass}>
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <article className="mt-4 rounded-3xl border border-border bg-surface p-6 sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Documento legal
           </p>
           <h1 className="mt-2 text-3xl font-extrabold">{title}</h1>
           {intro ? <p className="mt-3 text-sm leading-relaxed text-muted">{intro}</p> : null}
 
-          <div className="mt-6 space-y-5">
-            {sections.map((section) => (
-              <section key={section.title}>
-                <h2 className="text-base font-bold">{section.title}</h2>
-                <p className="mt-1 text-sm leading-relaxed text-muted">{section.body}</p>
+          <div className="mt-8 divide-y divide-border">
+            {sections.map((section, index) => (
+              <section key={section.title} className="py-5 first:pt-0 last:pb-0">
+                <h2 className="flex items-baseline gap-2 text-base font-bold">
+                  <span className="text-[11px] font-extrabold tracking-widest text-accent">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  {section.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted sm:pl-7">{section.body}</p>
               </section>
             ))}
           </div>
 
-          <p className="mt-8 border-t border-border pt-4 text-xs text-muted">
-            Última actualización: octubre de 2026. Dudas: soporte@duolas.app
-          </p>
-        </div>
+          <div className="mt-8 flex flex-col gap-2 border-t border-border pt-4 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+            <p>Última actualización: octubre de 2026.</p>
+            <a
+              href="mailto:soporte@duolas.app"
+              className="inline-flex min-h-11 items-center text-accent hover:underline"
+            >
+              soporte@duolas.app
+            </a>
+          </div>
+        </article>
 
-        <nav className="mt-4 flex flex-wrap gap-x-4 text-xs font-semibold text-muted">
-          <Link to="/terminos" className="inline-flex min-h-11 items-center hover:text-text">
-            Términos
-          </Link>
-          <Link to="/privacidad" className="inline-flex min-h-11 items-center hover:text-text">
-            Privacidad
-          </Link>
-          <Link to="/aviso-riot" className="inline-flex min-h-11 items-center hover:text-text">
-            Aviso de Riot
-          </Link>
-          <Link
-            to="/"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-text"
-          >
-            Volver
-          </Link>
-        </nav>
+        <p className="mt-4 text-center text-xs leading-relaxed text-muted">
+          Duo LAS no está afiliado ni avalado por Riot Games.
+        </p>
       </div>
     </div>
   );

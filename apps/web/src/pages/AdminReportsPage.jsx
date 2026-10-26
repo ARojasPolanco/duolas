@@ -3,7 +3,7 @@ import { AlertTriangle, Check, RefreshCw, ShieldAlert, UserX } from 'lucide-reac
 import AppShell from '../components/AppShell.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
-import { REPORT_REASON_LABELS, REPORT_STATUS_LABELS } from '../utils/labels.js';
+import { REPORT_REASON_LABELS, REPORT_STATUS_LABELS, USER_STATUS_LABELS } from '../utils/labels.js';
 
 const reasonOptions = Object.keys(REPORT_REASON_LABELS);
 const statusOptions = Object.keys(REPORT_STATUS_LABELS);
@@ -179,7 +179,12 @@ export default function AdminReportsPage() {
                       </p>
                     </div>
                     <div className="text-right text-[11px] text-muted">
-                      <p>Reportado: {report.reported?.status}</p>
+                      <p>
+                        Reportado:{' '}
+                        {USER_STATUS_LABELS[report.reported?.status] ||
+                          report.reported?.status ||
+                          'Sin estado'}
+                      </p>
                       <p>Advertencias: {report.reported?.warningCount ?? 0}</p>
                     </div>
                   </div>
@@ -272,6 +277,19 @@ export default function AdminReportsPage() {
             <p className="mx-auto mt-2 max-w-md text-sm text-muted">
               Los reportes nuevos aparecen acá para revisión.
             </p>
+            {status || reason || priority ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setStatus('');
+                  setReason('');
+                  setPriority('');
+                }}
+                className="mt-5 inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-xs font-semibold text-accent"
+              >
+                Ver todos los reportes
+              </button>
+            ) : null}
           </div>
         )}
       </div>
