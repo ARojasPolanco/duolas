@@ -1,5 +1,6 @@
 import { AppError } from '../../errors/appError.js';
 import { verifyJWT } from '../../config/plugins/generate-jwt.js';
+import { authenticatedLimiter } from '../../middlewares/rateLimits.js';
 import { authService } from './auth.service.js';
 import { profileService } from '../profiles/profile.service.js';
 
@@ -53,7 +54,7 @@ export const protect = async (req, _res, next) => {
     }
 
     req.sessionUser = user;
-    return next();
+    return authenticatedLimiter(req, _res, next);
   } catch (_error) {
     return next(new AppError('Token inválido o expirado.', 401));
   }

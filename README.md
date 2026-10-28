@@ -6,7 +6,7 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 
 ## Estado
 
-- **Fase actual:** Fase 6 (métricas, hardening y cierre) implementada. Pendiente: smoke final y pasada visual.
+- **Fase actual:** MVP implementado; preparando release público sin Riot API y solicitud futura de production key.
 - **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
 - **Rama principal:** `dev`. `main` se reserva para el release final.
 - **Fuente de verdad:** los documentos de `docs/`.
@@ -31,21 +31,22 @@ El alcance de este repositorio es el servicio de match y duo: perfil, match por 
 
 ## Documentación
 
-| Documento              | Contenido                                                 |
-| ---------------------- | --------------------------------------------------------- |
-| `AGENTS.md`            | Convenciones obligatorias y reglas críticas               |
-| `TASK.md`              | Tablero vivo y plan por fases                             |
-| `docs/SPEC.md`         | Producto, alcance, flujos y reglas de negocio             |
-| `docs/ARCHITECTURE.md` | Arquitectura técnica, errores, realtime, push y operación |
-| `docs/DATA-MODEL.md`   | Tablas, enums, índices y migraciones                      |
-| `docs/API.md`          | Contrato de endpoints y catálogo de errores               |
-| `docs/ROUTES.md`       | Rutas web/API y flujos de prueba                          |
-| `docs/MATCHING.md`     | Fórmulas, filtros y pesos del match                       |
-| `docs/METRICS.md`      | Eventos, KPIs y consultas SQL                             |
-| `docs/TESTING.md`      | Plan de pruebas y smoke manual                            |
-| `docs/PRODUCTION.md`   | Checklist de envs, claves y deploy a producción           |
-| `docs/UI.md`           | Rutas, pantallas, componentes y copy                      |
-| `docs/DECISIONS.md`    | Registro de decisiones (ADR)                              |
+| Documento                  | Contenido                                                 |
+| -------------------------- | --------------------------------------------------------- |
+| `AGENTS.md`                | Convenciones obligatorias y reglas críticas               |
+| `TASK.md`                  | Tablero vivo y plan por fases                             |
+| `docs/SPEC.md`             | Producto, alcance, flujos y reglas de negocio             |
+| `docs/ARCHITECTURE.md`     | Arquitectura técnica, errores, realtime, push y operación |
+| `docs/DATA-MODEL.md`       | Tablas, enums, índices y migraciones                      |
+| `docs/API.md`              | Contrato de endpoints y catálogo de errores               |
+| `docs/ROUTES.md`           | Rutas web/API y flujos de prueba                          |
+| `docs/MATCHING.md`         | Fórmulas, filtros y pesos del match                       |
+| `docs/METRICS.md`          | Eventos, KPIs y consultas SQL                             |
+| `docs/TESTING.md`          | Plan de pruebas y smoke manual                            |
+| `docs/PRODUCTION.md`       | Checklist de envs, claves y deploy a producción           |
+| `docs/RIOT-INTEGRATION.md` | Preparación de Riot API, key y revisión                   |
+| `docs/UI.md`               | Rutas, pantallas, componentes y copy                      |
+| `docs/DECISIONS.md`        | Registro de decisiones (ADR)                              |
 
 ## Estructura planificada
 
@@ -135,7 +136,7 @@ Flujo rápido:
 
 - Solo servidor LAS.
 - Solo mayores de 18 años.
-- Sin Riot API ni RSO: el rango es declarado.
+- Sin Riot API ni RSO en el MVP: el rango es declarado. La preparación para una production key está en `docs/RIOT-INTEGRATION.md`.
 - El Riot ID y el Discord se revelan únicamente después de una conexión.
 - Sin chat interno: el contacto es Riot ID y Discord opcional.
 - Sin uploads de imágenes: avatares con iniciales.
@@ -144,9 +145,18 @@ Flujo rápido:
 - Disponibilidad "Disponible ya" con vencimiento de 30 o 60 minutos.
 - Reportar bloquea automáticamente al reportado.
 
+## Release público
+
+El MVP sale sin Riot API, con rango declarado y escudos SVG propios. El checklist de deploy está en `docs/PRODUCTION.md` y la preparación de la production key en `docs/RIOT-INTEGRATION.md`.
+
+- No usar una personal key en el sitio público.
+- No usar crests ni logos oficiales de Riot.
+- Registrar el producto en el Developer Portal.
+- Mantener el boilerplate legal exacto visible.
+
 ## Aviso legal
 
-Duo LAS no está avalado por Riot Games. League of Legends es una marca de Riot Games, Inc.
+Duo LAS isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
 
 ## Licencia
 

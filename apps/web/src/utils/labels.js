@@ -38,6 +38,14 @@ export const LANGUAGE_LABELS = {
   pt: 'Portugués',
 };
 
+export const COUNTRY_LABELS = {
+  AR: 'Argentina',
+  CL: 'Chile',
+  BO: 'Bolivia',
+  PY: 'Paraguay',
+  UY: 'Uruguay',
+};
+
 export const QUEUE_LABELS = {
   solo_duo: 'Solo/Dúo',
   flex: 'Flex',

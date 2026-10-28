@@ -29,9 +29,10 @@ La propuesta original está en `Propuesta plataforma de duos para League of Lege
 8. `docs/METRICS.md`
 9. `docs/TESTING.md`
 10. `docs/PRODUCTION.md`
-11. `docs/UI.md`
-12. `docs/DECISIONS.md`
-13. `TASK.md`
+11. `docs/RIOT-INTEGRATION.md`
+12. `docs/UI.md`
+13. `docs/DECISIONS.md`
+14. `TASK.md`
 
 ## 4. Stack
 
@@ -171,9 +172,10 @@ Reglas:
 - `requireCompleteProfile` para match, disponibilidad, postulaciones e invitaciones.
 - Ownership obligatorio en matches, invitaciones, postulaciones y feedback.
 - Reset de contraseña: token random, hash SHA-256 en DB, vence en 1 hora, un solo uso, respuesta genérica en `forgot-password`.
-- Verificación de email: token random, vence en 24 horas, resend lo regenera.
+- Verificación de email: token random, hash SHA-256 en DB, vence en 24 horas y resend lo regenera.
 - hCaptcha en registro; se salta en test y en desarrollo sin secret.
-- Rate limits por IP y por usuario (ver `docs/ARCHITECTURE.md`).
+- Contraseñas de 10 a 128 caracteres.
+- Rate limits por IP, por credencial de login y por usuario autenticado (ver `docs/ARCHITECTURE.md`).
 - Nunca loguear tokens, tickets SSE, contraseñas ni emails completos.
 - No se guardan Riot IDs históricos. Solo el actual.
 - El Riot ID y el Discord se revelan únicamente después de una conexión.
@@ -229,7 +231,7 @@ Heredadas del incidente real de Market Design:
 4. Los endpoints de auth (`/auth/login`, `/auth/register`, `/auth/verify-email`, `/auth/forgot-password`, `/auth/reset-password`) no disparan redirect.
 5. Los endpoints protegidos devuelven 401 sin token; nunca 200 vacío ni redirect del servidor.
 6. Toda request protegida debe asumir 401 y manejarlo sin depender de que el usuario esté logueado.
-7. `ProtectedRoute` para rutas privadas; `restrictTo` en backend para admin.
+7. `ProtectedRoute` para rutas privadas; `restrictTo` en backend para admin. Los admins usan `AdminShell` y son redirigidos a `/admin` desde rutas de jugador.
 8. `ErrorBoundary` global para evitar pantallas blancas.
 9. Fechas y countdowns con `Intl` y zona ART.
 10. Optimistic UI en likes e invitaciones, con rollback en error.

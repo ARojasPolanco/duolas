@@ -124,7 +124,7 @@ export class ReportService {
       ],
       order: [
         ['priority', 'DESC'],
-        ['createdAt', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       limit,
     });

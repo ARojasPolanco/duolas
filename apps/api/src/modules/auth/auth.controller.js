@@ -1,5 +1,5 @@
-import crypto from 'node:crypto';
 import { authService } from './auth.service.js';
+import { accountService } from './account.service.js';
 import { profileService } from '../profiles/profile.service.js';
 import { catchAsync } from '../../errors/catchAsync.js';
 import { AppError } from '../../errors/appError.js';
@@ -8,19 +8,22 @@ import { comparePassword } from '../../config/plugins/encrypted-password.js';
 import { mailService } from '../../config/resend/resend.js';
 import { metricsService } from '../metrics/metrics.service.js';
 import { verifyCaptcha } from '../../utils/captcha.js';
+import { generateToken, hashToken } from '../../utils/tokens.js';
 import logger from '../../config/logger.js';
 import {
   validateRegister,
   validateLogin,
   validateChangePassword,
+  validateDeleteAccount,
   validateForgotPassword,
   validateResetPassword,
 } from './auth.schema.js';
 
 const VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 const RESET_TTL_MS = 60 * 60 * 1000;
+const DUMMY_PASSWORD_HASH = '$2b$12$M1EYg382FC8RlXrb9EeY1OL8vK.SrHoJbNAnpS5I9mx4oQ5rDK5X2';
 
-const buildAuthUser = (user, profileCompleted = false) => ({
+const buildAuthUser = (user, profile = null) => ({
   id: user.id,
   username: user.username,
   email: user.email,
@@ -30,7 +33,8 @@ const buildAuthUser = (user, profileCompleted = false) => ({
   ageConfirmedAt: user.ageConfirmedAt,
   termsAcceptedAt: user.termsAcceptedAt,
   warningCount: user.warningCount,
-  profileCompleted,
+  country: profile?.country || null,
+  profileCompleted: Boolean(profile?.profileCompletedAt),
   createdAt: user.createdAt,
 });
 
@@ -59,9 +63,26 @@ export const register = catchAsync(async (req, res, next) => {
     return next(new AppError('Captcha inválido. Intentá de nuevo.', 422));
   }
 
+  const pendingEmail = await authService.findPendingDeletionByEmail(data.email);
+  if (pendingEmail) {
+    return next(
+      new AppError(
+        'Ese email tiene una cuenta pendiente de eliminación. Iniciá sesión para recuperarla.',
+        409
+      )
+    );
+  }
+
   const existingEmail = await authService.findOneByEmail(data.email);
   if (existingEmail) {
     return next(new AppError('El email ya está registrado.', 409));
+  }
+
+  const pendingUsername = await authService.findPendingDeletionByUsername(data.username);
+  if (pendingUsername) {
+    return next(
+      new AppError('Ese nombre de usuario pertenece a una cuenta pendiente de eliminación.', 409)
+    );
   }
 
   const existingUsername = await authService.findOneByUsername(data.username);
@@ -69,7 +90,7 @@ export const register = catchAsync(async (req, res, next) => {
     return next(new AppError('El nombre de usuario ya está en uso.', 409));
   }
 
-  const verificationToken = crypto.randomBytes(32).toString('hex');
+  const verificationToken = generateToken();
   const now = new Date();
 
   const user = await authService.create({
@@ -78,7 +99,7 @@ export const register = catchAsync(async (req, res, next) => {
     password: data.password,
     ageConfirmedAt: now,
     termsAcceptedAt: now,
-    emailVerificationToken: verificationToken,
+    emailVerificationToken: hashToken(verificationToken),
     emailVerificationExpires: new Date(now.getTime() + VERIFICATION_TTL_MS),
     lastActiveAt: now,
   });
@@ -95,7 +116,7 @@ export const register = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     token,
-    user: buildAuthUser(user, false),
+    user: buildAuthUser(user),
   });
 });
 
@@ -105,8 +126,16 @@ export const login = catchAsync(async (req, res, next) => {
     return res.status(422).json({ status: 'fail', message: errorMessages.join(', ') });
   }
 
-  const user = await authService.findByIdentifierWithPassword(data.identifier.trim());
+  let user = await authService.findByIdentifierWithPassword(data.identifier.trim());
+  let recovered = false;
+
   if (!user) {
+    user = await authService.findPendingDeletionByIdentifierWithPassword(data.identifier.trim());
+    recovered = Boolean(user);
+  }
+
+  if (!user) {
+    await comparePassword(data.password, DUMMY_PASSWORD_HASH);
     return next(new AppError('El email/usuario o la contraseña son incorrectos.', 401));
   }
 
@@ -118,6 +147,10 @@ export const login = catchAsync(async (req, res, next) => {
   if (isSuspensionActive(user)) {
     const reason = user.suspensionReason ? ` Motivo: ${user.suspensionReason}` : '';
     return next(new AppError(`Tu cuenta está suspendida.${reason}`, 403));
+  }
+
+  if (recovered) {
+    await accountService.restorePendingDeletion(user);
   }
 
   if (user.status === 'suspended') {
@@ -133,7 +166,23 @@ export const login = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     token,
-    user: buildAuthUser(user, Boolean(profile?.profileCompletedAt)),
+    recovered,
+    user: buildAuthUser(user, profile),
+  });
+});
+
+export const deleteAccount = catchAsync(async (req, res) => {
+  const { hasError, errorMessages, data } = validateDeleteAccount(req.body);
+  if (hasError) {
+    return res.status(422).json({ status: 'fail', message: errorMessages.join(', ') });
+  }
+
+  const { scheduledFor } = await accountService.requestDeletion(req.sessionUser.id, data.password);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Tu cuenta quedó programada para eliminarse.',
+    deletionScheduledFor: scheduledFor.toISOString(),
   });
 });
 
@@ -142,7 +191,7 @@ export const getProfile = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    user: buildAuthUser(req.sessionUser, Boolean(profile?.profileCompletedAt)),
+    user: buildAuthUser(req.sessionUser, profile),
   });
 });
 
@@ -179,7 +228,7 @@ export const verifyEmail = catchAsync(async (req, res, next) => {
     return next(new AppError('Falta el token de verificación.', 400));
   }
 
-  const user = await authService.findByVerificationToken(token);
+  const user = await authService.findByVerificationTokenHash(hashToken(token));
 
   if (!user) {
     return next(new AppError('El enlace de verificación no es válido o ya fue usado.', 400));
@@ -214,9 +263,9 @@ export const resendVerification = catchAsync(async (req, res) => {
     return res.status(200).json({ status: 'success', message: 'Tu email ya está verificado.' });
   }
 
-  const verificationToken = crypto.randomBytes(32).toString('hex');
+  const verificationToken = generateToken();
   await authService.update(user.id, {
-    emailVerificationToken: verificationToken,
+    emailVerificationToken: hashToken(verificationToken),
     emailVerificationExpires: new Date(Date.now() + VERIFICATION_TTL_MS),
   });
 
@@ -247,8 +296,8 @@ export const forgotPassword = catchAsync(async (req, res) => {
     return res.status(200).json(genericResponse);
   }
 
-  const token = crypto.randomBytes(32).toString('hex');
-  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const token = generateToken();
+  const tokenHash = hashToken(token);
 
   await authService.update(user.id, {
     passwordResetToken: tokenHash,
@@ -266,7 +315,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     return res.status(422).json({ status: 'fail', message: errorMessages.join(', ') });
   }
 
-  const tokenHash = crypto.createHash('sha256').update(data.token).digest('hex');
+  const tokenHash = hashToken(data.token);
   const user = await authService.findByResetToken(tokenHash);
 
   if (!user || !user.passwordResetExpires) {

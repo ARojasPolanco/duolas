@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  COUNTRIES,
   LANGUAGES,
   PLAY_STYLES,
   RANK_DIVISIONS,
@@ -8,11 +9,14 @@ import {
   ROLES,
   SCHEDULE_BLOCKS,
   SCHEDULE_DAYS,
-} from '@duo-las/shared';
+} from '@duo-las/shared/constants';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
+import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
+import { COUNTRY_LABELS } from '../utils/labels.js';
+import { formatBlockRange, getCountryOffsetMinutes } from '../utils/time.js';
 
 const ROLE_LABELS = {
   top: 'Top',
@@ -69,6 +73,7 @@ const STEPS = ['Riot ID', 'Roles', 'Rango', 'Horarios', 'Estilo', 'Cierre'];
 
 const initialForm = {
   riotId: '',
+  country: '',
   primaryRole: '',
   secondaryRole: '',
   rankTier: '',
@@ -113,6 +118,7 @@ export default function OnboardingPage() {
         const profile = res.data.profile;
         setForm({
           riotId: profile.riotId || '',
+          country: profile.country || '',
           primaryRole: profile.primaryRole || '',
           secondaryRole: profile.secondaryRole || '',
           rankTier: profile.rankTier || '',
@@ -217,6 +223,7 @@ export default function OnboardingPage() {
 
     const payload = {
       riotId: form.riotId.trim(),
+      country: form.country || null,
       primaryRole: form.primaryRole,
       secondaryRole: form.secondaryRole,
       rankTier: form.rankTier,
@@ -374,22 +381,27 @@ export default function OnboardingPage() {
                   </p>
                 </div>
 
-                <label className="block text-sm font-semibold">
-                  Tier
-                  <select
-                    className={`${inputClass} mt-2`}
-                    value={form.rankTier}
-                    onChange={(event) => setRankTier(event.target.value)}
-                    required
-                  >
-                    <option value="">Elegí tu tier</option>
+                <div>
+                  <p className="mb-2 text-sm font-semibold">Tier</p>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
                     {RANK_TIERS.map((tier) => (
-                      <option key={tier} value={tier}>
-                        {RANK_LABELS[tier]}
-                      </option>
+                      <button
+                        key={tier}
+                        type="button"
+                        onClick={() => setRankTier(tier)}
+                        aria-pressed={form.rankTier === tier}
+                        className={`flex min-h-20 flex-col items-center justify-center gap-1 rounded-xl border px-1 py-2 text-[11px] font-semibold transition ${
+                          form.rankTier === tier
+                            ? 'border-accent bg-accent/10 text-accent'
+                            : 'border-border text-muted hover:border-accent/50 hover:text-text'
+                        }`}
+                      >
+                        <RankIcon tier={tier} size={34} />
+                        <span className="text-center leading-tight">{RANK_LABELS[tier]}</span>
+                      </button>
                     ))}
-                  </select>
-                </label>
+                  </div>
+                </div>
 
                 {form.rankTier && !isApex ? (
                   <div>
@@ -433,6 +445,39 @@ export default function OnboardingPage() {
                     Tocá los momentos en los que normalmente podés jugar. Todos los horarios están
                     en hora Argentina.
                   </p>
+                </div>
+
+                <div className="rounded-2xl border border-border bg-bg p-4">
+                  <label className="block text-sm font-semibold" htmlFor="profile-country">
+                    País de residencia (opcional)
+                  </label>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">
+                    Lo usamos para mostrarte los horarios en tu hora local. Los bloques siempre se
+                    guardan en ART.
+                  </p>
+                  <select
+                    id="profile-country"
+                    value={form.country}
+                    onChange={setField('country')}
+                    className="mt-3 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-text"
+                  >
+                    <option value="">Sin especificar</option>
+                    {COUNTRIES.map((country) => (
+                      <option key={country} value={country}>
+                        {COUNTRY_LABELS[country]}
+                      </option>
+                    ))}
+                  </select>
+
+                  {form.country && getCountryOffsetMinutes(form.country) !== 0 ? (
+                    <p className="mt-3 text-xs leading-relaxed text-muted">
+                      En {COUNTRY_LABELS[form.country]}, los bloques se ven así: madrugada{' '}
+                      {formatBlockRange('early', form.country)}, mañana{' '}
+                      {formatBlockRange('morning', form.country)}, tarde{' '}
+                      {formatBlockRange('afternoon', form.country)}, noche{' '}
+                      {formatBlockRange('night', form.country)}.
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="rounded-2xl border border-border bg-bg p-3">
@@ -638,7 +683,11 @@ export default function OnboardingPage() {
                   <p className="font-semibold">Resumen</p>
                   <ul className="mt-3 space-y-2 text-muted">
                     <li>
-                      <span className="text-text">Riot ID:</span> {form.riotId || '—'}
+                      <span className="text-text">Riot ID:</span> {form.riotId || '-'}
+                    </li>
+                    <li>
+                      <span className="text-text">País:</span>{' '}
+                      {form.country ? COUNTRY_LABELS[form.country] : 'Sin especificar'}
                     </li>
                     <li>
                       <span className="text-text">Roles:</span>{' '}

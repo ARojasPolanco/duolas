@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { beforeAll, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import app from '../app.js';
@@ -5,6 +6,7 @@ import sequelize from '../config/database/database.js';
 import { runMigrations } from '../config/database/migrator.js';
 import MetricsEvent from '../modules/metrics/metricsEvent.model.js';
 import User from '../modules/auth/auth.model.js';
+import { hashToken } from '../utils/tokens.js';
 import { authHeader, completeProfile, createMatchUser, registerUser } from './helpers/fixtures.js';
 
 const api = request(app);
@@ -37,9 +39,10 @@ describe('Métricas', () => {
     expect(created).toBeTruthy();
 
     const stored = await User.findByPk(user.id);
-    const verification = await api.get(
-      `/api/v1/auth/verify-email?token=${stored.emailVerificationToken}`
-    );
+    const plainToken = crypto.randomBytes(32).toString('hex');
+    await stored.update({ emailVerificationToken: hashToken(plainToken) });
+
+    const verification = await api.get(`/api/v1/auth/verify-email?token=${plainToken}`);
     expect(verification.status).toBe(200);
 
     const verified = await waitForMetric(user.id, 'email_verified');

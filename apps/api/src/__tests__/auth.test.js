@@ -5,6 +5,7 @@ import app from '../app.js';
 import sequelize from '../config/database/database.js';
 import { runMigrations } from '../config/database/migrator.js';
 import User from '../modules/auth/auth.model.js';
+import { hashToken } from '../utils/tokens.js';
 import { authHeader, loginUser, registerUser, uniqueEmail } from './helpers/fixtures.js';
 
 beforeAll(async () => {
@@ -22,13 +23,15 @@ beforeAll(async () => {
 describe('Auth', () => {
   describe('POST /api/v1/auth/register', () => {
     it('registra un usuario con +18 y términos aceptados', async () => {
-      const { res } = await registerUser();
+      const { res, user } = await registerUser();
+      const stored = await User.findByPk(user.id);
 
       expect(res.status).toBe(201);
       expect(res.body.status).toBe('success');
       expect(res.body.token).toBeTruthy();
       expect(res.body.user.emailVerified).toBe(false);
       expect(res.body.user.profileCompleted).toBe(false);
+      expect(stored.emailVerificationToken).toMatch(/^[a-f0-9]{64}$/);
     });
 
     it('normaliza el email a minúsculas', async () => {
@@ -54,7 +57,7 @@ describe('Auth', () => {
     });
 
     it('rechaza contraseñas cortas', async () => {
-      const { res } = await registerUser({ password: 'corta' });
+      const { res } = await registerUser({ password: '123456789' });
 
       expect(res.status).toBe(422);
     });
@@ -145,10 +148,10 @@ describe('Auth', () => {
     it('verifica con un token válido', async () => {
       const { user } = await registerUser();
       const stored = await User.findByPk(user.id);
+      const plainToken = crypto.randomBytes(32).toString('hex');
+      await stored.update({ emailVerificationToken: hashToken(plainToken) });
 
-      const res = await request(app).get(
-        `/api/v1/auth/verify-email?token=${stored.emailVerificationToken}`
-      );
+      const res = await request(app).get(`/api/v1/auth/verify-email?token=${plainToken}`);
       const refreshed = await User.findByPk(user.id);
 
       expect(res.status).toBe(200);
@@ -165,11 +168,13 @@ describe('Auth', () => {
     it('rechaza un token expirado', async () => {
       const { user } = await registerUser();
       const stored = await User.findByPk(user.id);
-      await stored.update({ emailVerificationExpires: new Date(Date.now() - 1000) });
+      const plainToken = crypto.randomBytes(32).toString('hex');
+      await stored.update({
+        emailVerificationToken: hashToken(plainToken),
+        emailVerificationExpires: new Date(Date.now() - 1000),
+      });
 
-      const res = await request(app).get(
-        `/api/v1/auth/verify-email?token=${stored.emailVerificationToken}`
-      );
+      const res = await request(app).get(`/api/v1/auth/verify-email?token=${plainToken}`);
 
       expect(res.status).toBe(400);
     });

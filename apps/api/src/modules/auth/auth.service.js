@@ -22,12 +22,48 @@ export class AuthService {
     });
   }
 
+  async findPendingDeletionByEmail(email) {
+    return User.findOne({
+      where: {
+        email: email.toLowerCase(),
+        isDeleted: true,
+        deletionScheduledFor: { [Op.gt]: new Date() },
+      },
+      attributes: ['id'],
+    });
+  }
+
+  async findPendingDeletionByUsername(username) {
+    return User.findOne({
+      where: {
+        username: { [Op.iLike]: username },
+        isDeleted: true,
+        deletionScheduledFor: { [Op.gt]: new Date() },
+      },
+      attributes: ['id'],
+    });
+  }
+
   async findByIdentifierWithPassword(identifier) {
     const where = identifier.includes('@')
       ? { email: identifier.toLowerCase() }
       : { username: { [Op.iLike]: identifier } };
 
     return User.findOne({ where: { ...where, isDeleted: false } });
+  }
+
+  async findPendingDeletionByIdentifierWithPassword(identifier) {
+    const where = identifier.includes('@')
+      ? { email: identifier.toLowerCase() }
+      : { username: { [Op.iLike]: identifier } };
+
+    return User.findOne({
+      where: {
+        ...where,
+        isDeleted: true,
+        deletionScheduledFor: { [Op.gt]: new Date() },
+      },
+    });
   }
 
   async findOneById(id) {
@@ -37,9 +73,9 @@ export class AuthService {
     });
   }
 
-  async findByVerificationToken(token) {
+  async findByVerificationTokenHash(tokenHash) {
     return User.findOne({
-      where: { emailVerificationToken: token, isDeleted: false },
+      where: { emailVerificationToken: tokenHash, isDeleted: false },
       attributes: { exclude: ['password'] },
     });
   }

@@ -30,7 +30,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 ### Incluido
 
 - Registro con confirmación de mayoría de edad y verificación de email.
-- Perfil de jugador con Riot ID, rango declarado, roles, horarios, idioma, micrófono y estilo.
+- Perfil de jugador con Riot ID, país, rango declarado, roles, horarios, idioma, micrófono y estilo.
 - Match de duo por afinidad con interés mutuo.
 - "Disponible ya" con vencimiento automático.
 - "Busco 1" para grupos.
@@ -69,7 +69,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 
 1. Registro con username, email, contraseña, confirmación +18 y términos.
 2. Verificación de email.
-3. Onboarding: Riot ID, roles, rango, horarios, idioma, micrófono y estilo.
+3. Onboarding: Riot ID, país, roles, rango, horarios, idioma, micrófono y estilo.
 4. Perfil completo: aparece en candidatos y puede interactuar.
 
 Sin email verificado o sin perfil completo no se puede matchear, invitar, postular ni publicar.
@@ -119,7 +119,7 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 - Username de 3 a 20 caracteres, letras, números y guión bajo. Único sin distinguir mayúsculas.
 - Email único, normalizado a minúsculas.
 - Username y email no se pueden cambiar en el MVP.
-- Contraseña de 8 a 128 caracteres, hasheada con bcrypt 12.
+- Contraseña de 10 a 128 caracteres, hasheada con bcrypt 12.
 - Verificación de email obligatoria para interactuar. Token de 24 horas.
 - Reset de contraseña con token de 1 hora, un solo uso y respuesta genérica.
 - JWT de 1 día. Sin refresh token.
@@ -131,6 +131,7 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 | -------------- | -------------------------------------------------------------------------------------------- |
 | Riot ID        | Formato `nombre#TAG`; nombre 3-16, tag 3-5 alfanumérico; único sin distinguir mayúsculas     |
 | Servidor       | Fijo `LAS` en el MVP                                                                         |
+| País           | Opcional: Argentina, Chile, Bolivia, Paraguay o Uruguay; se usa para mostrar la hora local   |
 | Rol principal  | Obligatorio: top, jungle, mid, adc o support                                                 |
 | Rol secundario | Obligatorio y distinto del principal                                                         |
 | Rango          | Tier + división obligatorios hasta Diamante; Maestro, Gran Maestro y Challenger sin división |
@@ -147,6 +148,7 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 - El Riot ID y el Discord no se muestran en el perfil público.
 - Solo se guarda el Riot ID actual. No se almacenan históricos.
 - El avatar se genera con iniciales y color determinístico. No hay uploads.
+- El país es informativo y no filtra candidatos. Los horarios se guardan en ART; la UI muestra la equivalencia local cuando corresponde.
 
 ## 9. Reglas de match
 
@@ -214,6 +216,15 @@ Detalle completo en `docs/MATCHING.md`.
 - El admin puede descartar, advertir, suspender 7 días, 30 días o permanentemente.
 - Toda sanción queda registrada con motivo, admin y fecha.
 - La suspensión envía email y notificación.
+
+### 13.1 Panel admin
+
+- El admin es un operador: no necesita perfil de jugador ni participa del matching.
+- `AdminShell` separa Resumen, Usuarios, Reportes y Métricas del flujo de jugador.
+- El resumen muestra cuentas activas, altas, verificación, perfiles, sanciones, reportes, matches y disponibilidad.
+- El listado de usuarios permite buscar por username/email y filtrar por rol, estado, verificación, perfil y baja.
+- El detalle concentra cuenta, perfil, reportes, sanciones, disponibilidad y conexiones.
+- Nunca se exponen contraseñas ni tokens.
 
 ## 14. Notificaciones
 

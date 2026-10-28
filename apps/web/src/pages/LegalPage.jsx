@@ -1,5 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import RiotDisclaimer from '../components/RiotDisclaimer.jsx';
+import { LEGAL_LAST_UPDATED } from '../content/legal.js';
 
 const legalLinks = [
   { to: '/terminos', label: 'Términos' },
@@ -64,7 +66,7 @@ export default function LegalPage({ title, intro, sections }) {
           </div>
 
           <div className="mt-8 flex flex-col gap-2 border-t border-border pt-4 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-            <p>Última actualización: octubre de 2026.</p>
+            <p>Última actualización: {LEGAL_LAST_UPDATED}.</p>
             <a
               href="mailto:soporte@duolas.app"
               className="inline-flex min-h-11 items-center text-accent hover:underline"
@@ -74,9 +76,7 @@ export default function LegalPage({ title, intro, sections }) {
           </div>
         </article>
 
-        <p className="mt-4 text-center text-xs leading-relaxed text-muted">
-          Duo LAS no está afiliado ni avalado por Riot Games.
-        </p>
+        <RiotDisclaimer className="mt-4 text-center" />
       </div>
     </div>
   );

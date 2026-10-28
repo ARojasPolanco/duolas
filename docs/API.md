@@ -31,19 +31,22 @@ Contrato HTTP del MVP. Base: `/api/v1`. Si el código contradice este documento,
 
 ## 3. Rate limits
 
-| Ámbito                        | Límite                                      |
-| ----------------------------- | ------------------------------------------- |
-| API global                    | 100 por 15 min por IP (1.000 en desarrollo) |
-| Auth                          | 30 por 15 min por IP (1.000 en desarrollo)  |
-| Likes                         | 30 por hora por usuario                     |
-| Invitaciones                  | 20 por hora por usuario                     |
-| Invitación a la misma persona | 1 cada 10 min                               |
-| Posts activos                 | 3 por usuario                               |
-| Posts creados                 | 5 por día                                   |
-| Postulaciones                 | 20 por día                                  |
-| Reportes                      | 10 por día                                  |
-| Tickets SSE                   | 30 por hora                                 |
-| Suscripciones push            | 10 por hora                                 |
+| Ámbito                        | Límite                                           |
+| ----------------------------- | ------------------------------------------------ |
+| API global                    | 600 por 15 min por IP (5.000 en desarrollo)      |
+| API autenticada               | 600 por 15 min por usuario (5.000 en desarrollo) |
+| Auth                          | 60 por 15 min por IP (1.000 en desarrollo)       |
+| Login por email/username      | 10 fallos por 15 min por credencial              |
+| Recuperación por email        | 5 por 15 min por email+IP                        |
+| Likes                         | 30 por hora por usuario                          |
+| Invitaciones                  | 20 por hora por usuario                          |
+| Invitación a la misma persona | 1 cada 10 min                                    |
+| Posts activos                 | 3 por usuario                                    |
+| Posts creados                 | 5 por día                                        |
+| Postulaciones                 | 20 por día                                       |
+| Reportes                      | 10 por día                                       |
+| Tickets SSE                   | 30 por hora                                      |
+| Suscripciones push            | 10 por hora                                      |
 
 Al exceder: 429 con mensaje claro.
 
@@ -134,6 +137,7 @@ Protegido. Devuelve la cuenta:
     "emailVerified": true,
     "status": "active",
     "ageConfirmedAt": "2026-10-25T...",
+    "country": "AR",
     "profileCompleted": true,
     "warningCount": 0
   }
@@ -147,6 +151,26 @@ Protegido. Devuelve la cuenta:
 ```
 
 `200`. 401 si la actual es incorrecta. Invalida tokens previos vía `changedPasswordAt` y devuelve un token nuevo.
+
+### `DELETE /auth/account`
+
+Protegido. Programa la eliminación con recuperación durante 30 días.
+
+```json
+{ "password": "contraseña-actual" }
+```
+
+`200`:
+
+```json
+{ "status": "success", "deletionScheduledFor": "2026-11-25T..." }
+```
+
+- 401 si la contraseña es incorrecta.
+- Invalida la sesión actual.
+- Desactiva perfil, disponibilidad, invitaciones, posts y notificaciones.
+- Login dentro del plazo recupera la cuenta y cancela la baja.
+- Al vencer, se purgan datos personales y el perfil; reportes, feedback y sanciones quedan anonimizados.
 
 ## 5. Perfiles
 
@@ -162,6 +186,7 @@ Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` 
     "username": "faker",
     "riotId": "Faker#LAS",
     "server": "LAS",
+    "country": "AR",
     "primaryRole": "mid",
     "secondaryRole": "jungle",
     "rankTier": "diamond",
@@ -196,13 +221,14 @@ Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` 
 
 Protegido. Acepta actualización parcial de:
 
-`riotId`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`.
+`riotId`, `country`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`.
 
 El servicio exige que el estado final quede completo. Para crear el perfil hay que enviar todos los campos obligatorios; si falta alguno responde 422 con la lista. Una vez creado, acepta actualizaciones parciales que mantengan el perfil completo. `profile_completed_at` se setea al completar. `200` con perfil y completitud.
 
 Reglas:
 
 - Riot ID único case-insensitive.
+- `country` opcional: `AR`, `CL`, `BO`, `PY` o `UY`.
 - Roles distintos.
 - Hasta Diamante con división; Maestro+ sin división.
 - 1-3 idiomas.
@@ -220,6 +246,7 @@ Protegido. Perfil público:
   "profile": {
     "id": "uuid",
     "username": "faker",
+    "country": "AR",
     "primaryRole": "mid",
     "secondaryRole": "jungle",
     "rankTier": "diamond",
@@ -444,6 +471,7 @@ Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo, bloquead
   "counterpart": {
     "id": "uuid",
     "username": "pepe",
+    "country": "CL",
     "rankTier": "diamond",
     "primaryRole": "mid",
     "reputation": { "...": "..." }
@@ -712,6 +740,32 @@ Solo admin. `200` con `{ users, connections, tickets }`.
 ## 14. Admin
 
 Requiere rol `admin`.
+
+### `GET /admin/overview`
+
+Resumen operativo: usuarios activos, jugadores, admins, altas de 7 días, emails verificados,
+perfiles completos, suspendidos, bajas pendientes, reportes abiertos, matches activos y
+disponibilidades activas.
+
+### `GET /admin/users`
+
+Query:
+
+- `search`: username o email, máximo 100 caracteres.
+- `role`: `player` o `admin`.
+- `status`: `active` o `suspended`.
+- `account`: `active` (default), `pending_deletion`, `deleted` o `all`.
+- `emailVerified`: `true` o `false`.
+- `profileCompleted`: `true` o `false`.
+- `page` y `limit` (máximo 50).
+
+Devuelve usuarios con email, perfil resumido y conteos de reportes abiertos, conexiones
+activas y sanciones.
+
+### `GET /admin/users/:id`
+
+Detalle de cuenta, perfil, reportes recibidos, sanciones, disponibilidad y conexiones.
+Nunca incluye contraseña ni tokens.
 
 ### `GET /admin/reports`
 

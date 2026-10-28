@@ -194,6 +194,34 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Batch 3: cards de candidatos simplificadas, grilla desktop de 3 columnas y tipografía/espaciado unificados.
 - [x] Batch 4: admin, métricas y legales pulidos; QA visual 360/390/768/1440 sin overflow.
 - [x] Selector de horarios rediseñado con tarjetas por día y atajos.
+- [x] Set SVG original de 10 rangos integrado en Home, cards, matches y onboarding.
+- [x] País de residencia LAS y equivalencia local de horarios en onboarding y cards.
+  - Migración 013 con `country` opcional y check de los cinco países.
+  - Selector en onboarding, badge de país/diferencia horaria en cards, matches, invitaciones, Disponible y Busco 1.
+  - 109 tests pasando, lint y build verdes, migración 013 down/up verificada y seed actualizado.
+
+## Hardening previo a producción
+
+- [x] Rate limit global 600/15 min por IP y 600/15 min por usuario autenticado.
+- [x] Login limitado por credencial (10 fallos/15 min) y recuperación por email+IP (5/15 min).
+- [x] Hash dummy en login para evitar enumeración por timing.
+- [x] Tokens de verificación y reset hasheados en DB.
+- [x] Contraseñas de 10 a 128 caracteres.
+- [x] CORS de producción exige HTTPS y rechaza wildcard.
+- [x] `TRUST_PROXY` configurable.
+- [x] CSP, HSTS, Referrer-Policy, X-Frame-Options, Permissions-Policy y CORP en Vercel.
+- [x] Zod actualizado a 4.6.7; audit sin vulnerabilidades high.
+- [ ] Revisar las 2 moderadas restantes de `uuid` al migrar a Sequelize 7.
+
+## Panel admin separado
+
+- [x] `AdminShell` con Resumen, Usuarios, Reportes y Métricas.
+- [x] `GET /admin/overview` con conteos operativos.
+- [x] `GET /admin/users` con búsqueda, filtros y paginación.
+- [x] `GET /admin/users/:id` con cuenta, perfil, reportes, sanciones y disponibilidad.
+- [x] `/admin`, `/admin/usuarios` y `/admin/usuarios/:id`.
+- [x] Admin redirigido fuera de las rutas de jugador; no requiere perfil.
+- [x] Tests de permisos, listado y detalle admin.
 
 ## Decisiones cerradas
 
@@ -223,6 +251,20 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - Sin chat interno: el contacto es Riot ID + Discord tras la conexión.
 - `npm audit` reporta una vulnerabilidad alta en Zod 3 (DoS con colecciones gigantes) y una moderada en `uuid` 8 vía Sequelize. El body limit de 100 KB mitiga; no se aplicó `audit fix --force` porque rompería Zod y degradaría Sequelize. Revisar al actualizar majors.
 
+## Release público y Riot
+
+- [x] Términos y privacidad completos.
+- [x] Aviso de Riot y boilerplate legal exacto en web/README.
+- [x] Guía de producción key, costos, revisión y checklist en `docs/RIOT-INTEGRATION.md`.
+- [x] Variables Riot preparadas en envs y Docker para uso futuro.
+- [ ] Registrar el producto en el Developer Portal de Riot.
+- [ ] Definir dominio y titular legal del producto.
+- [ ] Deploy público de web, API y PostgreSQL.
+- [ ] Verificar URLs legales, CORS, emails, captcha y PWA en producción.
+- [ ] Correr smoke público desktop/mobile.
+- [ ] Solicitar production key y probar integración en desarrollo.
+- [ ] Evaluar RSO solo si se va a verificar titularidad de cuenta.
+
 ## Pre-producción
 
 Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.production.example` y `apps/web/.env.production.example`.
@@ -245,6 +287,7 @@ Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.productio
 
 ## Próxima acción
 
-1. Correr el smoke completo desktop/mobile.
-2. Hacer la pasada visual final.
-3. Preparar el release en `main`.
+1. Cerrar dominio, titular legal y deploy público.
+2. Correr el smoke completo desktop/mobile en producción.
+3. Registrar el producto en el Developer Portal y solicitar la production key.
+4. Mantener el lanzamiento sin Riot API y con rango declarado.

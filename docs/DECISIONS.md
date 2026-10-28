@@ -80,7 +80,7 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 
 **Decisión:** 28 bloques semanales (7 días × 4 bloques) y todos se interpretan en `America/Argentina/Buenos_Aires`.
 
-**Consecuencias:** simplicidad y consistencia. Jugadores de otras zonas deben adaptar su disponibilidad a ART. No hay horario de verano.
+**Consecuencias:** simplicidad y consistencia. Jugadores de otras zonas deben adaptar su disponibilidad a ART. No hay horario de verano. La UI muestra la equivalencia local desde ADR-033.
 
 ## ADR-011 — Rol principal y secundario obligatorios
 
@@ -241,3 +241,43 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** `PATCH /profiles/me` exige que el estado final quede completo; el onboarding envía todos los campos juntos. Las ediciones posteriores también validan el estado final.
 
 **Consecuencias:** no existen perfiles parciales. `profile_completed_at` se setea al crear o actualizar un perfil completo y la UI valida cada paso antes de guardar.
+
+## ADR-031 - Lanzamiento sin Riot API y preparación de production key
+
+**Contexto:** el producto puede salir con rango declarado y assets propios mientras se tramita una production key que puede demorar meses.
+
+**Decisión:** lanzar el MVP público sin Riot API ni RSO, registrar el producto en el Developer Portal, mantener `RankIcon` como SVG original y dejar la integración documentada en `docs/RIOT-INTEGRATION.md`. La production key se solicita en paralelo.
+
+**Consecuencias:** el release no depende de Riot. El rango sigue siendo declarado y no se usan crests ni logos oficiales. Cuando haya key aprobada, la integración se prueba primero en desarrollo y la verificación de titularidad requiere RSO.
+
+## ADR-032 - Eliminación de cuenta con recuperación de 30 días
+
+**Contexto:** los usuarios necesitan ejercer la eliminación de sus datos sin depender de soporte, pero los reportes, feedback y sanciones deben conservarse para moderación.
+
+**Decisión:** `DELETE /auth/account` exige contraseña, programa la baja a 30 días e invalida la sesión. Iniciar sesión dentro del plazo recupera la cuenta. Un job horario purga los datos personales y el perfil, anonimiza el usuario y conserva registros de moderación no identificables.
+
+**Consecuencias:** la cuenta se oculta de inmediato y puede recuperarse antes de la fecha de purga. El borrado permanente es una anonimización con retención mínima de moderación, no un `DELETE` físico que arrastre feedbacks o reportes.
+
+## ADR-033 - País de residencia y equivalencia horaria local
+
+**Contexto:** LAS incluye Argentina, Chile, Bolivia, Paraguay y Uruguay. Los bloques horarios se guardan en ART, pero un jugador de otro país puede interpretar mal la hora local.
+
+**Decisión:** `country` es opcional en `player_profiles` y solo acepta los cinco países de LAS. Se usa para mostrar la equivalencia local de los bloques y una diferencia contra ART en cards, matches y perfil. No es filtro duro ni altera el matching: todos los bloques siguen siendo ART.
+
+**Consecuencias:** el matching se mantiene simple y compatible. La UI calcula la diferencia con la zona IANA del país y `Intl`, contemplando horario de verano. Si el país no está cargado, la UI muestra solo ART. Perú y Ecuador quedan fuera porque pertenecen a LAN.
+
+## ADR-034 - Hardening de producción antes del release
+
+**Contexto:** el MVP ya tenía auth, validación y rate limits básicos, pero faltaban ajustes para tráfico real, proxies y exposición web.
+
+**Decisión:** subir el límite global a 600/15 min por IP y agregar un límite por usuario autenticado; agregar límite por credencial en login (10 fallos/15 min) y por email+IP en recuperación; comparar un hash dummy cuando el login no encuentra usuario; guardar hasheados los tokens de verificación y reset; exigir HTTPS y prohibir wildcard en CORS de producción; hacer configurable `TRUST_PROXY`; aplicar CSP y headers de seguridad en Vercel; actualizar Zod 4.
+
+**Consecuencias:** menos falsos 429 detrás de NAT, mejor resistencia a fuerza bruta distribuida y enumeración por timing. Los rate limits siguen en memoria y asumen una instancia. Queda una vulnerabilidad moderada conocida de `uuid` vía Sequelize que no afecta la ruta usada (v1/v4 sin buffer).
+
+## ADR-035 - Panel admin separado del flujo de jugador
+
+**Contexto:** las cuentas admin no representan jugadores y no necesitan completar perfil ni entrar al matching. La información de usuarios estaba dispersa en reportes y métricas.
+
+**Decisión:** crear un `AdminShell` propio con Resumen, Usuarios, Reportes y Métricas. El admin es redirigido desde rutas de jugador a `/admin`. `GET /admin/users` expone búsqueda, filtros y paginación; `GET /admin/users/:id` concentra cuenta, perfil, reportes, sanciones y disponibilidad. Los datos sensibles como contraseña y tokens nunca se devuelven.
+
+**Consecuencias:** los admins operan sin perfil de jugador y no aparecen en el flujo social. El panel queda read-only en esta fase; las acciones de moderación siguen viviendo en reportes y en los endpoints existentes de warn/suspend.

@@ -118,7 +118,7 @@ export default function RegisterPage() {
           value={form.password}
           onChange={setField('password')}
           autoComplete="new-password"
-          minLength={8}
+          minLength={10}
           maxLength={128}
         />
 
@@ -127,7 +127,7 @@ export default function RegisterPage() {
           value={form.confirmPassword}
           onChange={setField('confirmPassword')}
           autoComplete="new-password"
-          minLength={8}
+          minLength={10}
           maxLength={128}
         />
 
@@ -136,7 +136,7 @@ export default function RegisterPage() {
             type="checkbox"
             checked={form.ageConfirmed}
             onChange={setField('ageConfirmed')}
-            className="mt-1 h-4 w-4 accent-[#00c2b8]"
+            className="mt-1 h-4 w-4 accent-[#b0cf5c]"
             required
           />
           <span>Confirmo que soy mayor de 18 años.</span>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
             type="checkbox"
             checked={form.termsAccepted}
             onChange={setField('termsAccepted')}
-            className="mt-1 h-4 w-4 accent-[#00c2b8]"
+            className="mt-1 h-4 w-4 accent-[#b0cf5c]"
             required
           />
           <span>

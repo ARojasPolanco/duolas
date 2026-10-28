@@ -87,9 +87,12 @@ requestId()
 accessLog()
 helmet()
 express.json({ limit: '100kb' })
-cors({ origin: whitelist })
+cors({ origin: whitelist, methods, headers })
 rateLimit(auth) en /api/v1/auth
 rateLimit(api) en /api
+rateLimit(login por credencial) en POST /auth/login
+rateLimit(recuperación por email+IP) en POST /auth/forgot-password
+rateLimit(autenticado) dentro de protect
 GET /health
 /api/v1 → routes
 app.all('*') → AppError 404
@@ -99,10 +102,12 @@ globalErrorHandler
 Reglas:
 
 - `trust proxy` habilitado para Render/Railway/Vercel.
-- CORS con lista separada por comas desde `CORS_ORIGIN`.
+- CORS con lista separada por comas desde `CORS_ORIGIN`; en producción exige HTTPS y sin wildcard.
 - Sin `cookie-parser`: el token viaja en `Authorization`.
 - Sin compresión global: SSE necesita flush inmediato.
 - Body JSON limitado a 100 KB.
+- `TRUST_PROXY` configurable; por defecto 1 detrás de Render/Railway.
+- La web se sirve desde Vercel con CSP, HSTS, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` y `X-Content-Type-Options`.
 
 ## 5. Manejo de errores
 
@@ -170,6 +175,7 @@ Reglas:
 | ---------------------- | ----------------------------------------- |
 | `PORT`                 | Puerto de la API, default 3000            |
 | `NODE_ENV`             | development, production o test            |
+| `TRUST_PROXY`          | Proxies confiables, default 1             |
 | `CORS_ORIGIN`          | Lista de orígenes permitidos              |
 | `APP_URL`              | URL pública de la web para emails y links |
 | `DB_URI`               | PostgreSQL de desarrollo                  |
@@ -184,7 +190,8 @@ Reglas:
 | `VAPID_PRIVATE_KEY`    | Push                                      |
 | `VAPID_SUBJECT`        | `mailto:` de contacto push                |
 | `RATE_LIMIT_WINDOW_MS` | Default 900000                            |
-| `RATE_LIMIT_MAX`       | Default 100                               |
+| `RATE_LIMIT_MAX`       | Default 600, por IP                       |
+| `RATE_LIMIT_USER_MAX`  | Default 600, por usuario autenticado      |
 | `LOG_LEVEL`            | Nivel de Winston                          |
 | `ADMIN_EMAIL`          | Email del admin para el seed              |
 | `ADMIN_PASSWORD`       | Password del admin para el seed           |
@@ -245,6 +252,8 @@ Además, índices únicos y parciales como última barrera:
 | `009_trust_safety`             | Reportes y feedbacks                        |
 | `010_push_subscriptions`       | Suscripciones push                          |
 | `011_metrics_events`           | Eventos de métricas                         |
+| `012_account_deletion`         | Baja programada y purga de cuentas          |
+| `013_profile_country`          | País de residencia LAS                      |
 
 ### Jobs internos
 
@@ -253,6 +262,7 @@ Además, índices únicos y parciales como última barrera:
 - **Tickets SSE:** limpieza de tickets vencidos cada 30 segundos.
 - **Actividad:** `last_active_at` se actualiza como máximo una vez cada 5 minutos por usuario.
 - **Push:** las suscripciones 404/410 se marcan inactivas al intentar enviar.
+- **Cuentas vencidas:** cada hora se purgan las bajas cuyo plazo de 30 días venció.
 
 Todos los intervalos usan `unref()` para no impedir el cierre ordenado.
 
@@ -265,28 +275,33 @@ Todos los intervalos usan `unref()` para no impedir el cierre ordenado.
 - `requireVerifiedEmail` para interacciones sociales.
 - `requireCompleteProfile` para match, disponibilidad, postulaciones e invitaciones.
 - `restrictTo('admin')` para moderación.
+- El panel admin usa `AdminShell` y `/admin`; no requiere perfil de jugador y no entra al matching.
 - Ownership explícito en conexiones, invitaciones, postulaciones y feedback.
 - Reset con SHA-256, 1 hora y un uso.
-- Verificación de email con token de 24 horas.
-- Rate limits por usuario autenticado o IP.
-- CORS restringido, helmet y body limitado.
-- Token en `localStorage`: riesgo de XSS aceptado para el MVP. Se mitiga con React sin HTML crudo y sin `dangerouslySetInnerHTML`.
+- Verificación de email con token de 24 horas, guardado hasheado.
+- Contraseñas de 10 a 128 caracteres; bcrypt 12. Login compara un hash dummy cuando el usuario no existe para evitar enumeración por timing.
+- Rate limits por IP, por credencial de login y por usuario autenticado.
+- CORS restringido, helmet, body limitado y headers de seguridad en la web.
+- Token en `localStorage`: riesgo de XSS aceptado para el MVP. Se mitiga con React sin HTML crudo, sin `dangerouslySetInnerHTML` y CSP restrictiva.
 
 ### Rate limits
 
-| Ámbito                        | Límite                                      |
-| ----------------------------- | ------------------------------------------- |
-| API global                    | 100 por 15 min por IP (1.000 en desarrollo) |
-| Auth                          | 30 por 15 min por IP (1.000 en desarrollo)  |
-| Likes                         | 30 por hora por usuario                     |
-| Invitaciones                  | 20 por hora por usuario                     |
-| Invitación a la misma persona | 1 cada 10 min                               |
-| Posts activos                 | 3 por usuario                               |
-| Posts creados                 | 5 por día                                   |
-| Postulaciones                 | 20 por día                                  |
-| Reportes                      | 10 por día                                  |
-| Tickets SSE                   | 30 por hora                                 |
-| Suscripciones push            | 10 por hora                                 |
+| Ámbito                        | Límite                                              |
+| ----------------------------- | --------------------------------------------------- |
+| API global                    | 600 por 15 min por IP (5.000 en desarrollo)         |
+| API autenticada               | 600 por 15 min por usuario (5.000 en desarrollo)    |
+| Auth                          | 60 por 15 min por IP (1.000 en desarrollo)          |
+| Login por email/username      | 10 fallos por 15 min por credencial (1.000 en test) |
+| Recuperación por email        | 5 por 15 min por email+IP (1.000 en desarrollo)     |
+| Likes                         | 30 por hora por usuario                             |
+| Invitaciones                  | 20 por hora por usuario                             |
+| Invitación a la misma persona | 1 cada 10 min                                       |
+| Posts activos                 | 3 por usuario                                       |
+| Posts creados                 | 5 por día                                           |
+| Postulaciones                 | 20 por día                                          |
+| Reportes                      | 10 por día                                          |
+| Tickets SSE                   | 30 por hora                                         |
+| Suscripciones push            | 10 por hora                                         |
 
 ## 10. Realtime con SSE
 

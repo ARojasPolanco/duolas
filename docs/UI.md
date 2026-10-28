@@ -6,55 +6,62 @@ Mapa de rutas, pantallas, componentes y reglas de interacción. Mobile-first, te
 
 ### Públicas
 
-| Ruta               | Pantalla               |
-| ------------------ | ---------------------- |
-| `/`                | Landing                |
-| `/login`           | Iniciar sesión         |
-| `/register`        | Registro               |
-| `/verify-email`    | Verificación de email  |
-| `/forgot-password` | Pedir reset            |
-| `/reset-password`  | Nueva contraseña       |
-| `/terminos`        | Términos de uso        |
-| `/privacidad`      | Política de privacidad |
+| Ruta                | Pantalla               |
+| ------------------- | ---------------------- |
+| `/`                 | Landing                |
+| `/login`            | Iniciar sesión         |
+| `/register`         | Registro               |
+| `/verify-email`     | Verificación de email  |
+| `/forgot-password`  | Pedir reset            |
+| `/reset-password`   | Nueva contraseña       |
+| `/terminos`         | Términos de uso        |
+| `/privacidad`       | Política de privacidad |
+| `/cuenta-eliminada` | Baja programada        |
 
 ### Protegidas
 
-| Ruta              | Pantalla                          |
-| ----------------- | --------------------------------- |
-| `/inicio`         | Hub del jugador                   |
-| `/onboarding`     | Completar perfil                  |
-| `/match`          | Candidatos y likes                |
-| `/disponible`     | Disponibilidad inmediata          |
-| `/busco-1`        | Posts de grupo                    |
-| `/matches`        | Conexiones y contacto             |
-| `/invitaciones`   | Invitaciones recibidas y enviadas |
-| `/notificaciones` | Centro de notificaciones          |
-| `/perfil`         | Perfil propio                     |
-| `/perfil/:id`     | Perfil público                    |
-| `/admin/reportes` | Moderación                        |
-| `/admin/metrics`  | KPIs                              |
+| Ruta                  | Pantalla                          |
+| --------------------- | --------------------------------- |
+| `/inicio`             | Hub del jugador                   |
+| `/onboarding`         | Completar perfil                  |
+| `/match`              | Candidatos y likes                |
+| `/disponible`         | Disponibilidad inmediata          |
+| `/busco-1`            | Posts de grupo                    |
+| `/matches`            | Conexiones y contacto             |
+| `/invitaciones`       | Invitaciones recibidas y enviadas |
+| `/notificaciones`     | Centro de notificaciones          |
+| `/perfil`             | Perfil propio                     |
+| `/perfil/:id`         | Perfil público                    |
+| `/admin`              | Resumen admin                     |
+| `/admin/usuarios`     | Buscador de cuentas               |
+| `/admin/usuarios/:id` | Detalle de usuario                |
+| `/admin/reportes`     | Moderación                        |
+| `/admin/metrics`      | KPIs                              |
 
 Reglas:
 
 - Sin sesión, una ruta protegida redirige a `/login` sin loops.
 - Con sesión y perfil incompleto, `/match`, `/disponible` y `/busco-1` redirigen a `/onboarding`.
 - `/admin/*` requiere rol admin.
+- Un admin que abre una ruta de jugador es redirigido a `/admin`.
+- El admin no necesita completar perfil de jugador.
 - La landing redirige a `/inicio` si hay sesión.
 
 ## 2. Navegación
 
-Todas las pantallas protegidas usan `AppShell`, salvo onboarding, que mantiene un layout enfocado.
+Todas las pantallas protegidas de jugador usan `AppShell`, salvo onboarding, que mantiene un layout enfocado. Las pantallas admin usan `AdminShell`.
 
 ### Mobile
 
 - Top bar fija con logo, campana y avatar.
 - Bottom nav fija con cinco ítems: Inicio, Match, Disponible, Busco 1 y Matches.
-- El avatar abre el menú de cuenta: Mi perfil, Invitaciones, Notificaciones, accesos admin y Cerrar sesión.
-- Los ítems de admin no se muestran en la bottom nav.
+- El avatar abre el menú de cuenta: Mi perfil, Invitaciones, Notificaciones, Eliminar cuenta y Cerrar sesión.
+- Los accesos admin viven fuera del shell de jugador, en `AdminShell`.
+- El pie de las pantallas protegidas incluye Términos, Privacidad, Aviso de Riot y el disclaimer legal de Riot.
 
 ### Desktop
 
-Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A la derecha viven la campana y el menú de avatar con perfil, notificaciones, accesos admin y logout.
+Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A la derecha viven la campana y el menú de avatar con perfil, notificaciones y logout. Los admins usan un top nav propio con Resumen, Usuarios, Reportes y Métricas.
 
 ## 3. Pantallas
 
@@ -98,7 +105,7 @@ Seis pasos con barra de progreso:
 1. Riot ID y servidor LAS.
 2. Rol principal y secundario.
 3. Rango y LP.
-4. Horarios por día con bloques de 6 horas, atajos y selección múltiple.
+4. Horarios por día con bloques de 6 horas, atajos y selección múltiple. Incluye país opcional y equivalencia local de cada bloque.
 5. Estilo, idiomas y micrófono.
 6. Bio, Discord opcional y resumen.
 
@@ -111,7 +118,7 @@ Reglas:
 
 ### 3.6 Inicio `/inicio`
 
-- Hero con saludo, email y perfil propio.
+- Hero con saludo, email, país y perfil propio.
 - Stats de rango, roles, reputación y estado de cuenta.
 - Card de perfil propio con Riot ID y Discord visibles solo para el dueño.
 - Accesos rápidos a Match, Matches y edición de perfil.
@@ -125,13 +132,14 @@ Reglas:
 
 - Filtros: cola (Solo/Dúo, Flex) y rol opcional.
 - Card de candidato:
-  - Iniciales, username, rango, roles, estilo, idiomas, mic.
+  - Iniciales, username, rango, roles, país, diferencia horaria contra ART, estilo, idiomas, mic.
   - Score con anillo y motivos.
   - Botón "Me interesa" y "Pasar".
   - Indicador de disponibilidad activa.
 - Lista de likes enviados.
 - Estado vacío: "No encontramos duos compatibles todavía. Probá ampliar horarios o volver más tarde."
 - Optimistic UI al likear con rollback.
+- El badge de país y diferencia contra ART se reutiliza en todas las cards de jugador.
 
 ### 3.8 Disponible ya `/disponible`
 
@@ -184,7 +192,7 @@ Reglas:
 
 ### 3.13 Perfil `/perfil`
 
-- Editar perfil con los mismos campos del onboarding. Username y email no son editables en el MVP.
+- Editar perfil con los mismos campos del onboarding, incluido el país. Username y email no son editables en el MVP.
 - Reputación con porcentaje y conteos.
 - Estado de verificación de email.
 - Lista de bloqueados con desbloquear.
@@ -193,13 +201,36 @@ Reglas:
 
 ### 3.14 Perfil público `/perfil/:id`
 
-- Iniciales, username, rango, roles, estilo, idiomas, mic, bio.
+- Iniciales, username, rango, roles, país, diferencia horaria contra ART, estilo, idiomas, mic, bio.
 - Reputación y cantidad de conexiones.
 - Badge "Disponible ahora".
 - Botón reportar y bloquear.
 - Nunca muestra email, Riot ID ni Discord.
 
-### 3.15 Admin reportes `/admin/reportes`
+### 3.15 Admin resumen `/admin`
+
+- `AdminShell` con logo, badge Admin, navegación y logout.
+- Cards de usuarios activos, altas de 7 días, email verificado, perfiles completos, suspendidos, reportes abiertos, matches activos, disponibilidad y bajas pendientes.
+- Cada card enlaza al listado o sección correspondiente.
+
+### 3.16 Admin usuarios `/admin/usuarios`
+
+- Buscador por username o email.
+- Filtros por rol, estado, tipo de cuenta, email verificado y perfil completo.
+- Tabla desktop y cards mobile con usuario, email, rol, estado, perfil, reportes y último acceso.
+- Paginación de 20 por página.
+- Click abre el detalle.
+
+### 3.17 Admin detalle de usuario `/admin/usuarios/:id`
+
+- Cabecera con username, email, rol, estado y contadores.
+- Cuenta: ID, verificación, alta, último login, última actividad, suspensión y baja.
+- Perfil de jugador: Riot ID, Discord, rango, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
+- Reportes recibidos y sanciones recientes.
+- Disponibilidad activa y conexiones históricas.
+- Si la cuenta no tiene perfil, se muestra un aviso; es esperable en admins.
+
+### 3.18 Admin reportes `/admin/reportes`
 
 - Tabla con fecha, reportero, reportado, motivo, prioridad y estado.
 - Filtros por estado, motivo y prioridad.
@@ -207,23 +238,34 @@ Reglas:
 - Acciones: descartar, advertir, suspender 7 días, 30 días o permanente.
 - Nota interna opcional; se usa como motivo de la sanción.
 
-### 3.16 Admin métricas `/admin/metrics`
+### 3.19 Admin métricas `/admin/metrics`
 
 - Cuatro cards: tiempo al primer duo, match a partida, retención 7d, simultáneos.
 - Selector de rango de fechas en ART, con formato numérico es-AR.
 - Estado vacío si no hay datos.
 
-### 3.17 Legales `/terminos`, `/privacidad`, `/aviso-riot`
+### 3.20 Legales `/terminos`, `/privacidad`, `/aviso-riot`
 
 - Header con logo y volver al inicio.
 - Tabs para cambiar entre documentos, con estado activo.
-- Contenido numerado, última actualización y contacto de soporte.
+- Contenido numerado, última actualización, contacto de soporte y disclaimer legal de Riot.
+
+### 3.21 Baja de cuenta
+
+- Opción “Eliminar cuenta” dentro del menú de avatar.
+- Doble confirmación: aviso de 30 días y luego contraseña actual.
+- Al confirmar se cierra la sesión y se muestra `/cuenta-eliminada`.
+- La cuenta se recupera iniciando sesión antes de la fecha de purga.
+- Al vencer el plazo se eliminan datos personales y el perfil; quedan registros anonimizados de moderación.
 
 ## 4. Componentes
 
 | Componente           | Uso                                   |
 | -------------------- | ------------------------------------- |
-| `AppShell`           | Shell responsive con nav y menú       |
+| `AppShell`           | Shell responsive de jugador           |
+| `AdminShell`         | Shell interno con navegación admin    |
+| `RankIcon`           | Escudo SVG propio por tier            |
+| `RiotDisclaimer`     | Boilerplate legal exigido por Riot    |
 | `RankBadge`          | Tier, división y color                |
 | `RoleIcon`           | Icono SVG propio por rol              |
 | `PlayerAvatar`       | Iniciales con color determinístico    |

@@ -12,12 +12,13 @@ Plan de pruebas del MVP. Sin tests E2E automatizados: el smoke manual es obligat
 
 ### Estado actual
 
-- F0 a F6 cerrados técnicamente con **103 tests pasando**.
-- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, perfiles, Riot ID, roles, rango, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias, suspensiones, tickets SSE, bus de eventos, suscripciones push, métricas y autorización admin de KPIs.
+- F0 a F6 cerrados técnicamente con **109 tests pasando**.
+- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, eliminación y recuperación de cuenta, perfiles, país de residencia, Riot ID, roles, rango, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias, suspensiones, tickets SSE, bus de eventos, suscripciones push, métricas, panel admin de usuarios y autorización admin de KPIs.
 - Smoke técnico: flujo API contra PostgreSQL y rutas web respondiendo 200.
 - Pendiente: smoke visual interactivo en navegador antes del release.
 
 - `NODE_ENV=test`.
+- Rate limits altos en test (1.000) para no interferir; los valores productivos se validan en smoke.
 - `fileParallelism: false`.
 - Timeout 15 segundos.
 - Base `duo_lol_test`; los tests fallan si no está disponible.
@@ -105,7 +106,10 @@ Cuando exista CI, los mismos comandos deben pasar sin servicios externos: Resend
 - Discord válido e inválido.
 - Username y email.
 - Edad y términos obligatorios.
+- Contraseña de 10 a 128 caracteres.
+- Tokens de verificación y reset guardados hasheados.
 - Idiomas 1-3.
+- País `AR`, `CL`, `BO`, `PY` o `UY`; `PE` rechazado; vacío permitido.
 - Horarios 1-28.
 - Bio y notas con longitud máxima.
 - Feedback negativo sin tag.
@@ -257,8 +261,9 @@ En ventana incógnita, sin sesión:
 
 ### Perfil y match
 
-- [ ] Completar onboarding en mobile.
-- [ ] Ver candidatos con score y motivos.
+- [ ] Completar onboarding en mobile, elegir país y ver la equivalencia local de los bloques.
+- [ ] Ver candidatos con score, motivos, país y diferencia horaria contra ART.
+- [ ] Confirmar que un candidato sin país no muestra badge y no rompe la card.
 - [ ] Dar like y retirarlo.
 - [ ] Con dos cuentas, concretar un like mutuo.
 - [ ] Confirmar que el contacto aparece solo en ambos matches.
@@ -294,6 +299,10 @@ En ventana incógnita, sin sesión:
 - [ ] Entrar como admin y resolver el reporte.
 - [ ] Advertir y suspender.
 - [ ] Confirmar que el suspendido recibe 403.
+- [ ] Entrar como admin y confirmar que redirige a `/admin`, no a `/inicio`.
+- [ ] Abrir `/admin/usuarios`, buscar una cuenta y filtrar por rol, estado y perfil.
+- [ ] Abrir el detalle y confirmar perfil, reportes, sanciones y disponibilidad.
+- [ ] Confirmar que un jugador recibe 403 en la API admin y no puede abrir `/admin`.
 
 ### Realtime y push
 

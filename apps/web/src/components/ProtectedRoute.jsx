@@ -17,6 +17,10 @@ export default function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
+  if (user.role === 'admin' && !location.pathname.startsWith('/admin')) {
+    return <Navigate to="/admin" replace />;
+  }
+
   if (requiredRole && user.role !== requiredRole && user.role !== 'admin') {
     return <Navigate to="/" replace />;
   }

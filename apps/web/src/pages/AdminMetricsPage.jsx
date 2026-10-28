@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BarChart3, Clock3, Gamepad2, RefreshCw, Users } from 'lucide-react';
-import AppShell from '../components/AppShell.jsx';
+import AdminShell from '../components/AdminShell.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 
@@ -108,7 +108,7 @@ export default function AdminMetricsPage() {
     : [];
 
   return (
-    <AppShell maxWidth="max-w-5xl">
+    <AdminShell maxWidth="max-w-5xl">
       <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Admin</p>
@@ -196,6 +196,6 @@ export default function AdminMetricsPage() {
           Restablecer últimos 30 días
         </button>
       </div>
-    </AppShell>
+    </AdminShell>
   );
 }

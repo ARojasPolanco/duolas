@@ -16,6 +16,12 @@ export const changePasswordSchema = z
   })
   .strict();
 
+export const deleteAccountSchema = z
+  .object({
+    password: z.string().min(1, 'La contraseña es requerida'),
+  })
+  .strict();
+
 export const forgotPasswordSchema = z
   .object({
     email: emailSchema,
@@ -43,7 +49,7 @@ const fieldLabels = {
 };
 
 const formatErrors = (error) =>
-  error.errors.map((issue) => {
+  error.issues.map((issue) => {
     const field = issue.path[0];
     return `${fieldLabels[field] || field}: ${issue.message}`;
   });
@@ -66,6 +72,14 @@ export function validateLogin(data) {
 
 export function validateChangePassword(data) {
   const result = changePasswordSchema.safeParse(data);
+  if (!result.success) {
+    return { hasError: true, errorMessages: formatErrors(result.error), data: null };
+  }
+  return { hasError: false, errorMessages: [], data: result.data };
+}
+
+export function validateDeleteAccount(data) {
+  const result = deleteAccountSchema.safeParse(data);
   if (!result.success) {
     return { hasError: true, errorMessages: formatErrors(result.error), data: null };
   }

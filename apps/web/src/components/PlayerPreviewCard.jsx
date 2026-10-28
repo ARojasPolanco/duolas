@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import { Ban, Check, Heart, Languages, Mic, MicOff, Star } from 'lucide-react';
+import CountryBadge from './CountryBadge.jsx';
+import RankIcon from './RankIcon.jsx';
 import {
   LANGUAGE_LABELS,
   STYLE_LABELS,
@@ -33,9 +35,17 @@ export default function PlayerPreviewCard({
           </div>
           <div className="min-w-0">
             <h3 className="truncate font-bold">{player.username}</h3>
-            <p className="truncate text-xs text-muted">
-              {formatRank(player)} · {formatRoles(player)}
+            <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+              <RankIcon tier={player.rankTier} size={16} />
+              <span className="truncate">
+                {formatRank(player)} · {formatRoles(player)}
+              </span>
             </p>
+            {player.country ? (
+              <p className="mt-0.5 text-[10px] text-muted">
+                <CountryBadge country={player.country} />
+              </p>
+            ) : null}
           </div>
         </div>
         {typeof score === 'number' ? (

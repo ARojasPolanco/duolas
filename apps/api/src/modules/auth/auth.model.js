@@ -112,6 +112,16 @@ User.init(
       defaultValue: false,
       field: 'is_deleted',
     },
+    deletionRequestedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'deletion_requested_at',
+    },
+    deletionScheduledFor: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'deletion_scheduled_for',
+    },
   },
   {
     sequelize,

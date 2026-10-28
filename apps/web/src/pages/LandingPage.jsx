@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Radio, ShieldCheck, Swords, Users } from 'lucide-react';
 import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
+import RiotDisclaimer from '../components/RiotDisclaimer.jsx';
 
 const features = [
   {
@@ -27,6 +28,7 @@ const mockPlayers = [
     profile: {
       id: 'demo-card-mid',
       username: 'MidOrDodge',
+      country: 'AR',
       rankTier: 'diamond',
       rankDivision: 'ii',
       primaryRole: 'mid',
@@ -44,6 +46,7 @@ const mockPlayers = [
     profile: {
       id: 'demo-card-jungle',
       username: 'JungleTrack',
+      country: 'CL',
       rankTier: 'diamond',
       rankDivision: 'iii',
       primaryRole: 'jungle',
@@ -61,6 +64,7 @@ const mockPlayers = [
     profile: {
       id: 'demo-card-support',
       username: 'SupportCarry',
+      country: 'UY',
       rankTier: 'platinum',
       rankDivision: 'i',
       primaryRole: 'support',
@@ -247,17 +251,22 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t border-border px-5 py-6">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Duo LAS</span>
-          <div className="flex flex-wrap items-center gap-x-4">
-            <Link to="/terminos" className="inline-flex min-h-11 items-center">
-              Términos
-            </Link>
-            <Link to="/privacidad" className="inline-flex min-h-11 items-center">
-              Privacidad
-            </Link>
-            <span>No afiliado ni avalado por Riot Games.</span>
+        <div className="mx-auto max-w-6xl space-y-3 text-xs text-muted">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <span>© {new Date().getFullYear()} Duo LAS</span>
+            <div className="flex flex-wrap items-center gap-x-4">
+              <Link to="/terminos" className="inline-flex min-h-11 items-center">
+                Términos
+              </Link>
+              <Link to="/privacidad" className="inline-flex min-h-11 items-center">
+                Privacidad
+              </Link>
+              <Link to="/aviso-riot" className="inline-flex min-h-11 items-center">
+                Aviso de Riot
+              </Link>
+            </div>
           </div>
+          <RiotDisclaimer className="border-t border-border pt-3" />
         </div>
       </footer>
     </div>

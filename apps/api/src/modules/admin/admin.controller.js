@@ -1,3 +1,5 @@
+import { adminService } from './admin.service.js';
+import { validateAdminUsersQuery } from './admin.schema.js';
 import { reportService } from '../trust/report.service.js';
 import {
   validateAdminReportsQuery,
@@ -7,6 +9,34 @@ import {
 } from '../trust/report.schema.js';
 import { validateUuid } from '../../utils/validation.js';
 import { catchAsync } from '../../errors/catchAsync.js';
+
+export const getOverview = catchAsync(async (_req, res) => {
+  const overview = await adminService.overview();
+
+  res.status(200).json({ status: 'success', overview });
+});
+
+export const getUsers = catchAsync(async (req, res) => {
+  const { hasError, errorMessages, data } = validateAdminUsersQuery(req.query);
+  if (hasError) {
+    return res.status(422).json({ status: 'fail', message: errorMessages.join(', ') });
+  }
+
+  const result = await adminService.list(data);
+
+  res.status(200).json({ status: 'success', ...result });
+});
+
+export const getUserDetail = catchAsync(async (req, res) => {
+  const { hasError, errorMessages, data: userId } = validateUuid(req.params.id, 'Usuario');
+  if (hasError) {
+    return res.status(422).json({ status: 'fail', message: errorMessages.join(', ') });
+  }
+
+  const user = await adminService.detail(userId);
+
+  res.status(200).json({ status: 'success', user });
+});
 
 export const getReports = catchAsync(async (req, res) => {
   const { hasError, errorMessages, data } = validateAdminReportsQuery(req.query);

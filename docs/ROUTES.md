@@ -22,33 +22,37 @@ npm run seed
 
 ### Públicas
 
-| Ruta               | Estado | Qué probar                                                |
-| ------------------ | ------ | --------------------------------------------------------- |
-| `/`                | Lista  | Hero, carrusel de 4 slides, cards de ejemplo y CTAs       |
-| `/login`           | Lista  | Login, toggle de contraseña y link de recuperación        |
-| `/register`        | Lista  | Registro, +18, términos y campos de contraseña con toggle |
-| `/verify-email`    | Lista  | Verificación con `?token=...`                             |
-| `/forgot-password` | Lista  | Pedido de reset                                           |
-| `/reset-password`  | Lista  | Reset con `?token=...`                                    |
-| `/terminos`        | Lista  | Términos de uso                                           |
-| `/privacidad`      | Lista  | Política de privacidad                                    |
-| `/aviso-riot`      | Lista  | Aviso de no afiliación con Riot                           |
+| Ruta                | Estado | Qué probar                                                |
+| ------------------- | ------ | --------------------------------------------------------- |
+| `/`                 | Lista  | Hero, carrusel de 4 slides, cards de ejemplo y CTAs       |
+| `/login`            | Lista  | Login, toggle de contraseña y link de recuperación        |
+| `/register`         | Lista  | Registro, +18, términos y campos de contraseña con toggle |
+| `/verify-email`     | Lista  | Verificación con `?token=...`                             |
+| `/forgot-password`  | Lista  | Pedido de reset                                           |
+| `/reset-password`   | Lista  | Reset con `?token=...`                                    |
+| `/terminos`         | Lista  | Términos de uso                                           |
+| `/privacidad`       | Lista  | Política de privacidad                                    |
+| `/aviso-riot`       | Lista  | Aviso de no afiliación con Riot                           |
+| `/cuenta-eliminada` | Lista  | Baja programada, recuperación y cierre de sesión          |
 
 ### Protegidas
 
-| Ruta              | Estado | Qué probar                                               |
-| ----------------- | ------ | -------------------------------------------------------- |
-| `/onboarding`     | Lista  | Perfil completo, edición y guardado                      |
-| `/inicio`         | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
-| `/match`          | Lista  | Filtros, candidatos, like, pasar y bloquear              |
-| `/disponible`     | Lista  | Abrir/cerrar disponibilidad, TTL, filtros e invitar      |
-| `/invitaciones`   | Lista  | Recibidas/enviadas, aceptar, rechazar y cancelar         |
-| `/busco-1`        | Lista  | Publicar, explorar, postularse y gestionar postulaciones |
-| `/matches`        | Lista  | Contacto, feedback doble ciego, reportar, archivar       |
-| `/notificaciones` | Lista  | Lista, contador, SSE, push y marcar leídas               |
-| `/admin/reportes` | Admin  | Reportes abiertos, advertencias y suspensiones           |
-| `/admin/metrics`  | Admin  | Los 4 KPIs con filtro de fechas                          |
-| `*`               | Lista  | Página 404                                               |
+| Ruta                  | Estado | Qué probar                                               |
+| --------------------- | ------ | -------------------------------------------------------- |
+| `/onboarding`         | Lista  | Perfil completo, edición y guardado                      |
+| `/inicio`             | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
+| `/match`              | Lista  | Filtros, candidatos, like, pasar y bloquear              |
+| `/disponible`         | Lista  | Abrir/cerrar disponibilidad, TTL, filtros e invitar      |
+| `/invitaciones`       | Lista  | Recibidas/enviadas, aceptar, rechazar y cancelar         |
+| `/busco-1`            | Lista  | Publicar, explorar, postularse y gestionar postulaciones |
+| `/matches`            | Lista  | Contacto, feedback doble ciego, reportar, archivar       |
+| `/notificaciones`     | Lista  | Lista, contador, SSE, push y marcar leídas               |
+| `/admin`              | Admin  | Resumen operativo                                        |
+| `/admin/usuarios`     | Admin  | Buscador y listado de cuentas                            |
+| `/admin/usuarios/:id` | Admin  | Detalle de cuenta, perfil y moderación                   |
+| `/admin/reportes`     | Admin  | Reportes abiertos, advertencias y suspensiones           |
+| `/admin/metrics`      | Admin  | Los 4 KPIs con filtro de fechas                          |
+| `*`                   | Lista  | Página 404                                               |
 
 ### Todavía no implementadas
 
@@ -77,19 +81,20 @@ Base: `http://localhost:3000/api/v1`. Las rutas protegidas usan `Authorization: 
 
 ### Autenticadas
 
-| Método | Ruta                          | Descripción                    |
-| ------ | ----------------------------- | ------------------------------ |
-| GET    | `/auth/profile`               | Cuenta autenticada             |
-| PATCH  | `/auth/change-password`       | Cambio de contraseña           |
-| POST   | `/auth/resend-verification`   | Reenvío de verificación        |
-| GET    | `/profiles/me`                | Perfil propio                  |
-| PATCH  | `/profiles/me`                | Crear o editar perfil          |
-| GET    | `/profiles/:id`               | Perfil público de otro jugador |
-| GET    | `/notifications`              | Notificaciones y no leídas     |
-| GET    | `/notifications/unread-count` | Contador de no leídas          |
-| PATCH  | `/notifications/read-all`     | Marcar todas como leídas       |
-| PATCH  | `/notifications/:id/read`     | Marcar una como leída          |
-| DELETE | `/notifications/:id`          | Borrar una notificación propia |
+| Método | Ruta                          | Descripción                     |
+| ------ | ----------------------------- | ------------------------------- |
+| GET    | `/auth/profile`               | Cuenta autenticada              |
+| PATCH  | `/auth/change-password`       | Cambio de contraseña            |
+| DELETE | `/auth/account`               | Programar eliminación de cuenta |
+| POST   | `/auth/resend-verification`   | Reenvío de verificación         |
+| GET    | `/profiles/me`                | Perfil propio                   |
+| PATCH  | `/profiles/me`                | Crear o editar perfil           |
+| GET    | `/profiles/:id`               | Perfil público de otro jugador  |
+| GET    | `/notifications`              | Notificaciones y no leídas      |
+| GET    | `/notifications/unread-count` | Contador de no leídas           |
+| PATCH  | `/notifications/read-all`     | Marcar todas como leídas        |
+| PATCH  | `/notifications/:id/read`     | Marcar una como leída           |
+| DELETE | `/notifications/:id`          | Borrar una notificación propia  |
 
 ### Matching
 
@@ -165,6 +170,9 @@ Requiere rol `admin`.
 
 | Método | Ruta                                       | Descripción                        |
 | ------ | ------------------------------------------ | ---------------------------------- |
+| GET    | `/admin/overview`                          | Resumen operativo                  |
+| GET    | `/admin/users?search=&role=&account=`      | Listado paginado de cuentas        |
+| GET    | `/admin/users/:id`                         | Detalle de cuenta y moderación     |
 | GET    | `/admin/reports?status=&reason=&priority=` | Reportes con reportero y reportado |
 | POST   | `/admin/reports/:id/resolve`               | Descartar, advertir o suspender    |
 | POST   | `/admin/users/:id/warn`                    | Advertencia directa                |
@@ -211,11 +219,12 @@ Requiere rol `admin`.
 ### Flujo 3 — Perfil
 
 1. Entrar con una cuenta sin perfil y abrir `/onboarding`.
-2. Completar Riot ID, roles, rango, horarios, idioma, mic y estilo.
-3. Guardar y confirmar `/inicio`.
-4. Editar un campo y guardar.
-5. Abrir `/profiles/me` por API y confirmar Riot ID y Discord propios.
-6. Abrir `/profiles/:id` por API y confirmar que no expone email, Riot ID ni Discord.
+2. Completar Riot ID, país, roles, rango, horarios, idioma, mic y estilo.
+3. Confirmar que el país muestra la equivalencia local de los bloques ART.
+4. Guardar y confirmar `/inicio`.
+5. Editar un campo y guardar.
+6. Abrir `/profiles/me` por API y confirmar Riot ID, país y Discord propios.
+7. Abrir `/profiles/:id` por API y confirmar que no expone email, Riot ID ni Discord.
 
 ### Flujo 4 — Match
 
@@ -298,11 +307,15 @@ Requiere rol `admin`.
 
 ### Flujo 13 - Admin
 
-1. Entrar con `demo_admin`; el login redirige a `/admin/reportes`.
-2. Filtrar por estado, motivo y prioridad.
-3. Abrir un reporte y agregar una nota.
-4. Probar descartar, advertir, suspender 7/30 días y suspensión permanente.
-5. Confirmar que el usuario reportado recibe notificación y no puede operar si fue suspendido.
+1. Entrar con `demo_admin`; el login redirige a `/admin`.
+2. Revisar el resumen y abrir `/admin/usuarios`.
+3. Buscar `demo_mid`, filtrar por rol, estado, email, perfil y tipo de cuenta.
+4. Abrir el detalle y confirmar perfil, reportes, sanciones y disponibilidad.
+5. Ir a `/admin/reportes`, filtrar por estado, motivo y prioridad.
+6. Abrir un reporte y agregar una nota.
+7. Probar descartar, advertir, suspender 7/30 días y suspensión permanente.
+8. Confirmar que el usuario reportado recibe notificación y no puede operar si fue suspendido.
+9. Confirmar que un jugador no puede abrir `/admin` y que un admin es redirigido desde `/inicio` a `/admin`.
 
 ### Flujo 14 - Notificaciones y SSE
 
@@ -332,7 +345,20 @@ Requiere rol `admin`.
 7. Instalar la PWA desde el navegador y repetir el push.
 8. En iOS, instalar primero la PWA y probar desde ahí.
 
-### Flujo 17 - Métricas admin
+### Flujo 17 - Eliminación y recuperación de cuenta
+
+1. Entrar con una cuenta demo y abrir el menú de avatar.
+2. Tocar “Eliminar cuenta”.
+3. Leer el primer cartel y tocar “Continuar”.
+4. Ingresar una contraseña incorrecta y confirmar el 401.
+5. Ingresar la contraseña correcta y confirmar la baja.
+6. Verificar que la sesión se cierra y que `/cuenta-eliminada` muestra la fecha de purga.
+7. Confirmar que el token anterior devuelve 401.
+8. Volver a iniciar sesión antes de 30 días y confirmar que la cuenta se recupera.
+9. Para probar la purga, adelantar `deletion_scheduled_for` en la DB y correr el job o esperar el barrido.
+10. Confirmar que el perfil desaparece y que las entradas de moderación quedan anonimizadas.
+
+### Flujo 18 - Métricas admin
 
 1. Entrar con `demo_admin`.
 2. Abrir `/admin/metrics`.

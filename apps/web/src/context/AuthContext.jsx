@@ -69,7 +69,7 @@ export function AuthProvider({ children }) {
     async (identifier, password) => {
       const res = await api.post('/v1/auth/login', { identifier, password });
       setSession(res.data.token, res.data.user);
-      return res.data.user;
+      return res.data;
     },
     [setSession]
   );

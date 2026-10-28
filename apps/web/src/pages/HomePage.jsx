@@ -13,9 +13,11 @@ import {
   Users,
 } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
+import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
@@ -176,12 +178,18 @@ export default function HomePage() {
               </p>
               <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Hola, {user?.username}.</h1>
               <p className="mt-2 text-sm text-muted">{user?.email}</p>
+              {user?.country ? (
+                <p className="mt-1 text-xs text-muted">
+                  <CountryBadge country={user.country} />
+                </p>
+              ) : null}
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 <div className={statCard}>
                   <p className="text-xs text-muted">Rango</p>
-                  <p className="mt-1 text-sm font-semibold">
-                    {profile ? formatRank(profile) : 'Sin perfil'}
+                  <p className="mt-1 flex items-center gap-2 text-sm font-semibold">
+                    {profile ? <RankIcon tier={profile.rankTier} size={24} /> : null}
+                    <span>{profile ? formatRank(profile) : 'Sin perfil'}</span>
                   </p>
                 </div>
                 <div className={statCard}>
@@ -242,8 +250,9 @@ export default function HomePage() {
                 </div>
                 <div>
                   <p className="font-bold">{user?.username}</p>
-                  <p className="text-xs text-muted">
-                    {profile ? formatRank(profile) : 'Completá tu perfil'}
+                  <p className="flex items-center gap-1.5 text-xs text-muted">
+                    {profile ? <RankIcon tier={profile.rankTier} size={15} /> : null}
+                    <span>{profile ? formatRank(profile) : 'Completá tu perfil'}</span>
                   </p>
                 </div>
               </div>
@@ -404,8 +413,11 @@ export default function HomePage() {
                     </div>
                     <div className="min-w-0">
                       <p className="truncate font-bold">{match.other.username}</p>
-                      <p className="truncate text-xs text-muted">
-                        {formatRank(match.other)} · {formatRoles(match.other)}
+                      <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                        <RankIcon tier={match.other.rankTier} size={15} />
+                        <span className="truncate">
+                          {formatRank(match.other)} · {formatRoles(match.other)}
+                        </span>
                       </p>
                     </div>
                   </div>

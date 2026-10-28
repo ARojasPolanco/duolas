@@ -20,6 +20,10 @@ En el `.env` de desarrollo local hoy faltan o están vacías:
 - [ ] `ADMIN_PASSWORD` (solo para el seed de admin)
 - [ ] `VITE_API_URL` en la web
 - [ ] `VITE_HCAPTCHA_SITE_KEY` en la web
+- [ ] Dominio real de web y API
+- [ ] URLs públicas de términos, privacidad y aviso de Riot
+- [ ] Producto registrado en el Developer Portal de Riot
+- [ ] Boilerplate legal exacto de Riot publicado
 
 Además, antes de producción hay que reemplazar los valores de desarrollo:
 
@@ -37,7 +41,8 @@ Además, antes de producción hay que reemplazar los valores de desarrollo:
 | ---------------------- | ----------------------- | ------------------------------------------------ | ---------------------------- | ------------------------------------------------ |
 | `PORT`                 | La define la plataforma | `3000`                                           | Render/Railway               | No hace falta fijarla si el proveedor la inyecta |
 | `NODE_ENV`             | Sí                      | `production`                                     | Manual                       | Activa errores genéricos y rate limits estrictos |
-| `CORS_ORIGIN`          | Sí                      | `https://duolas.app,https://www.duolas.app`      | Dominio de la web            | Sin barra final; separar por coma                |
+| `TRUST_PROXY`          | No                      | `1`                                              | Render/Railway               | 1 proxy; subir si agregás Cloudflare             |
+| `CORS_ORIGIN`          | Sí                      | `https://duolas.app,https://www.duolas.app`      | Dominio de la web            | HTTPS obligatorio; sin wildcard                  |
 | `APP_URL`              | Sí                      | `https://duolas.app`                             | Dominio de la web            | Se usa en links de email                         |
 | `DB_URI`               | Sí                      | `postgresql://user:pass@host/db?sslmode=require` | Neon                         | Usar la cadena con SSL                           |
 | `TEST_DB_URI`          | No                      | —                                                | —                            | Solo test/local; no va en producción             |
@@ -50,8 +55,13 @@ Además, antes de producción hay que reemplazar los valores de desarrollo:
 | `VAPID_PUBLIC_KEY`     | Sí antes de push        | `REPLACE_WITH_VAPID_PUBLIC`                      | Generar                      | Fase 5                                           |
 | `VAPID_PRIVATE_KEY`    | Sí antes de push        | `REPLACE_WITH_VAPID_PRIVATE`                     | Generar                      | Secreto, nunca exponer                           |
 | `VAPID_SUBJECT`        | Sí antes de push        | `mailto:soporte@duolas.app`                      | Dominio de la web            | Formato `mailto:`                                |
+| `RIOT_API_KEY`         | Solo integración futura | `RGAPI-REPLACE_ME`                               | Developer Portal             | Solo backend; personal key no va a producción    |
+| `RIOT_PLATFORM`        | Solo integración futura | `la2`                                            | Manual                       | LAS                                              |
+| `RIOT_REGION`          | Solo integración futura | `americas`                                       | Manual                       | Routing regional                                 |
+| `RIOT_API_TIMEOUT_MS`  | No                      | `8000`                                           | Manual                       | Timeout de llamadas                              |
 | `RATE_LIMIT_WINDOW_MS` | No                      | `900000`                                         | Manual                       | Default 15 minutos                               |
-| `RATE_LIMIT_MAX`       | No                      | `100`                                            | Manual                       | Default 100                                      |
+| `RATE_LIMIT_MAX`       | No                      | `600`                                            | Manual                       | Por IP; default 600                              |
+| `RATE_LIMIT_USER_MAX`  | No                      | `600`                                            | Manual                       | Por usuario autenticado; default 600             |
 | `LOG_LEVEL`            | No                      | `info`                                           | Manual                       | Usar `info` en producción                        |
 | `ADMIN_EMAIL`          | Solo seed               | `admin@duolas.app`                               | Manual                       | Se usa al correr `npm run seed:admin`            |
 | `ADMIN_PASSWORD`       | Solo seed               | `REPLACE_WITH_STRONG_PASSWORD`                   | Manual                       | Quitarla después del seed                        |
@@ -76,9 +86,10 @@ Además, antes de producción hay que reemplazar los valores de desarrollo:
 | Resend           | API key y dominio verificado            | Verificación y reset                     |
 | hCaptcha         | Site key y secret                       | Registro                                 |
 | Web Push VAPID   | Par de claves y subject                 | Push de Fase 5                           |
+| Riot Developer   | Producto registrado y production key    | Integración futura, no MVP               |
 | Dominio y DNS    | Dominio de web y API                    | `APP_URL`, `CORS_ORIGIN`, `VITE_API_URL` |
 
-No se necesitan en el MVP: Redis, R2, Cloudinary, Mercado Pago, Riot API/RSO ni credenciales de Riot.
+No se necesitan en el MVP: Redis, R2, Cloudinary, Mercado Pago ni RSO. La Riot API queda fuera del MVP; la preparación y el checklist de la key están en `docs/RIOT-INTEGRATION.md`.
 
 ## 5. Cómo generar los secretos
 
@@ -98,10 +109,15 @@ La API key de Resend y las claves de hCaptcha se copian desde sus dashboards. El
 
 ## 6. Checklist de deploy
 
+- [ ] Definir titular legal, dominio y correo de soporte.
+- [ ] Publicar URLs estables de términos, privacidad y aviso de Riot.
+- [ ] Confirmar que el boilerplate legal exacto de Riot esté visible.
+- [ ] Registrar el producto en el Developer Portal de Riot, aunque no use API.
 - [ ] Crear la base en Neon y copiar la connection string con `sslmode=require`.
 - [ ] Cargar todas las variables de la API en Render/Railway.
 - [ ] Confirmar `NODE_ENV=production`.
-- [ ] Confirmar `CORS_ORIGIN` y `APP_URL` con los dominios finales.
+- [ ] Confirmar `CORS_ORIGIN` y `APP_URL` con los dominios finales. La API falla al iniciar si falta un secreto obligatorio de producción.
+- [ ] Confirmar que `SECRET_JWT_SEED` no sea el de desarrollo.
 - [ ] Generar un `SECRET_JWT_SEED` nuevo.
 - [ ] Verificar el dominio en Resend y configurar `OWNER_EMAIL`.
 - [ ] Cargar `RESEND_API_KEY` y `SUPPORT_EMAIL`.
@@ -133,12 +149,43 @@ La API key de Resend y las claves de hCaptcha se copian desde sus dashboards. El
 - [ ] Una request sin token devuelve 401 y no genera loops.
 - [ ] La web carga en mobile y desktop.
 - [ ] Push llega con la PWA instalada.
+- [ ] Términos, privacidad y aviso de Riot cargan por URL directa.
+- [ ] El aviso legal exacto de Riot se ve en el footer y en legales.
+- [ ] El sitio público no contiene una API key ni un `VITE_RIOT_*`.
+- [ ] Eliminar cuenta pide contraseña, cierra la sesión y muestra el plazo de 30 días.
+- [ ] Volver a iniciar sesión antes del plazo recupera la cuenta.
+- [ ] El barrido de cuentas vencidas está corriendo en la API.
 
 ## 8. Notas de seguridad
 
-- `SECRET_JWT_SEED`, `DB_URI`, `RESEND_API_KEY`, `HCAPTCHA_SECRET`, `VAPID_PRIVATE_KEY` y `ADMIN_PASSWORD` son secretos.
+- La API valida al arrancar que producción tenga `APP_URL`, CORS HTTPS sin localhost ni wildcard, secreto JWT nuevo, `RESEND_API_KEY`, `OWNER_EMAIL`, `HCAPTCHA_SECRET` y VAPID.
+- Contraseñas de usuario de 10 a 128 caracteres; admin de 20+.
+- Login tiene límite por credencial (10 fallos/15 min) además del límite por IP; un usuario inexistente compara un hash dummy para no filtrar timing.
+- Verificación de email y reset guardan solo el SHA-256 del token.
+- La web en Vercel aplica CSP, HSTS, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`, `X-Content-Type-Options` y CORP.
+- El CSP permite `connect-src https:` para no hardcodear el dominio de la API. Después del deploy, conviene restringirlo al dominio real en `apps/web/vercel.json`.
+- `npm audit --omit=dev` queda con 2 moderadas de `uuid` vía Sequelize. La ruta vulnerable (buffers en v3/v5/v6) no la usa Sequelize; se revisa al actualizar Sequelize 7.
+- `SECRET_JWT_SEED`, `DB_URI`, `RESEND_API_KEY`, `HCAPTCHA_SECRET`, `VAPID_PRIVATE_KEY`, `RIOT_API_KEY` y `ADMIN_PASSWORD` son secretos.
 - `VITE_HCAPTCHA_SITE_KEY` y `VAPID_PUBLIC_KEY` son públicos.
+- Nunca crear variables `VITE_RIOT_*`: expondrían la key en el bundle de la web.
 - No commitear `.env`, `.env.production` ni logs.
 - No loguear tokens de verificación, reset, tickets SSE ni emails completos.
 - Si `HCAPTCHA_SECRET` falta, el captcha se salta: no deployar así.
 - Si `RESEND_API_KEY` falta, los emails se omiten: no deployar así.
+- Los rate limits en memoria asumen una sola instancia. Si se escala, mover el store a Redis.
+- Los headers de seguridad no reemplazan un WAF: usar Cloudflare o el edge del proveedor para DDoS.
+
+## 9. Release público sin Riot API
+
+Duo LAS puede lanzarse con rango declarado y `RankIcon` propio sin esperar la production key.
+
+Reglas del release:
+
+- No usar crests oficiales ni el logo de League.
+- No mostrar un check de “verificado por Riot”.
+- No usar una personal key en el sitio público.
+- Registrar el producto en el Developer Portal.
+- Mantener `docs/RIOT-INTEGRATION.md` actualizado.
+- Aplicar a production key en paralelo, sin bloquear el lanzamiento.
+
+Cuando Riot apruebe la key, la integración se prueba primero en desarrollo/staging con una key de desarrollo o personal. La production key se usa únicamente en el producto público aprobado.

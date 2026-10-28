@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Reputación, feedback y seguridad">
   <defs>
     <linearGradient id="trust-bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b1220"/>
-      <stop offset="1" stop-color="#111a2c"/>
+      <stop offset="0" stop-color="#030407"/>
+      <stop offset="1" stop-color="#060b14"/>
     </linearGradient>
     <linearGradient id="trust-shield" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#34d399"/>
-      <stop offset="1" stop-color="#00c2b8"/>
+      <stop offset="1" stop-color="#b0cf5c"/>
     </linearGradient>
   </defs>
   <rect width="640" height="360" rx="28" fill="url(#trust-bg)"/>
   <circle cx="560" cy="300" r="120" fill="#34d399" opacity=".06"/>
-  <path d="M206 66l116 48v92c0 66-52 108-116 134-64-26-116-68-116-134v-92Z" fill="#111a2c" stroke="url(#trust-shield)" stroke-width="5"/>
+  <path d="M206 66l116 48v92c0 66-52 108-116 134-64-26-116-68-116-134v-92Z" fill="#060b14" stroke="url(#trust-shield)" stroke-width="5"/>
   <path d="M158 164l34 34 66-78" fill="none" stroke="url(#trust-shield)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   <g transform="translate(380 88)">
     <g fill="#f5c451">
@@ -20,16 +20,16 @@
       <path d="M132 0l7 16 17 2-12 12 3 17-15-8-15 8 3-17L110 18l17-2Z"/>
     </g>
     <g transform="translate(0 62)">
-      <rect width="152" height="12" rx="6" fill="#22304d"/>
+      <rect width="152" height="12" rx="6" fill="#1558c9"/>
       <rect width="106" height="12" rx="6" fill="#34d399"/>
-      <rect y="28" width="152" height="12" rx="6" fill="#22304d"/>
+      <rect y="28" width="152" height="12" rx="6" fill="#1558c9"/>
       <rect width="34" height="12" rx="6" fill="#f87171"/>
-      <rect y="56" width="152" height="12" rx="6" fill="#22304d"/>
-      <rect width="126" height="12" rx="6" fill="#00c2b8"/>
+      <rect y="56" width="152" height="12" rx="6" fill="#1558c9"/>
+      <rect width="126" height="12" rx="6" fill="#b0cf5c"/>
     </g>
   </g>
   <g transform="translate(382 268)">
-    <path d="M0 8a8 8 0 0 1 8-8h94a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H44l-18 14V44H8a8 8 0 0 1-8-8Z" fill="#16213a" stroke="#22304d" stroke-width="2"/>
+    <path d="M0 8a8 8 0 0 1 8-8h94a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H44l-18 14V44H8a8 8 0 0 1-8-8Z" fill="#0a1424" stroke="#1558c9" stroke-width="2"/>
     <circle cx="26" cy="22" r="4" fill="#34d399"/>
     <circle cx="44" cy="22" r="4" fill="#34d399"/>
     <circle cx="62" cy="22" r="4" fill="#34d399"/>

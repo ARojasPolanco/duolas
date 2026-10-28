@@ -5,15 +5,18 @@ import sequelize from './config/database/database.js';
 import { runMigrations } from './config/database/migrator.js';
 import logger from './config/logger.js';
 import { feedbackService } from './modules/trust/feedback.service.js';
+import { accountService } from './modules/auth/account.service.js';
 import { eventBus } from './modules/events/event.bus.js';
 import { ticketStore } from './modules/events/ticket.store.js';
 
 const FEEDBACK_SWEEP_MS = 5 * 60 * 1000;
 const SSE_TICKET_SWEEP_MS = 30 * 1000;
+const ACCOUNT_DELETION_SWEEP_MS = 60 * 60 * 1000;
 
 let server;
 let feedbackTimer;
 let ticketCleanupTimer;
+let deletionTimer;
 
 const shutdown = async (signal) => {
   logger.info('Cerrando API', { signal });
@@ -24,6 +27,10 @@ const shutdown = async (signal) => {
 
   if (ticketCleanupTimer) {
     clearInterval(ticketCleanupTimer);
+  }
+
+  if (deletionTimer) {
+    clearInterval(deletionTimer);
   }
 
   eventBus.closeAll();
@@ -58,8 +65,27 @@ const start = async () => {
     ticketStore.cleanup();
   }, SSE_TICKET_SWEEP_MS);
 
+  const purgeDeletedAccounts = () => {
+    accountService
+      .purgeExpiredDeletions()
+      .then((count) => {
+        if (count > 0) {
+          logger.info('Cuentas eliminadas permanentemente', { count });
+        }
+      })
+      .catch((error) => {
+        logger.warn('No se pudieron purgar las cuentas eliminadas', {
+          message: error.message,
+        });
+      });
+  };
+
+  purgeDeletedAccounts();
+  deletionTimer = setInterval(purgeDeletedAccounts, ACCOUNT_DELETION_SWEEP_MS);
+
   feedbackTimer.unref();
   ticketCleanupTimer.unref();
+  deletionTimer.unref();
   eventBus.startHeartbeat();
 };
 

@@ -41,8 +41,30 @@ describe('Perfiles', () => {
       expect(res.body.completeness.completed).toBe(true);
       expect(res.body.profile.riotId).toBe(payload.riotId);
       expect(res.body.profile.discordTag).toBe('tester');
+      expect(res.body.profile.country).toBe('AR');
       expect(stored.rankIndex).toBe(26);
       expect(stored.profileCompletedAt).toBeTruthy();
+    });
+
+    it('rechaza un país fuera de LAS', async () => {
+      const { token } = await registerUser();
+      const { res } = await completeProfile(token, { country: 'PE' });
+
+      expect(res.status).toBe(422);
+      expect(res.body.message).toContain('País');
+    });
+
+    it('actualiza el país de residencia', async () => {
+      const { token } = await registerUser();
+      await completeProfile(token, { country: 'AR' });
+
+      const res = await request(app)
+        .patch('/api/v1/profiles/me')
+        .set(authHeader(token))
+        .send({ country: 'CL' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.profile.country).toBe('CL');
     });
 
     it('rechaza un perfil incompleto', async () => {
@@ -165,6 +187,7 @@ describe('Perfiles', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.user.profileCompleted).toBe(true);
+      expect(res.body.user.country).toBe('AR');
     });
 
     it('expone el perfil público sin email, Riot ID ni Discord', async () => {
@@ -178,6 +201,7 @@ describe('Perfiles', () => {
       expect(res.body.profile.riotId).toBeUndefined();
       expect(res.body.profile.discordTag).toBeUndefined();
       expect(res.body.profile.email).toBeUndefined();
+      expect(res.body.profile.country).toBe('AR');
       expect(res.body.profile.stats.connections).toBe(0);
       expect(res.body.profile.reputation.label).toBe('Nuevo');
     });

@@ -50,6 +50,7 @@ export const markEmailVerified = async (userId) => {
 export const completeProfile = async (token, overrides = {}) => {
   const payload = {
     riotId: uniqueRiotId(),
+    country: 'AR',
     primaryRole: 'mid',
     secondaryRole: 'jungle',
     rankTier: 'diamond',

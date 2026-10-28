@@ -11,7 +11,7 @@ import router from './routes/routes.js';
 
 const app = express();
 
-app.set('trust proxy', 1);
+app.set('trust proxy', envs.TRUST_PROXY);
 
 app.use(requestId);
 app.use(accessLog);
@@ -22,7 +22,14 @@ const allowedOrigins = envs.CORS_ORIGIN.split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-app.use(cors({ origin: allowedOrigins }));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id'],
+    maxAge: 600,
+  })
+);
 
 app.use('/api/v1/auth', authLimiter);
 app.use('/api', apiLimiter);

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell.jsx';
 import PasswordField from '../components/PasswordField.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 
 const inputClass =
   'w-full rounded-xl border border-border bg-bg px-4 py-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none';
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,16 +32,21 @@ export default function LoginPage() {
     setSubmitting(true);
 
     try {
-      const user = await login(identifier.trim(), password);
+      const { user, recovered } = await login(identifier.trim(), password);
       const from = location.state?.from;
       const destination =
         user.role === 'admin'
           ? from?.startsWith('/admin')
             ? from
-            : '/admin/reportes'
+            : '/admin'
           : user.profileCompleted
             ? from || '/inicio'
             : '/onboarding';
+
+      if (recovered) {
+        toast.success('Recuperamos tu cuenta. La eliminación fue cancelada.');
+      }
+
       navigate(destination, { replace: true });
     } catch (requestError) {
       setError(

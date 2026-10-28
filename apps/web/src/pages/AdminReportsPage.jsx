@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AlertTriangle, Check, RefreshCw, ShieldAlert, UserX } from 'lucide-react';
-import AppShell from '../components/AppShell.jsx';
+import AdminShell from '../components/AdminShell.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import { REPORT_REASON_LABELS, REPORT_STATUS_LABELS, USER_STATUS_LABELS } from '../utils/labels.js';
@@ -73,7 +73,7 @@ export default function AdminReportsPage() {
   };
 
   return (
-    <AppShell>
+    <AdminShell>
       <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Admin</p>
@@ -293,6 +293,6 @@ export default function AdminReportsPage() {
           </div>
         )}
       </div>
-    </AppShell>
+    </AdminShell>
   );
 }

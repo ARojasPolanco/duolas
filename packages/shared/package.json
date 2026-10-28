@@ -5,10 +5,11 @@
   "type": "module",
   "main": "src/index.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./constants": "./src/constants.js"
   },
   "scripts": {},
   "dependencies": {
-    "zod": "^3.24.1"
+    "zod": "^4.6.7"
   }
 }

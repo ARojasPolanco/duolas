@@ -37,6 +37,16 @@ export const QUEUES = Object.freeze(['solo_duo', 'flex']);
 export const PLAY_STYLES = Object.freeze(['casual', 'ranked', 'tryhard']);
 export const LANGUAGES = Object.freeze(['es', 'en', 'pt']);
 
+export const COUNTRIES = Object.freeze(['AR', 'CL', 'BO', 'PY', 'UY']);
+
+export const COUNTRY_TIMEZONES = Object.freeze({
+  AR: 'America/Argentina/Buenos_Aires',
+  CL: 'America/Santiago',
+  BO: 'America/La_Paz',
+  PY: 'America/Asuncion',
+  UY: 'America/Montevideo',
+});
+
 export const SCHEDULE_DAYS = Object.freeze(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']);
 export const SCHEDULE_BLOCKS = Object.freeze(['early', 'morning', 'afternoon', 'night']);
 export const SCHEDULE_BLOCK_VALUES = Object.freeze(

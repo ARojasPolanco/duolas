@@ -5,7 +5,7 @@ const isProduction = envs.NODE_ENV === 'production';
 
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isProduction ? 30 : 1000,
+  max: isProduction ? 60 : 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -16,7 +16,7 @@ export const authLimiter = rateLimit({
 
 export const apiLimiter = rateLimit({
   windowMs: envs.RATE_LIMIT_WINDOW_MS,
-  max: isProduction ? envs.RATE_LIMIT_MAX : 1000,
+  max: isProduction ? envs.RATE_LIMIT_MAX : 5000,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -26,6 +26,49 @@ export const apiLimiter = rateLimit({
 });
 
 const userKey = (req) => req.sessionUser?.id || req.ip;
+
+const normalizedCredential = (value) =>
+  String(value || '')
+    .trim()
+    .toLowerCase()
+    .slice(0, 120);
+
+export const loginCredentialLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isProduction ? 10 : 1000,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => `login:${normalizedCredential(req.body?.identifier) || req.ip}`,
+  message: {
+    status: 'fail',
+    message: 'Demasiados intentos fallidos para esta cuenta. Esperá 15 minutos.',
+  },
+});
+
+export const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isProduction ? 5 : 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => `reset:${normalizedCredential(req.body?.email) || req.ip}:${req.ip}`,
+  message: {
+    status: 'fail',
+    message: 'Demasiados pedidos de recuperación. Esperá 15 minutos.',
+  },
+});
+
+export const authenticatedLimiter = rateLimit({
+  windowMs: envs.RATE_LIMIT_WINDOW_MS,
+  max: isProduction ? envs.RATE_LIMIT_USER_MAX : 5000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: userKey,
+  message: {
+    status: 'fail',
+    message: 'Demasiadas solicitudes. Intentá de nuevo más tarde.',
+  },
+});
 
 const userLimiter = (windowMs, max, message) =>
   rateLimit({

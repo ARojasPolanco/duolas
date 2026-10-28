@@ -35,7 +35,7 @@ export function validateFeedback(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }

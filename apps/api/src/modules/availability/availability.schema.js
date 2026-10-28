@@ -52,7 +52,7 @@ export function validateCreateAvailability(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -64,7 +64,7 @@ export function validateInvite(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -76,7 +76,7 @@ export function validateAvailabilityList(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -88,7 +88,7 @@ export function validateInvitesList(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }

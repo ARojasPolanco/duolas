@@ -21,7 +21,7 @@ export function validateCandidatesQuery(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -33,7 +33,7 @@ export function validateLike(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -45,7 +45,7 @@ export function validateUuidParam(value, label = 'id') {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }

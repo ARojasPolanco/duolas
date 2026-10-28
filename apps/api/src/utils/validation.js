@@ -7,7 +7,7 @@ export function validateUuid(value, label = 'ID') {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }

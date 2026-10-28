@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   SCHEDULE_BLOCK_VALUES,
+  countrySchema,
   discordTagSchema,
   languageSchema,
   playStyleSchema,
@@ -15,6 +16,7 @@ const scheduleBlockSchema = z.enum(SCHEDULE_BLOCK_VALUES);
 export const updateProfileSchema = z
   .object({
     riotId: riotIdSchema.optional(),
+    country: countrySchema.nullable().optional(),
     primaryRole: roleSchema.optional(),
     secondaryRole: roleSchema.optional(),
     rankTier: rankTierSchema.optional(),
@@ -45,6 +47,7 @@ export const updateProfileSchema = z
 
 const fieldLabels = {
   riotId: 'Riot ID',
+  country: 'País',
   primaryRole: 'Rol principal',
   secondaryRole: 'Rol secundario',
   rankTier: 'Rango',
@@ -69,7 +72,7 @@ export function validateUpdateProfile(data) {
 
   const result = updateProfileSchema.safeParse(data);
   if (!result.success) {
-    const messages = result.error.errors.map((issue) => {
+    const messages = result.error.issues.map((issue) => {
       const field = issue.path[0];
       return `${fieldLabels[field] || field}: ${issue.message}`;
     });

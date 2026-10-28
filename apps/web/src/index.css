@@ -3,14 +3,14 @@
 @theme {
   --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
 
-  --color-bg: #0b1220;
-  --color-surface: #111a2c;
-  --color-surface-2: #16213a;
-  --color-border: #22304d;
-  --color-text: #e6edf7;
+  --color-bg: #030407;
+  --color-surface: #060b14;
+  --color-surface-2: #0a1424;
+  --color-border: #1558c9;
+  --color-text: #f4f7fb;
   --color-muted: #94a3b8;
-  --color-accent: #00c2b8;
-  --color-accent-strong: #22d3ee;
+  --color-accent: #b0cf5c;
+  --color-accent-strong: #9fbf4f;
   --color-gold: #f5c451;
   --color-danger: #f87171;
   --color-success: #34d399;

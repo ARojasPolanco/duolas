@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthShell
       title="Nueva contraseña"
-      subtitle="Elegí una contraseña de al menos 8 caracteres."
+      subtitle="Elegí una contraseña de al menos 10 caracteres."
       footer={
         <Link to="/login" className="inline-flex min-h-11 items-center font-semibold text-accent">
           Volver a iniciar sesión
@@ -73,7 +73,7 @@ export default function ResetPasswordPage() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="new-password"
-          minLength={8}
+          minLength={10}
           maxLength={128}
         />
 
@@ -82,7 +82,7 @@ export default function ResetPasswordPage() {
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
           autoComplete="new-password"
-          minLength={8}
+          minLength={10}
           maxLength={128}
         />
 

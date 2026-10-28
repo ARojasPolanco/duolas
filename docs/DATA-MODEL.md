@@ -53,7 +53,7 @@ Fuente de verdad del esquema. Las migraciones deben reflejar exactamente este do
 | `afternoon` | 12:00 a 17:59 |
 | `night`     | 18:00 a 23:59 |
 
-Zona canónica: `America/Argentina/Buenos_Aires`. No hay horario de verano.
+Zona canónica: `America/Argentina/Buenos_Aires`. No hay horario de verano. El país del perfil solo se usa para mostrar la equivalencia local; el matching compara los mismos bloques ART.
 
 ### Notificaciones
 
@@ -89,6 +89,8 @@ Zona canónica: `America/Argentina/Buenos_Aires`. No hay horario de verano.
 | `last_login_at`              | TIMESTAMPTZ  | NULL                                          |
 | `last_active_at`             | TIMESTAMPTZ  | NULL                                          |
 | `is_deleted`                 | BOOLEAN      | NOT NULL, default false                       |
+| `deletion_requested_at`      | TIMESTAMPTZ  | NULL; inicio del plazo de 30 días             |
+| `deletion_scheduled_for`     | TIMESTAMPTZ  | NULL; fecha de purga definitiva               |
 | `created_at`                 | TIMESTAMPTZ  | NOT NULL, default now                         |
 | `updated_at`                 | TIMESTAMPTZ  | NOT NULL, default now                         |
 
@@ -98,6 +100,7 @@ Zona canónica: `America/Argentina/Buenos_Aires`. No hay horario de verano.
 - Único `email`.
 - `(status)`.
 - `(last_active_at)`.
+- Parcial `(deletion_scheduled_for) WHERE is_deleted = true`.
 
 ### 3.2 `errors`
 
@@ -127,6 +130,7 @@ Sin `updated_at`.
 | `riot_id`                  | VARCHAR(30)  | NOT NULL, texto visible                       |
 | `riot_id_normalized`       | VARCHAR(30)  | NOT NULL, único, minúsculas                   |
 | `server`                   | VARCHAR(10)  | NOT NULL, default `LAS`, check `LAS`          |
+| `country`                  | CHAR(2)      | NULL, check `AR`, `CL`, `BO`, `PY`, `UY`      |
 | `primary_role`             | VARCHAR(10)  | NOT NULL, check                               |
 | `secondary_role`           | VARCHAR(10)  | NOT NULL, check, distinto del principal       |
 | `rank_tier`                | VARCHAR(12)  | NOT NULL, check                               |
@@ -152,6 +156,7 @@ Sin `updated_at`.
 
 Checks:
 
+- `country IS NULL OR country IN ('AR', 'CL', 'BO', 'PY', 'UY')`.
 - `secondary_role <> primary_role`.
 - `(rank_tier IN ('master','grandmaster','challenger') AND rank_division IS NULL)` o `(rank_tier NOT IN (...) AND rank_division IS NOT NULL)`.
 
@@ -163,6 +168,7 @@ Checks:
 - `(primary_role)`.
 - GIN `(schedule_blocks)`.
 - `(reputation_score)`.
+- No se indexa `country`: no es filtro de matching en el MVP.
 
 ### 3.4 `availability_sessions`
 
@@ -541,13 +547,15 @@ Se setea cuando el perfil se crea o actualiza con todos los campos obligatorios.
 | `feedbacks`             | Inmutable; no se borra                               |
 | `sanctions`             | Inmutable; no se borra                               |
 | `notifications`         | Puede borrarse físicamente a pedido del usuario      |
+| `users`                 | Baja lógica 30 días; luego anonimización permanente  |
+| `player_profiles`       | Se elimina en la purga definitiva                    |
 | `metrics_events`        | Inmutable; retención agregada                        |
 | `errors`                | Retención operativa; no se expone al cliente         |
 
 ## 7. Seeds
 
 - Admin desde `ADMIN_EMAIL` y `ADMIN_PASSWORD`.
-- 12 jugadores LAS con distribución de tiers, roles, horarios e idiomas.
+- 12 jugadores LAS con distribución de tiers, roles, horarios, países e idiomas.
 - 2 conexiones activas con feedback pendiente.
 - 1 invitación pendiente.
 - 1 post activo con 2 postulaciones.

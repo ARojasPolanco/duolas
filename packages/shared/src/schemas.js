@@ -1,5 +1,13 @@
 import { z } from 'zod';
-import { LANGUAGES, PLAY_STYLES, QUEUES, RANK_DIVISIONS, RANK_TIERS, ROLES } from './constants.js';
+import {
+  COUNTRIES,
+  LANGUAGES,
+  PLAY_STYLES,
+  QUEUES,
+  RANK_DIVISIONS,
+  RANK_TIERS,
+  ROLES,
+} from './constants.js';
 
 const RIOT_GAME_NAME_REGEX = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,14}[\p{L}\p{N}]$/u;
 const RIOT_TAG_REGEX = /^[A-Za-z0-9]{3,5}$/;
@@ -15,7 +23,7 @@ export const emailSchema = z.string().trim().toLowerCase().email('Email inválid
 
 export const passwordSchema = z
   .string()
-  .min(8, 'La contraseña debe tener al menos 8 caracteres')
+  .min(10, 'La contraseña debe tener al menos 10 caracteres')
   .max(128, 'La contraseña no puede exceder 128 caracteres');
 
 export const riotIdSchema = z
@@ -44,6 +52,7 @@ export const rankDivisionSchema = z.enum(RANK_DIVISIONS);
 export const queueSchema = z.enum(QUEUES);
 export const playStyleSchema = z.enum(PLAY_STYLES);
 export const languageSchema = z.enum(LANGUAGES);
+export const countrySchema = z.enum(COUNTRIES);
 
 export const registerSchema = z
   .object({
@@ -51,10 +60,10 @@ export const registerSchema = z
     email: emailSchema,
     password: passwordSchema,
     ageConfirmed: z.literal(true, {
-      errorMap: () => ({ message: 'Tenés que confirmar que sos mayor de 18 años' }),
+      error: 'Tenés que confirmar que sos mayor de 18 años',
     }),
     termsAccepted: z.literal(true, {
-      errorMap: () => ({ message: 'Tenés que aceptar los términos y la privacidad' }),
+      error: 'Tenés que aceptar los términos y la privacidad',
     }),
     captchaToken: z.string().min(1).optional(),
   })

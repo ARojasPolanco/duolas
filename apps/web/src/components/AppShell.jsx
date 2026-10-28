@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
-  BarChart3,
   Bell,
   ChevronDown,
   ClipboardList,
   Home,
   LogOut,
   Radio,
-  ShieldAlert,
   Swords,
+  Trash2,
   UserRound,
   Users,
 } from 'lucide-react';
+import DeleteAccountDialog from './DeleteAccountDialog.jsx';
+import RiotDisclaimer from './RiotDisclaimer.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNotifications } from '../context/NotificationsContext.jsx';
 import { initialsOf } from '../utils/labels.js';
@@ -42,6 +43,7 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
   const location = useLocation();
   const menuRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -169,33 +171,24 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
                     </Link>
                   </div>
 
-                  {user?.role === 'admin' ? (
-                    <div className="border-t border-border p-1.5">
-                      <Link
-                        to="/admin/reportes"
-                        role="menuitem"
-                        className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
-                      >
-                        <ShieldAlert size={16} aria-hidden="true" />
-                        Reportes
-                      </Link>
-                      <Link
-                        to="/admin/metrics"
-                        role="menuitem"
-                        className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
-                      >
-                        <BarChart3 size={16} aria-hidden="true" />
-                        Métricas
-                      </Link>
-                    </div>
-                  ) : null}
-
                   <div className="border-t border-border p-1.5">
                     <button
                       type="button"
                       role="menuitem"
-                      onClick={handleLogout}
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setDeleteOpen(true);
+                      }}
                       className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-semibold text-danger transition hover:bg-danger/10"
+                    >
+                      <Trash2 size={16} aria-hidden="true" />
+                      Eliminar cuenta
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
                     >
                       <LogOut size={16} aria-hidden="true" />
                       Cerrar sesión
@@ -208,7 +201,25 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
         </div>
       </header>
 
-      <main className={`mx-auto px-4 pb-28 pt-6 sm:px-6 lg:pb-12 ${maxWidth}`}>{children}</main>
+      <main className={`mx-auto px-4 pb-28 pt-6 sm:px-6 lg:pb-12 ${maxWidth}`}>
+        {children}
+        <footer className="mt-10 border-t border-border pt-4">
+          <nav className="flex flex-wrap gap-x-4 text-[11px] font-semibold text-muted">
+            <Link to="/terminos" className="inline-flex min-h-11 items-center hover:text-text">
+              Términos
+            </Link>
+            <Link to="/privacidad" className="inline-flex min-h-11 items-center hover:text-text">
+              Privacidad
+            </Link>
+            <Link to="/aviso-riot" className="inline-flex min-h-11 items-center hover:text-text">
+              Aviso de Riot
+            </Link>
+          </nav>
+          <RiotDisclaimer className="mt-2 max-w-4xl" />
+        </footer>
+      </main>
+
+      {deleteOpen ? <DeleteAccountDialog onClose={() => setDeleteOpen(false)} /> : null}
 
       <nav
         className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"

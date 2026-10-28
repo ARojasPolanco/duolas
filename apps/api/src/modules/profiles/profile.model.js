@@ -1,4 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
+import { COUNTRIES } from '@duo-las/shared';
 import sequelize from '../../config/database/database.js';
 import User from '../auth/auth.model.js';
 
@@ -34,6 +35,11 @@ PlayerProfile.init(
       allowNull: false,
       defaultValue: 'LAS',
       validate: { isIn: [['LAS']] },
+    },
+    country: {
+      type: DataTypes.STRING(2),
+      allowNull: true,
+      validate: { isIn: [COUNTRIES] },
     },
     primaryRole: {
       type: DataTypes.STRING(10),

@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Archive, Ban, Copy, Flag, MessageSquare, Swords } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import CountryBadge from '../components/CountryBadge.jsx';
 import FeedbackPanel from '../components/FeedbackPanel.jsx';
+import RankIcon from '../components/RankIcon.jsx';
 import ReportDialog from '../components/ReportDialog.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -151,11 +153,19 @@ export default function MatchesPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-2 text-sm font-extrabold text-accent">
                       {initialsOf(match.other.username)}
                     </div>
-                    <div>
-                      <h2 className="font-bold">{match.other.username}</h2>
-                      <p className="text-xs text-muted">
-                        {formatRank(match.other)} · {formatRoles(match.other)}
+                    <div className="min-w-0">
+                      <h2 className="truncate font-bold">{match.other.username}</h2>
+                      <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                        <RankIcon tier={match.other.rankTier} size={16} />
+                        <span className="truncate">
+                          {formatRank(match.other)} · {formatRoles(match.other)}
+                        </span>
                       </p>
+                      {match.other.country ? (
+                        <p className="mt-0.5 text-[10px] text-muted">
+                          <CountryBadge country={match.other.country} />
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                   <span className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-muted">

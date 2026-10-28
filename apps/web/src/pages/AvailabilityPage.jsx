@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, Lock, Radio, RefreshCw, Send, Users } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
+import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
@@ -418,9 +420,17 @@ export default function AvailabilityPage() {
                             </div>
                             <div className="min-w-0">
                               <h3 className="truncate font-bold">{player.profile.username}</h3>
-                              <p className="truncate text-xs text-muted">
-                                {formatRank(player.profile)} · {formatRoles(player.profile)}
+                              <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                                <RankIcon tier={player.profile.rankTier} size={16} />
+                                <span className="truncate">
+                                  {formatRank(player.profile)} · {formatRoles(player.profile)}
+                                </span>
                               </p>
+                              {player.profile.country ? (
+                                <p className="mt-0.5 text-[10px] text-muted">
+                                  <CountryBadge country={player.profile.country} />
+                                </p>
+                              ) : null}
                             </div>
                           </div>
                           <div className="shrink-0 rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">

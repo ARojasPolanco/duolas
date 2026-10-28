@@ -265,11 +265,27 @@ const demoPlayers = [
   },
 ];
 
+const DEMO_COUNTRIES = {
+  mid: 'AR',
+  jungle: 'CL',
+  adc: 'AR',
+  support: 'UY',
+  top1: 'CL',
+  mid2: 'BO',
+  jungle2: 'PY',
+  adc2: 'AR',
+  support2: 'CL',
+  top2: 'UY',
+  jungle3: 'BO',
+  support3: 'PY',
+};
+
 const createOrUpdateDemoUser = async (player) => {
   const profileData = {
     riotId: player.riotId,
     riotIdNormalized: player.riotId.toLowerCase(),
     server: 'LAS',
+    country: DEMO_COUNTRIES[player.key] || null,
     primaryRole: player.primaryRole,
     secondaryRole: player.secondaryRole,
     rankTier: player.rankTier,

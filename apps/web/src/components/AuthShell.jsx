@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import RiotDisclaimer from './RiotDisclaimer.jsx';
 
 export default function AuthShell({ title, subtitle, children, footer }) {
   return (
@@ -16,6 +17,19 @@ export default function AuthShell({ title, subtitle, children, footer }) {
           <div className="mt-6">{children}</div>
         </div>
         {footer ? <div className="mt-6 text-center text-sm text-muted">{footer}</div> : null}
+
+        <nav className="mt-4 flex flex-wrap justify-center gap-x-4 text-[11px] font-semibold text-muted">
+          <Link to="/terminos" className="inline-flex min-h-11 items-center hover:text-text">
+            Términos
+          </Link>
+          <Link to="/privacidad" className="inline-flex min-h-11 items-center hover:text-text">
+            Privacidad
+          </Link>
+          <Link to="/aviso-riot" className="inline-flex min-h-11 items-center hover:text-text">
+            Aviso de Riot
+          </Link>
+        </nav>
+        <RiotDisclaimer className="mt-2 text-center" />
       </div>
     </div>
   );

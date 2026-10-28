@@ -352,7 +352,7 @@ Los pesos deben sumar 100 cada uno. Un test unitario lo verifica.
 - **Disponibilidad vencida:** se cierra de forma perezosa y no aparece.
 - **Cambio de rango:** recalcula `rank_index`; los likes existentes se mantienen.
 - **Reputación nueva:** score 50 y etiqueta "Nuevo" con menos de 3 feedbacks.
-- **Zona horaria:** ART fija, sin horario de verano; no se convierten zonas.
+- **Zona horaria:** ART fija, sin horario de verano; el matching compara bloques ART. El país del perfil solo se usa para mostrar la equivalencia local en la UI.
 - **Sin solape horario:** se descarta aunque el resto sea perfecto.
 - **Doble like:** idempotente; no duplica conexión.
 - **Like a sí mismo:** 400.

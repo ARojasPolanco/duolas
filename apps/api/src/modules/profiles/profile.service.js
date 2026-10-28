@@ -66,6 +66,7 @@ const toPrivateProfile = (profile, user) => ({
   username: user.username,
   riotId: profile.riotId,
   server: profile.server,
+  country: profile.country,
   primaryRole: profile.primaryRole,
   secondaryRole: profile.secondaryRole,
   rankTier: profile.rankTier,
@@ -87,6 +88,7 @@ const toPrivateProfile = (profile, user) => ({
 const toPublicProfile = (profile, user) => ({
   id: user.id,
   username: user.username,
+  country: profile.country,
   primaryRole: profile.primaryRole,
   secondaryRole: profile.secondaryRole,
   rankTier: profile.rankTier,
@@ -136,6 +138,7 @@ export class ProfileService {
 
     const merged = {
       riotId: data.riotId !== undefined ? data.riotId.trim() : current?.riotId,
+      country: data.country !== undefined ? data.country : current?.country,
       primaryRole: data.primaryRole !== undefined ? data.primaryRole : current?.primaryRole,
       secondaryRole: data.secondaryRole !== undefined ? data.secondaryRole : current?.secondaryRole,
       rankTier: data.rankTier !== undefined ? data.rankTier : current?.rankTier,
@@ -184,6 +187,7 @@ export class ProfileService {
       riotId: merged.riotId,
       riotIdNormalized,
       server: 'LAS',
+      country: merged.country ?? null,
       primaryRole: merged.primaryRole,
       secondaryRole: merged.secondaryRole,
       rankTier: merged.rankTier,

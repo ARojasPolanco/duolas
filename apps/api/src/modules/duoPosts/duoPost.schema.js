@@ -55,7 +55,7 @@ export function validateCreatePost(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -67,7 +67,7 @@ export function validatePostsQuery(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }
@@ -79,7 +79,7 @@ export function validateApplication(data) {
   if (!result.success) {
     return {
       hasError: true,
-      errorMessages: result.error.errors.map((issue) => issue.message),
+      errorMessages: result.error.issues.map((issue) => issue.message),
       data: null,
     };
   }

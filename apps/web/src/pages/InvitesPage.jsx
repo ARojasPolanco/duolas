@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Clock, Copy, Inbox, Lock, X } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
+import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
@@ -248,9 +250,17 @@ export default function InvitesPage() {
                           </div>
                           <div className="min-w-0">
                             <h2 className="truncate font-bold">{invite.counterpart.username}</h2>
-                            <p className="truncate text-xs text-muted">
-                              {formatRank(invite.counterpart)} · {formatRoles(invite.counterpart)}
+                            <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                              <RankIcon tier={invite.counterpart.rankTier} size={16} />
+                              <span className="truncate">
+                                {formatRank(invite.counterpart)} · {formatRoles(invite.counterpart)}
+                              </span>
                             </p>
+                            {invite.counterpart.country ? (
+                              <p className="mt-0.5 text-[10px] text-muted">
+                                <CountryBadge country={invite.counterpart.country} />
+                              </p>
+                            ) : null}
                           </div>
                         </div>
                         <span

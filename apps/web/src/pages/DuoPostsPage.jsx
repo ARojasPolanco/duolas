@@ -16,7 +16,9 @@ import {
   X,
 } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
+import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
@@ -599,10 +601,20 @@ export default function DuoPostsPage() {
                               </div>
                               <div className="min-w-0">
                                 <h2 className="truncate font-bold">{post.owner?.username}</h2>
-                                <p className="truncate text-xs text-muted">
-                                  {post.owner ? formatRank(post.owner) : 'Sin rango'} ·{' '}
-                                  {post.owner ? formatRoles(post.owner) : 'Sin roles'}
+                                <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                                  {post.owner ? (
+                                    <RankIcon tier={post.owner.rankTier} size={16} />
+                                  ) : null}
+                                  <span className="truncate">
+                                    {post.owner ? formatRank(post.owner) : 'Sin rango'} ·{' '}
+                                    {post.owner ? formatRoles(post.owner) : 'Sin roles'}
+                                  </span>
                                 </p>
+                                {post.owner?.country ? (
+                                  <p className="mt-0.5 text-[10px] text-muted">
+                                    <CountryBadge country={post.owner.country} />
+                                  </p>
+                                ) : null}
                               </div>
                             </div>
                             <span className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-muted">
@@ -780,9 +792,15 @@ export default function DuoPostsPage() {
                                           <p className="truncate text-sm font-semibold">
                                             {application.applicant.username}
                                           </p>
-                                          <p className="truncate text-[11px] text-muted">
-                                            {formatRank(application.applicant)} ·{' '}
-                                            {formatRoles(application.applicant)}
+                                          <p className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted">
+                                            <RankIcon
+                                              tier={application.applicant.rankTier}
+                                              size={14}
+                                            />
+                                            <span className="truncate">
+                                              {formatRank(application.applicant)} ·{' '}
+                                              {formatRoles(application.applicant)}
+                                            </span>
                                           </p>
                                         </div>
                                       </div>
