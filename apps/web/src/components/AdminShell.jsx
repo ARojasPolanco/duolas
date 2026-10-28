@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { BarChart3, LayoutDashboard, LogOut, ShieldAlert, Users } from 'lucide-react';
+import BetaBadge from './BetaBadge.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const links = [
@@ -39,6 +40,7 @@ export default function AdminShell({ children, maxWidth = 'max-w-6xl' }) {
             <span>
               Duo<span className="text-accent">LAS</span>
             </span>
+            <BetaBadge />
             <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-accent">
               Admin
             </span>

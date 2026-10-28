@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import BetaBadge from './BetaBadge.jsx';
 import RiotDisclaimer from './RiotDisclaimer.jsx';
 
 export default function AuthShell({ title, subtitle, children, footer }) {
@@ -7,9 +8,10 @@ export default function AuthShell({ title, subtitle, children, footer }) {
       <div className="w-full max-w-md">
         <Link
           to="/"
-          className="mx-auto mb-8 flex min-h-11 w-fit items-center text-2xl font-extrabold tracking-tight"
+          className="mx-auto mb-8 flex min-h-11 w-fit items-center gap-2 text-2xl font-extrabold tracking-tight"
         >
           Duo<span className="text-accent">LAS</span>
+          <BetaBadge />
         </Link>
         <div className="rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-black/20 sm:p-8">
           <h1 className="text-2xl font-bold">{title}</h1>

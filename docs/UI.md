@@ -51,9 +51,11 @@ Reglas:
 
 Todas las pantallas protegidas de jugador usan `AppShell`, salvo onboarding, que mantiene un layout enfocado. Las pantallas admin usan `AdminShell`.
 
+El logo `Duo LAS` muestra un badge `Beta` en landing, auth, onboarding, app y admin. El footer de la app y el hero de la landing aclaran que el servicio está en fase beta y puede cambiar.
+
 ### Mobile
 
-- Top bar fija con logo, campana y avatar.
+- Top bar fija con logo + badge `Beta`, campana y avatar.
 - Bottom nav fija con cinco ítems: Inicio, Match, Disponible, Busco 1 y Matches.
 - El avatar abre el menú de cuenta: Mi perfil, Invitaciones, Notificaciones, Eliminar cuenta y Cerrar sesión.
 - Los accesos admin viven fuera del shell de jugador, en `AdminShell`.
@@ -68,6 +70,7 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A 
 ### 3.1 Landing `/`
 
 - Hero: "Encontrá tu duo en LAS y subí de elo".
+- Badge `Beta` junto al logo y aviso de beta abierta en el hero.
 - Dos CTAs: "Crear cuenta" y "Ya tengo cuenta".
 - Carrusel de 4 slides con ilustraciones propias: match por afinidad, Disponible ya, Busco 1 y confianza.
 - Vista previa de 3 cards de jugadores de ejemplo, sin Riot ID ni Discord.

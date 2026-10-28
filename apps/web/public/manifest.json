@@ -1,7 +1,7 @@
 {
-  "name": "Duo LAS",
-  "short_name": "Duo LAS",
-  "description": "Encontrá tu duo de League of Legends en LAS.",
+  "name": "Duo LAS Beta",
+  "short_name": "Duo LAS Beta",
+  "description": "Encontrá tu duo de League of Legends en LAS. Fase beta.",
   "start_url": "/inicio",
   "scope": "/",
   "display": "standalone",

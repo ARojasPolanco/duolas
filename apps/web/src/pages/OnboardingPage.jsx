@@ -10,6 +10,7 @@ import {
   SCHEDULE_BLOCKS,
   SCHEDULE_DAYS,
 } from '@duo-las/shared/constants';
+import BetaBadge from '../components/BetaBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -263,8 +264,9 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-bg px-5 py-8 text-text">
       <div className="mx-auto max-w-3xl space-y-5">
         <header className="flex items-center justify-between">
-          <span className="text-xl font-extrabold tracking-tight">
+          <span className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
             Duo<span className="text-accent">LAS</span>
+            <BetaBadge />
           </span>
           <span className="text-xs font-semibold text-muted">
             Paso {step + 1} de {STEPS.length}

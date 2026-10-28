@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Radio, ShieldCheck, Swords, Users } from 'lucide-react';
+import BetaBadge from '../components/BetaBadge.jsx';
 import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
 import RiotDisclaimer from '../components/RiotDisclaimer.jsx';
@@ -84,16 +85,21 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-bg text-text">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-        <span className="text-lg font-extrabold tracking-tight">
+        <span className="flex items-center gap-2 text-lg font-extrabold tracking-tight">
           Duo<span className="text-accent">LAS</span>
+          <BetaBadge />
         </span>
-        <div className="flex items-center gap-3 text-sm font-semibold">
-          <Link to="/login" className="inline-flex min-h-11 items-center text-muted">
-            Iniciar sesión
+        <div className="flex items-center gap-1.5 text-sm font-semibold sm:gap-3">
+          <Link
+            to="/login"
+            className="inline-flex min-h-11 items-center text-xs text-muted sm:text-sm"
+          >
+            <span className="sm:hidden">Ingresar</span>
+            <span className="hidden sm:inline">Iniciar sesión</span>
           </Link>
           <Link
             to="/register"
-            className="inline-flex min-h-11 items-center rounded-lg bg-accent px-4 text-xs font-bold text-bg"
+            className="inline-flex min-h-11 items-center rounded-lg bg-accent px-3 text-[11px] font-bold text-bg sm:px-4 sm:text-xs"
           >
             Crear cuenta
           </Link>
@@ -128,6 +134,14 @@ export default function LandingPage() {
             >
               Perfiles compatibles, disponibilidad inmediata y reputación. Gratis, mobile-first y
               solo para mayores de 18 años.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12 }}
+              className="mt-3 text-xs font-semibold text-accent"
+            >
+              Beta abierta: el servicio puede cambiar mientras lo probamos.
             </motion.p>
 
             <motion.div

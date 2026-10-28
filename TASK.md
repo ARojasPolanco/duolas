@@ -197,6 +197,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Set SVG original de 10 rangos integrado en Home, cards, matches y onboarding.
 - [x] País de residencia LAS y equivalencia local de horarios en onboarding y cards.
 - [x] Aclaración de que el nombre de usuario no es el Riot ID en registro, onboarding y cards.
+- [x] Badge `Beta` en landing, auth, onboarding, app, admin, emails y PWA.
   - Migración 013 con `country` opcional y check de los cinco países.
   - Selector en onboarding, badge de país/diferencia horaria en cards, matches, invitaciones, Disponible y Busco 1.
   - 109 tests pasando, lint y build verdes, migración 013 down/up verificada y seed actualizado.

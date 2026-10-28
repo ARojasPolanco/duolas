@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import BetaBadge from '../components/BetaBadge.jsx';
 import RiotDisclaimer from '../components/RiotDisclaimer.jsx';
 import { LEGAL_LAST_UPDATED } from '../content/legal.js';
 
@@ -23,9 +24,10 @@ export default function LegalPage({ title, intro, sections }) {
         <header className="flex items-center justify-between gap-3">
           <Link
             to="/"
-            className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-tight"
+            className="inline-flex min-h-11 items-center gap-2 text-xl font-extrabold tracking-tight"
           >
             Duo<span className="text-accent">LAS</span>
+            <BetaBadge />
           </Link>
           <Link
             to="/"

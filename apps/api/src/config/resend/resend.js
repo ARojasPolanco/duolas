@@ -2,7 +2,8 @@ import { Resend } from 'resend';
 import { envs, appUrl } from '../enviroments.js';
 import logger from '../logger.js';
 
-const resend = envs.RESEND_API_KEY ? new Resend(envs.RESEND_API_KEY) : null;
+const mailEnabled = Boolean(envs.RESEND_API_KEY) && envs.NODE_ENV !== 'test';
+const resend = mailEnabled ? new Resend(envs.RESEND_API_KEY) : null;
 const from = envs.OWNER_EMAIL || 'onboarding@resend.dev';
 const support = envs.SUPPORT_EMAIL || 'soporte@duolas.app';
 
@@ -29,9 +30,12 @@ const layout = (title, preheader, body) => `
             <td style="padding:28px 28px 0;font-family:Arial,Helvetica,sans-serif;">
               <div style="font-size:24px;font-weight:800;letter-spacing:-0.4px;color:#f4f7fb;">
                 Duo<span style="color:#b0cf5c;">LAS</span>
+                <span style="display:inline-block;margin-left:8px;padding:3px 7px;border:1px solid #b0cf5c;border-radius:999px;font-size:9px;font-weight:700;letter-spacing:1.5px;line-height:1.4;color:#b0cf5c;vertical-align:middle;">
+                  BETA
+                </span>
               </div>
               <div style="padding-top:4px;font-size:12px;color:#94a3b8;">
-                Encontrá tu duo en LAS
+                Encontrá tu duo en LAS · Beta
               </div>
             </td>
           </tr>
@@ -103,7 +107,7 @@ export class MailService {
 
   async sendVerificationEmail(to, token) {
     if (!resend) {
-      logger.info('Email de verificación omitido: falta RESEND_API_KEY', { to: '[email]' });
+      logger.info('Email de verificación omitido: Resend no está habilitado', { to: '[email]' });
       return null;
     }
 
@@ -130,7 +134,7 @@ export class MailService {
 
   async sendPasswordResetEmail(to, token) {
     if (!resend) {
-      logger.info('Email de reset omitido: falta RESEND_API_KEY', { to: '[email]' });
+      logger.info('Email de reset omitido: Resend no está habilitado', { to: '[email]' });
       return null;
     }
 
@@ -157,7 +161,7 @@ export class MailService {
 
   async sendSuspensionEmail(to, reason, suspendedUntil) {
     if (!resend) {
-      logger.info('Email de suspensión omitido: falta RESEND_API_KEY', { to: '[email]' });
+      logger.info('Email de suspensión omitido: Resend no está habilitado', { to: '[email]' });
       return null;
     }
 

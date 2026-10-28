@@ -12,6 +12,7 @@ import {
   UserRound,
   Users,
 } from 'lucide-react';
+import BetaBadge from './BetaBadge.jsx';
 import DeleteAccountDialog from './DeleteAccountDialog.jsx';
 import RiotDisclaimer from './RiotDisclaimer.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -82,9 +83,10 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:px-6">
           <Link
             to="/inicio"
-            className="flex min-h-11 shrink-0 items-center text-xl font-extrabold tracking-tight"
+            className="flex min-h-11 shrink-0 items-center gap-2 text-xl font-extrabold tracking-tight"
           >
             Duo<span className="text-accent">LAS</span>
+            <BetaBadge />
           </Link>
 
           <nav className="ml-4 hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
@@ -216,6 +218,9 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
             </Link>
           </nav>
           <RiotDisclaimer className="mt-2 max-w-4xl" />
+          <p className="mt-2 text-[11px] text-muted">
+            Duo LAS está en beta: pueden haber cambios y errores mientras lo probamos.
+          </p>
         </footer>
       </main>
 
