@@ -8,6 +8,7 @@
     "start": "node src/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
+    "mail:test": "node scripts/test-email.js",
     "seed": "node seeders/run-seed.js",
     "seed:admin": "node seeders/seed-admin.js"
   },

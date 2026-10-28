@@ -6,24 +6,101 @@ const resend = envs.RESEND_API_KEY ? new Resend(envs.RESEND_API_KEY) : null;
 const from = envs.OWNER_EMAIL || 'onboarding@resend.dev';
 const support = envs.SUPPORT_EMAIL || 'soporte@duolas.app';
 
-const layout = (title, body) => `
-  <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-    <div style="background: #0b1220; border-radius: 12px; padding: 24px; text-align: center;">
-      <h1 style="color: #00c2b8; margin: 0; font-size: 28px;">Duo LAS</h1>
-      <p style="color: #94a3b8; margin: 8px 0 0; font-size: 13px;">Encontrá tu duo en LAS</p>
-    </div>
-    <div style="background: #ffffff; border: 1px solid #e5e7eb; border-top: 0; border-radius: 0 0 12px 12px; padding: 28px;">
-      <h2 style="color: #0f172a; margin: 0 0 12px; font-size: 22px;">${title}</h2>
-      ${body}
-      <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
-      <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-        ¿Dudas? Escribinos a ${support}. Duo LAS no está avalado por Riot Games.
-      </p>
-    </div>
+const HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+const escapeHtml = (value = '') =>
+  String(value).replace(/[&<>"']/g, (character) => HTML_ESCAPES[character]);
+
+const layout = (title, preheader, body) => `
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+    ${escapeHtml(preheader)}
   </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background:#030407;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#060b14;border:1px solid #1558c9;border-radius:16px;overflow:hidden;">
+          <tr>
+            <td style="padding:28px 28px 0;font-family:Arial,Helvetica,sans-serif;">
+              <div style="font-size:24px;font-weight:800;letter-spacing:-0.4px;color:#f4f7fb;">
+                Duo<span style="color:#b0cf5c;">LAS</span>
+              </div>
+              <div style="padding-top:4px;font-size:12px;color:#94a3b8;">
+                Encontrá tu duo en LAS
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px;font-family:Arial,Helvetica,sans-serif;color:#f4f7fb;">
+              <h1 style="margin:0 0 16px;font-size:24px;line-height:1.3;color:#f4f7fb;">
+                ${title}
+              </h1>
+              ${body}
+            </td>
+          </tr>
+          <tr>
+            <td style="border-top:1px solid #1558c9;padding:18px 28px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#94a3b8;">
+              ¿Dudas? Escribinos a ${escapeHtml(support)}.<br />
+              Duo LAS no está avalado por Riot Games. ·
+              <a href="${escapeHtml(appUrl)}" style="color:#b0cf5c;text-decoration:none;">duolas.app</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 `;
 
+const paragraph = (text) =>
+  `<p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#cbd5e1;">${text}</p>`;
+
+const button = (url, label) => `
+  <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+    <tr>
+      <td align="center" style="border-radius:8px;background:#b0cf5c;">
+        <a href="${escapeHtml(url)}" style="display:inline-block;padding:14px 26px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;line-height:1;color:#030407;text-decoration:none;border-radius:8px;">
+          ${label}
+        </a>
+      </td>
+    </tr>
+  </table>
+`;
+
+const fallbackLink = (url) => `
+  <p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#94a3b8;word-break:break-all;">
+    Si el botón no funciona, copiá este enlace:<br />
+    <a href="${escapeHtml(url)}" style="color:#b0cf5c;text-decoration:underline;">${escapeHtml(url)}</a>
+  </p>
+`;
+
+const note = (text) =>
+  `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#94a3b8;">${text}</p>`;
+
 export class MailService {
+  async #send(payload) {
+    try {
+      const { data, error } = await resend.emails.send(payload);
+
+      if (error) {
+        logger.error('Resend rechazó el email', {
+          name: error.name,
+          message: error.message,
+        });
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      logger.error('Error inesperado al enviar email', { message: error.message });
+      return null;
+    }
+  }
+
   async sendVerificationEmail(to, token) {
     if (!resend) {
       logger.info('Email de verificación omitido: falta RESEND_API_KEY', { to: '[email]' });
@@ -32,27 +109,20 @@ export class MailService {
 
     const url = `${appUrl}/verify-email?token=${token}`;
 
-    return resend.emails.send({
+    return this.#send({
       from,
       to,
+      replyTo: support,
       subject: 'Verificá tu email - Duo LAS',
-      text: `Verificá tu email en Duo LAS: ${url}`,
+      text: `Verificá tu email en Duo LAS: ${url}\n\nEl enlace vence en 24 horas. Si no creaste una cuenta, ignorá este mensaje.`,
       html: layout(
         'Verificá tu email',
+        'Confirmá tu email para activar las funciones sociales de Duo LAS.',
         `
-          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
-            Estás a un paso de entrar a Duo LAS. Confirmá que este email es tuyo para activar las
-            funciones sociales.
-          </p>
-          <p style="text-align: center; margin: 28px 0;">
-            <a href="${url}" style="display: inline-block; background: #00c2b8; color: #0b1220; padding: 14px 30px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-              Verificar mi email
-            </a>
-          </p>
-          <p style="color: #9ca3af; font-size: 12px; text-align: center; word-break: break-all;">
-            ${url}
-          </p>
-          <p style="color: #9ca3af; font-size: 12px;">El enlace vence en 24 horas.</p>
+          ${paragraph('Estás a un paso de entrar a Duo LAS. Confirmá que este email es tuyo para activar tu perfil y empezar a buscar duo.')}
+          ${button(url, 'Verificar mi email')}
+          ${fallbackLink(url)}
+          ${note('El enlace vence en 24 horas y solo puede usarse una vez. Si no creaste una cuenta, ignorá este mensaje.')}
         `
       ),
     });
@@ -66,28 +136,20 @@ export class MailService {
 
     const url = `${appUrl}/reset-password?token=${token}`;
 
-    return resend.emails.send({
+    return this.#send({
       from,
       to,
+      replyTo: support,
       subject: 'Restablecé tu contraseña - Duo LAS',
-      text: `Restablecé tu contraseña en Duo LAS: ${url}`,
+      text: `Restablecé tu contraseña en Duo LAS: ${url}\n\nEl enlace vence en 1 hora y solo puede usarse una vez. Si no lo pediste, ignorá este mensaje.`,
       html: layout(
-        'Restablecer contraseña',
+        'Restablecé tu contraseña',
+        'Recibimos un pedido para restablecer tu contraseña de Duo LAS.',
         `
-          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
-            Recibimos un pedido para restablecer tu contraseña. Si fuiste vos, elegí una nueva.
-          </p>
-          <p style="text-align: center; margin: 28px 0;">
-            <a href="${url}" style="display: inline-block; background: #00c2b8; color: #0b1220; padding: 14px 30px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-              Restablecer mi contraseña
-            </a>
-          </p>
-          <p style="color: #9ca3af; font-size: 12px; text-align: center; word-break: break-all;">
-            ${url}
-          </p>
-          <p style="color: #9ca3af; font-size: 12px;">
-            El enlace vence en 1 hora y solo puede usarse una vez. Si no lo pediste, ignorá este mensaje.
-          </p>
+          ${paragraph('Recibimos un pedido para restablecer tu contraseña. Si fuiste vos, elegí una nueva.')}
+          ${button(url, 'Restablecer mi contraseña')}
+          ${fallbackLink(url)}
+          ${note('El enlace vence en 1 hora y solo puede usarse una vez. Si no lo pediste, ignorá este mensaje.')}
         `
       ),
     });
@@ -106,24 +168,26 @@ export class MailService {
         }).format(new Date(suspendedUntil))}.`
       : 'La suspensión es permanente.';
 
-    return resend.emails.send({
+    return this.#send({
       from,
       to,
+      replyTo: support,
       subject: 'Tu cuenta fue suspendida - Duo LAS',
-      text: `Tu cuenta de Duo LAS fue suspendida. Motivo: ${reason}. ${untilText}`,
+      text: `Tu cuenta de Duo LAS fue suspendida. Motivo: ${reason}. ${untilText}\n\nSi creés que fue un error, escribinos a ${support}.`,
       html: layout(
-        'Cuenta suspendida',
+        'Tu cuenta fue suspendida',
+        'Información sobre la suspensión de tu cuenta de Duo LAS.',
         `
-          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
-            Tu cuenta de Duo LAS fue suspendida por moderación.
-          </p>
-          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
-            <strong>Motivo:</strong> ${reason}<br />
-            <strong>Duración:</strong> ${untilText}
-          </p>
-          <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
-            Si creés que fue un error, escribinos a ${support}.
-          </p>
+          ${paragraph('Tu cuenta de Duo LAS fue suspendida por moderación.')}
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;border:1px solid #1558c9;border-radius:10px;background:#030407;">
+            <tr>
+              <td style="padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:#cbd5e1;">
+                <strong style="color:#f4f7fb;">Motivo:</strong> ${escapeHtml(reason)}<br />
+                <strong style="color:#f4f7fb;">Duración:</strong> ${untilText}
+              </td>
+            </tr>
+          </table>
+          ${paragraph(`Si creés que fue un error, escribinos a ${escapeHtml(support)}.`)}
         `
       ),
     });

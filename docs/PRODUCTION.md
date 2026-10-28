@@ -107,6 +107,22 @@ npx web-push generate-vapid-keys
 
 La API key de Resend y las claves de hCaptcha se copian desde sus dashboards. El password del admin se genera con un gestor de contraseñas y debe tener 20+ caracteres.
 
+### Probar emails con el modo test de Resend
+
+Sin un dominio verificado, Resend solo permite enviar desde `onboarding@resend.dev` a la casilla dueña de la cuenta. Para revisar las tres plantillas:
+
+1. En `apps/api/.env` configurar `RESEND_API_KEY`, `OWNER_EMAIL=onboarding@resend.dev` y `TEST_EMAIL_TO` con la casilla dueña de Resend.
+2. Mantener `APP_URL=http://localhost:5173` para que los links apunten al entorno local.
+3. Correr:
+
+```bash
+npm run mail:test --workspace @duo-las/api -- tu-casilla@dominio.com
+```
+
+El script envía verificación, reset y suspensión con tokens de prueba. Sirve para validar asunto, diseño, links, textos y reply-to, no para completar el flujo real. Para probar el flujo completo, registrar un usuario local con la misma casilla y usar el link real.
+
+Al pasar a producción: verificar el dominio en Resend, cambiar `OWNER_EMAIL` a `noreply@dominio`, quitar `TEST_EMAIL_TO` y redeployar la API. `SUPPORT_EMAIL` se usa como reply-to y en el pie de los emails.
+
 ## 6. Checklist de deploy
 
 - [ ] Definir titular legal, dominio y correo de soporte.

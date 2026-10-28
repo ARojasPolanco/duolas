@@ -253,6 +253,7 @@ En ventana incógnita, sin sesión:
 
 - [ ] Abrir `/`, `/login`, `/register`, `/terminos` y `/privacidad` sin recargas en loop.
 - [ ] Registrar un usuario y verificar el email.
+- [ ] Revisar las plantillas de verificación, reset y suspensión con el modo test de Resend.
 - [ ] Iniciar sesión.
 - [ ] Cerrar sesión sin loop.
 - [ ] Ensuciar `localStorage.token` y confirmar un solo redirect a `/login`.

@@ -16,6 +16,7 @@ const envSchema = z
     RESEND_API_KEY: z.string().optional(),
     OWNER_EMAIL: z.string().email().optional(),
     SUPPORT_EMAIL: z.string().email().optional(),
+    TEST_EMAIL_TO: z.string().email().optional(),
     VAPID_PUBLIC_KEY: z.string().optional(),
     VAPID_PRIVATE_KEY: z.string().optional(),
     VAPID_SUBJECT: z.string().optional(),
