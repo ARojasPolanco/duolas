@@ -16,6 +16,7 @@ import AppShell from '../components/AppShell.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
+import UsernameHint from '../components/UsernameHint.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
@@ -282,8 +283,9 @@ export default function MatchPage() {
                             {initialsOf(profile.username)}
                           </div>
                           <div className="min-w-0">
-                            <h3 className="truncate font-bold">{profile.username}</h3>
-                            <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                            <h3 className="truncate font-bold">@{profile.username}</h3>
+                            <UsernameHint className="mt-0.5" />
+                            <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
                               <RankIcon tier={profile.rankTier} size={16} />
                               <span className="truncate">
                                 {formatRank(profile)} · {formatRoles(profile)}
@@ -410,7 +412,7 @@ export default function MatchPage() {
                           {initialsOf(item.target.username)}
                         </div>
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold">{item.target.username}</p>
+                          <p className="truncate text-sm font-semibold">@{item.target.username}</p>
                           <p className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted">
                             <RankIcon tier={item.target.rankTier} size={14} />
                             <span className="truncate">

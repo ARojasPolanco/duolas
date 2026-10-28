@@ -98,7 +98,12 @@ export default function RegisterPage() {
             minLength={3}
             maxLength={20}
             required
+            placeholder="Ej.: midcarry"
           />
+          <span className="mt-2 block text-xs font-normal leading-relaxed text-muted">
+            Es tu nombre dentro de Duo LAS. No uses tu Riot ID acá; el Riot ID se pide después en tu
+            perfil.
+          </span>
         </label>
 
         <label className="block text-sm font-semibold">

@@ -5,6 +5,7 @@ import AppShell from '../components/AppShell.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import FeedbackPanel from '../components/FeedbackPanel.jsx';
 import RankIcon from '../components/RankIcon.jsx';
+import UsernameHint from '../components/UsernameHint.jsx';
 import ReportDialog from '../components/ReportDialog.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -154,8 +155,9 @@ export default function MatchesPage() {
                       {initialsOf(match.other.username)}
                     </div>
                     <div className="min-w-0">
-                      <h2 className="truncate font-bold">{match.other.username}</h2>
-                      <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
+                      <h2 className="truncate font-bold">@{match.other.username}</h2>
+                      <UsernameHint className="mt-0.5" />
+                      <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
                         <RankIcon tier={match.other.rankTier} size={16} />
                         <span className="truncate">
                           {formatRank(match.other)} · {formatRoles(match.other)}

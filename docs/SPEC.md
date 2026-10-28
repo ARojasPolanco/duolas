@@ -144,6 +144,7 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 | Discord        | Opcional, 2-32 caracteres alfanuméricos, punto o guión bajo                                  |
 
 - El rango es declarado (`rank_source = declared`). Se muestra como declarado.
+- El nombre de usuario es el identificador de Duo LAS y no debe ser el Riot ID.
 - No se admiten jugadores sin clasificar en el MVP.
 - El Riot ID y el Discord no se muestran en el perfil público.
 - Solo se guarda el Riot ID actual. No se almacenan históricos.

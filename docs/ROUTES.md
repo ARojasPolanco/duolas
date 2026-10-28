@@ -209,12 +209,13 @@ Requiere rol `admin`.
 ### Flujo 2 — Cuenta y login
 
 1. Abrir `/register` y probar el toggle de contraseña.
-2. Crear una cuenta con +18 y términos.
-3. Verificar el email con el token o usar una cuenta demo ya verificada.
-4. Cerrar sesión y entrar desde `/login`.
-5. Probar el ojo para mostrar/ocultar contraseña.
-6. Probar el link “¿Has olvidado tu contraseña?”.
-7. Abrir una ruta protegida sin sesión y confirmar un solo redirect a `/login`.
+2. Confirmar que el username aclara que no es el Riot ID.
+3. Crear una cuenta con +18 y términos.
+4. Verificar el email con el token o usar una cuenta demo ya verificada.
+5. Cerrar sesión y entrar desde `/login`.
+6. Probar el ojo para mostrar/ocultar contraseña.
+7. Probar el link "¿Has olvidado tu contraseña?".
+8. Abrir una ruta protegida sin sesión y confirmar un solo redirect a `/login`.
 
 ### Flujo 3 — Perfil
 

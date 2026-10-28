@@ -299,8 +299,8 @@ export default function OnboardingPage() {
               <div className="space-y-5">
                 <h1 className="text-2xl font-bold">Tu cuenta de League of Legends</h1>
                 <p className="text-sm leading-relaxed text-muted">
-                  Usá tu Riot ID actual con el formato Nombre#TAG. El servidor es LAS y no se puede
-                  cambiar en el MVP.
+                  Usá tu Riot ID actual con el formato Nombre#TAG. No es tu nombre de usuario de Duo
+                  LAS. El servidor es LAS y no se puede cambiar en el MVP.
                 </p>
                 <label className="block text-sm font-semibold">
                   Riot ID

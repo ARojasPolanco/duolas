@@ -87,6 +87,7 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A 
 ### 3.3 Registro `/register`
 
 - Username, email, contraseña.
+- El campo username aclara que es el nombre dentro de Duo LAS y no el Riot ID; el Riot ID se pide en onboarding.
 - Checkbox obligatorio +18.
 - Checkbox obligatorio de términos y privacidad.
 - hCaptcha si está configurado.
@@ -102,7 +103,7 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A 
 
 Seis pasos con barra de progreso:
 
-1. Riot ID y servidor LAS.
+1. Riot ID y servidor LAS. Se aclara que el Riot ID no es el nombre de usuario de Duo LAS.
 2. Rol principal y secundario.
 3. Rango y LP.
 4. Horarios por día con bloques de 6 horas, atajos y selección múltiple. Incluye país opcional y equivalencia local de cada bloque.
@@ -132,7 +133,7 @@ Reglas:
 
 - Filtros: cola (Solo/Dúo, Flex) y rol opcional.
 - Card de candidato:
-  - Iniciales, username, rango, roles, país, diferencia horaria contra ART, estilo, idiomas, mic.
+  - Iniciales, `@username`, aviso “Usuario de Duo LAS, no Riot ID”, rango, roles, país, diferencia horaria contra ART, estilo, idiomas, mic.
   - Score con anillo y motivos.
   - Botón "Me interesa" y "Pasar".
   - Indicador de disponibilidad activa.
