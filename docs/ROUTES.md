@@ -25,6 +25,7 @@ npm run seed
 | Ruta                | Estado | Qué probar                                                |
 | ------------------- | ------ | --------------------------------------------------------- |
 | `/`                 | Lista  | Hero, carrusel de 4 slides, cards de ejemplo y CTAs       |
+| `/como-funciona`    | Lista  | Guía de Match, Disponible, Busco 1, Flex y push           |
 | `/login`            | Lista  | Login, toggle de contraseña y link de recuperación        |
 | `/register`         | Lista  | Registro, +18, términos y campos de contraseña con toggle |
 | `/verify-email`     | Lista  | Verificación con `?token=...`                             |
@@ -203,8 +204,9 @@ Requiere rol `admin`.
 
 1. Abrir `/`.
 2. Ver el carrusel, cambiar de slide con flechas y dots.
-3. Abrir `/terminos` y `/privacidad`.
-4. Abrir una ruta inexistente y ver el 404.
+3. Abrir `/como-funciona` y revisar Match, Disponible, Busco 1, Flex y push.
+4. Abrir `/terminos` y `/privacidad`.
+5. Abrir una ruta inexistente y ver el 404.
 
 ### Flujo 2 — Cuenta y login
 

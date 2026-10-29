@@ -9,6 +9,7 @@ Mapa de rutas, pantallas, componentes y reglas de interacción. Mobile-first, te
 | Ruta                | Pantalla               |
 | ------------------- | ---------------------- |
 | `/`                 | Landing                |
+| `/como-funciona`    | Guía de uso            |
 | `/login`            | Iniciar sesión         |
 | `/register`         | Registro               |
 | `/verify-email`     | Verificación de email  |
@@ -78,6 +79,14 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. Ma
 - Tres bloques: match por afinidad, Disponible ya, Busco 1.
 - Aviso +18 y aviso de no afiliación con Riot.
 - Footer con términos y privacidad.
+
+### 3.1.1 Guía `/como-funciona`
+
+- Página pública y compartible, con CTA a registro o a la app si hay sesión.
+- Explica las tres formas de buscar: Match por afinidad, Disponible ya y Busco 1.
+- Aclara que Flex funciona en Match, Disponible ya y Busco 1, con tolerancia de ±2 tiers donde aplica.
+- Mini tutorial de Disponible ya y Busco 1, pasos del recorrido completo y activación de push.
+- Accesos desde landing, footer de la app, menú de cuenta y Match.
 
 ### 3.2 Login `/login`
 

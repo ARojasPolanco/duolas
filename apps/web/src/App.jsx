@@ -8,6 +8,7 @@ import AdminUsersPage from './pages/AdminUsersPage.jsx';
 import AvailabilityPage from './pages/AvailabilityPage.jsx';
 import DuoPostsPage from './pages/DuoPostsPage.jsx';
 import HomePage from './pages/HomePage.jsx';
+import HowItWorksPage from './pages/HowItWorksPage.jsx';
 import InvitesPage from './pages/InvitesPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -29,6 +30,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/como-funciona" element={<HowItWorksPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />

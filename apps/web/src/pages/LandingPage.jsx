@@ -185,6 +185,12 @@ export default function LandingPage() {
                 Todo el flujo, en cuatro pasos.
               </h2>
             </div>
+            <Link
+              to="/como-funciona"
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline"
+            >
+              Ver guía completa
+            </Link>
           </div>
           <HowItWorksCarousel />
         </section>
@@ -269,6 +275,9 @@ export default function LandingPage() {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span>© {new Date().getFullYear()} Duo LAS</span>
             <div className="flex flex-wrap items-center gap-x-4">
+              <Link to="/como-funciona" className="inline-flex min-h-11 items-center">
+                Cómo funciona
+              </Link>
               <Link to="/terminos" className="inline-flex min-h-11 items-center">
                 Términos
               </Link>

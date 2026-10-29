@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Bell,
+  BookOpen,
   ChevronDown,
   ClipboardList,
   Home,
@@ -175,6 +176,14 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
                       Mi perfil
                     </Link>
                     <Link
+                      to="/como-funciona"
+                      role="menuitem"
+                      className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
+                    >
+                      <BookOpen size={16} aria-hidden="true" />
+                      Cómo funciona
+                    </Link>
+                    <Link
                       to="/invitaciones"
                       role="menuitem"
                       className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
@@ -226,6 +235,9 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
         {children}
         <footer className="mt-10 border-t border-border pt-4">
           <nav className="flex flex-wrap gap-x-4 text-[11px] font-semibold text-muted">
+            <Link to="/como-funciona" className="inline-flex min-h-11 items-center hover:text-text">
+              Cómo funciona
+            </Link>
             <Link to="/terminos" className="inline-flex min-h-11 items-center hover:text-text">
               Términos
             </Link>

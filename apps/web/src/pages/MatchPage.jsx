@@ -163,13 +163,21 @@ export default function MatchPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Match</p>
-          <h1 className="mt-2 text-3xl font-extrabold">Encontrá tu duo</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-            Candidatos compatibles por rango, roles, horarios, estilo e idioma. Si hay interés
-            mutuo, se revela el contacto.
-          </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Match</p>
+            <h1 className="mt-2 text-3xl font-extrabold">Encontrá tu duo</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+              Candidatos compatibles por rango, roles, horarios, estilo e idioma. Si hay interés
+              mutuo, se revela el contacto.
+            </p>
+          </div>
+          <Link
+            to="/como-funciona"
+            className="inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-xs font-semibold text-muted transition hover:border-accent/50 hover:text-text"
+          >
+            ¿Cómo funciona?
+          </Link>
         </div>
 
         {!user?.emailVerified ? <EmailVerificationBanner /> : null}

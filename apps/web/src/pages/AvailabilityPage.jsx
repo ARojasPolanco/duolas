@@ -195,6 +195,12 @@ export default function AvailabilityPage() {
             Abrí tu disponibilidad por 30 o 60 minutos y recibí invitaciones de jugadores
             compatibles. El contacto se revela recién cuando aceptás.
           </p>
+          <Link
+            to="/como-funciona"
+            className="mt-2 inline-flex min-h-11 items-center text-xs font-semibold text-accent hover:underline"
+          >
+            ¿Cómo funciona?
+          </Link>
         </div>
 
         <EmailVerificationBanner />

@@ -320,6 +320,12 @@ export default function DuoPostsPage() {
               Publicá el lugar libre y recibí postulaciones. Al aceptar una se crea la conexión y el
               contacto se revela.
             </p>
+            <Link
+              to="/como-funciona"
+              className="mt-2 inline-flex min-h-11 items-center text-xs font-semibold text-accent hover:underline"
+            >
+              ¿Cómo funciona?
+            </Link>
           </div>
           <button
             type="button"
