@@ -155,7 +155,14 @@ export default function MatchesPage() {
                       {initialsOf(match.other.username)}
                     </div>
                     <div className="min-w-0">
-                      <h2 className="truncate font-bold">@{match.other.username}</h2>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h2 className="truncate font-bold">@{match.other.username}</h2>
+                        {match.source === 'aram' ? (
+                          <span className="rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gold">
+                            ARAM
+                          </span>
+                        ) : null}
+                      </div>
                       <UsernameHint className="mt-0.5" />
                       <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
                         <RankIcon tier={match.other.rankTier} size={16} />

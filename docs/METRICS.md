@@ -13,26 +13,29 @@ Definiciones y consultas de los cuatro KPIs del MVP. Todo se calcula server-side
 
 ## 2. Taxonomía
 
-| Evento                 | Cuándo                            | Metadata                                  |
-| ---------------------- | --------------------------------- | ----------------------------------------- |
-| `user_registered`      | Registro exitoso                  | `{}`                                      |
-| `email_verified`       | Primer verificado de email        | `{}`                                      |
-| `profile_completed`    | Transición a perfil completo      | `{ rankTier }`                            |
-| `availability_opened`  | Nueva disponibilidad              | `{ queue, roles, ttlMinutes }`            |
-| `availability_closed`  | Cierre manual, expiración o match | `{ reason, queue }`                       |
-| `like_sent`            | Like nuevo, no idempotente        | `{ targetUserId }`                        |
-| `match_created`        | Nueva fila de conexión            | `{ connectionId, source, otherUserId }`   |
-| `contact_revealed`     | Se revela contacto                | `{ connectionId, reactivated }`           |
-| `invite_sent`          | Invitación nueva                  | `{ inviteId, targetUserId, role }`        |
-| `invite_accepted`      | Invitación aceptada               | `{ inviteId, connectionId }`              |
-| `post_created`         | Post de Busco 1                   | `{ postId, queue, rolesNeeded }`          |
-| `application_sent`     | Postulación                       | `{ postId, applicationId }`               |
-| `application_accepted` | Postulación aceptada              | `{ postId, applicationId, connectionId }` |
-| `feedback_submitted`   | Feedback enviado                  | `{ connectionId, sentiment }`             |
-| `feedback_revealed`    | Feedback visible                  | `{ connectionId }`                        |
-| `report_created`       | Reporte                           | `{ reportId, reason, priority }`          |
-| `user_suspended`       | Sanción aplicada                  | `{ days, permanent }`                     |
-| `push_subscribed`      | Suscripción push                  | `{ endpointHash }`                        |
+| Evento                      | Cuándo                            | Metadata                                  |
+| --------------------------- | --------------------------------- | ----------------------------------------- |
+| `user_registered`           | Registro exitoso                  | `{}`                                      |
+| `email_verified`            | Primer verificado de email        | `{}`                                      |
+| `profile_completed`         | Transición a perfil completo      | `{ rankTier }`                            |
+| `availability_opened`       | Nueva disponibilidad              | `{ queue, roles, ttlMinutes }`            |
+| `availability_closed`       | Cierre manual, expiración o match | `{ reason, queue }`                       |
+| `like_sent`                 | Like nuevo, no idempotente        | `{ targetUserId }`                        |
+| `match_created`             | Nueva fila de conexión            | `{ connectionId, source, otherUserId }`   |
+| `contact_revealed`          | Se revela contacto                | `{ connectionId, reactivated }`           |
+| `invite_sent`               | Invitación nueva                  | `{ inviteId, targetUserId, role }`        |
+| `invite_accepted`           | Invitación aceptada               | `{ inviteId, connectionId }`              |
+| `post_created`              | Post de Busco 1                   | `{ postId, queue, rolesNeeded }`          |
+| `application_sent`          | Postulación                       | `{ postId, applicationId }`               |
+| `application_accepted`      | Postulación aceptada              | `{ postId, applicationId, connectionId }` |
+| `aram_post_created`         | Publicación ARAM creada           | `{ mode, playersPresent, slotsNeeded }`   |
+| `aram_application_sent`     | Solicitud ARAM enviada            | `{ postId, applicationId }`               |
+| `aram_application_accepted` | Solicitud ARAM aceptada           | `{ postId, applicationId, connectionId }` |
+| `feedback_submitted`        | Feedback enviado                  | `{ connectionId, sentiment }`             |
+| `feedback_revealed`         | Feedback visible                  | `{ connectionId }`                        |
+| `report_created`            | Reporte                           | `{ reportId, reason, priority }`          |
+| `user_suspended`            | Sanción aplicada                  | `{ days, permanent }`                     |
+| `push_subscribed`           | Suscripción push                  | `{ endpointHash }`                        |
 
 `match_created` se emite solo cuando se crea la fila. Una reactivación de conexión archivada no cuenta como match nuevo para los KPIs; emite `contact_revealed` con `reactivated: true`.
 
@@ -168,21 +171,22 @@ Para una serie por hora, se agrupa `running` en buckets de una hora y se toma el
 
 Puntos de registro:
 
-| Flujo                         | Evento                                       |
-| ----------------------------- | -------------------------------------------- |
-| Registro                      | `user_registered`                            |
-| Verificación                  | `email_verified`                             |
-| Onboarding completado         | `profile_completed`                          |
-| Disponibilidad creada/cerrada | `availability_opened`, `availability_closed` |
-| Like nuevo                    | `like_sent`                                  |
-| Conexión nueva                | `match_created`, `contact_revealed`          |
-| Invitación                    | `invite_sent`, `invite_accepted`             |
-| Post                          | `post_created`                               |
-| Postulación                   | `application_sent`, `application_accepted`   |
-| Feedback                      | `feedback_submitted`, `feedback_revealed`    |
-| Reporte                       | `report_created`                             |
-| Sanción                       | `user_suspended`                             |
-| Push                          | `push_subscribed`                            |
+| Flujo                         | Evento                                                                    |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| Registro                      | `user_registered`                                                         |
+| Verificación                  | `email_verified`                                                          |
+| Onboarding completado         | `profile_completed`                                                       |
+| Disponibilidad creada/cerrada | `availability_opened`, `availability_closed`                              |
+| Like nuevo                    | `like_sent`                                                               |
+| Conexión nueva                | `match_created`, `contact_revealed`                                       |
+| Invitación                    | `invite_sent`, `invite_accepted`                                          |
+| Post                          | `post_created`                                                            |
+| Postulación                   | `application_sent`, `application_accepted`                                |
+| ARAM                          | `aram_post_created`, `aram_application_sent`, `aram_application_accepted` |
+| Feedback                      | `feedback_submitted`, `feedback_revealed`                                 |
+| Reporte                       | `report_created`                                                          |
+| Sanción                       | `user_suspended`                                                          |
+| Push                          | `push_subscribed`                                                         |
 
 Reglas:
 

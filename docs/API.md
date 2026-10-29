@@ -574,6 +574,57 @@ Solo dueño. `200`.
 
 Solo el postulante. Retira la postulación. `200`.
 
+## 9.1 ARAM
+
+Protegido + email verificado + perfil completo. ARAM no usa rango, roles ni score de afinidad.
+
+### `GET /aram`
+
+Query: `mode` (`solo` o `group`) y `limit` máximo 50. Devuelve publicaciones activas y vigentes.
+
+### `POST /aram`
+
+```json
+{
+  "mode": "group",
+  "playersPresent": 3,
+  "slotsNeeded": 2,
+  "window": "now",
+  "hasMic": true,
+  "note": "Buscamos support."
+}
+```
+
+`mode: "solo"` exige `playersPresent: 1` y `slotsNeeded: 1`. Un grupo permite 2-4 jugadores presentes y hasta `5 - playersPresent` lugares. Vence en 1 hora para `now` y 6 horas para `tonight`. Una publicación activa por usuario.
+
+### `GET /aram/mine`
+
+Devuelve la publicación propia, solicitudes recibidas y postulaciones enviadas.
+
+### `DELETE /aram/:id`
+
+Dueño. Cancela la publicación y rechaza solicitudes pendientes. `200`.
+
+### `POST /aram/:id/applications`
+
+```json
+{ "message": "Juego support." }
+```
+
+`201`. No permite postularse a la propia publicación ni a un usuario bloqueado. 409 si ya existe una postulación.
+
+### `POST /aram/:postId/applications/:applicationId/accept`
+
+Solo dueño. Acepta una solicitud, descuenta un lugar y crea una conexión con `source: "aram"`. Si el grupo se llena, pasa a `filled` y rechaza las demás solicitudes. El contacto queda disponible en `/matches`.
+
+### `POST /aram/:postId/applications/:applicationId/reject`
+
+Solo dueño. Rechaza una solicitud pendiente. `200`.
+
+### `DELETE /aram/:postId/applications/:applicationId`
+
+Solo postulante. Retira una solicitud pendiente. `200`.
+
 ## 10. Confianza
 
 ### `POST /reports`

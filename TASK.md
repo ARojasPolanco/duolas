@@ -207,6 +207,15 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
   - Selector en onboarding, badge de país/diferencia horaria en cards, matches, invitaciones, Disponible y Busco 1.
   - 109 tests pasando, lint y build verdes, migración 013 down/up verificada y seed actualizado.
 
+## ARAM
+
+- [x] Migración 014 con publicaciones y postulaciones ARAM.
+- [x] Backend para grupo, disponibilidad individual, postulaciones y aceptación.
+- [x] Conexiones ARAM visibles en Matches y notificaciones/push.
+- [x] Frontend `/aram` con pestañas Busco grupo y Disponible ahora.
+- [x] 111 tests pasando y build verde.
+- [ ] Smoke visual y prueba manual en dev.
+
 ## Hardening previo a producción
 
 - [x] Rate limit global 600/15 min por IP y 600/15 min por usuario autenticado.

@@ -6,11 +6,12 @@ Especificación de producto del MVP. Define qué se construye, qué queda afuera
 
 Duo LAS es una web mobile-first, gratuita y exclusiva para mayores de 18 años, que conecta jugadores de League of Legends del servidor LAS para jugar duo y subir de elo.
 
-El MVP resuelve tres necesidades:
+El MVP resuelve cuatro necesidades:
 
 1. **Match por afinidad:** encontrar un duo compatible por rango, roles, horarios, estilo e idioma.
 2. **Disponibilidad inmediata:** "Disponible ya" para jugar ahora e "Busco 1" para grupos con un lugar libre.
-3. **Confianza:** reputación, feedback posterior a la partida, reportes y bloqueos.
+3. **ARAM:** buscar grupo o ponerse disponible sin rango ni roles, con postulaciones y aceptación.
+4. **Confianza:** reputación, feedback posterior a la partida, reportes y bloqueos.
 
 ## 2. Problema y oportunidad
 
@@ -34,6 +35,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 - Match de duo por afinidad con interés mutuo.
 - "Disponible ya" con vencimiento automático.
 - "Busco 1" para grupos.
+- Búsqueda ARAM para grupos o jugadores disponibles, sin rango ni roles.
 - Invitaciones y postulaciones.
 - Contacto revelado solo después de una conexión: Riot ID y Discord opcional.
 - Notificaciones en la app, SSE, polling de respaldo y web push.
@@ -97,6 +99,14 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 3. Los interesados postulan con un mensaje corto.
 4. El dueño acepta una postulación.
 5. Se crea la conexión, el post se cierra y las demás postulaciones se rechazan.
+
+### 6.4.1 ARAM
+
+1. Un jugador publica un grupo de 2-4 personas que busca completar los 5, o se pone disponible individualmente.
+2. Elige ventana `Ahora` o `Esta noche`, micrófono y una nota.
+3. Otros jugadores se postulan o invitan según el tipo de publicación.
+4. El dueño acepta una solicitud, se descuenta un lugar y se crea la conexión `aram`.
+5. El contacto se revela en Matches. Una publicación activa por usuario.
 
 ### 6.5 Feedback y reputación
 
@@ -190,6 +200,18 @@ Detalle completo en `docs/MATCHING.md`.
 - Aceptar crea la conexión, cierra el post y rechaza el resto.
 - Aplica a Solo/Dúo y Flex.
 
+## 11.1 Reglas de ARAM
+
+- No usa rango, roles, horarios ni score de afinidad.
+- `solo`: 1 jugador disponible, 1 lugar.
+- `group`: 2-4 jugadores presentes y hasta completar 5.
+- Ventana `now` (1 hora) o `tonight` (6 horas).
+- Una publicación activa por usuario.
+- Postulación con mensaje de hasta 140 caracteres; no se permite a uno mismo ni a bloqueados.
+- Aceptar crea una conexión `aram` y descuenta un lugar.
+- Al llenarse, el post pasa a `filled` y rechaza las solicitudes pendientes.
+- El contacto se revela en Matches.
+
 ## 12. Reglas de feedback y reputación
 
 - Solo se puede dejar feedback sobre una conexión existente.
@@ -229,21 +251,25 @@ Detalle completo en `docs/MATCHING.md`.
 
 ## 14. Notificaciones
 
-| Tipo                    | Cuándo                           | Push          |
-| ----------------------- | -------------------------------- | ------------- |
-| `match_created`         | Like mutuo                       | Sí            |
-| `invite_received`       | Llega una invitación             | Sí            |
-| `invite_accepted`       | Aceptan una invitación enviada   | Sí            |
-| `invite_declined`       | Rechazan una invitación enviada  | Sí            |
-| `invite_cancelled`      | Cancelan una invitación recibida | No            |
-| `application_received`  | Llega una postulación            | Sí            |
-| `application_accepted`  | Aceptan una postulación          | Sí            |
-| `application_rejected`  | Rechazan una postulación         | Sí            |
-| `application_withdrawn` | Un postulante se retira          | No            |
-| `post_suggested`        | Hay un Busco 1 compatible        | Sí            |
-| `feedback_revealed`     | Se revela feedback               | No            |
-| `warning_received`      | Advertencia del admin            | Sí            |
-| `account_suspended`     | Suspensión                       | Sí, más email |
+| Tipo                         | Cuándo                           | Push          |
+| ---------------------------- | -------------------------------- | ------------- |
+| `match_created`              | Like mutuo                       | Sí            |
+| `invite_received`            | Llega una invitación             | Sí            |
+| `invite_accepted`            | Aceptan una invitación enviada   | Sí            |
+| `invite_declined`            | Rechazan una invitación enviada  | Sí            |
+| `invite_cancelled`           | Cancelan una invitación recibida | No            |
+| `application_received`       | Llega una postulación            | Sí            |
+| `application_accepted`       | Aceptan una postulación          | Sí            |
+| `application_rejected`       | Rechazan una postulación         | Sí            |
+| `application_withdrawn`      | Un postulante se retira          | No            |
+| `aram_application_received`  | Llega una solicitud ARAM         | Sí            |
+| `aram_application_accepted`  | Aceptan una solicitud ARAM       | Sí            |
+| `aram_application_rejected`  | Rechazan una solicitud ARAM      | Sí            |
+| `aram_application_withdrawn` | Retiran una solicitud ARAM       | No            |
+| `post_suggested`             | Hay un Busco 1 compatible        | Sí            |
+| `feedback_revealed`          | Se revela feedback               | No            |
+| `warning_received`           | Advertencia del admin            | Sí            |
+| `account_suspended`          | Suspensión                       | Sí, más email |
 
 - La notificación se persiste antes de emitir SSE y antes de enviar push.
 - Si el usuario estaba desconectado, la recupera por API.

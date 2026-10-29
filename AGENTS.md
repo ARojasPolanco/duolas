@@ -69,7 +69,7 @@ duo-lol-fullstack/
 │  │  │  ├─ errors/             # AppError, catchAsync, matchers, handler
 │  │  │  ├─ middlewares/        # auth gates, rate limits, validación
 │  │  │  ├─ modules/            # auth, profiles, matching, availability,
-│  │  │  │                      # duoPosts, invites, trust, notifications,
+│  │  │  │                      # duoPosts, aram, invites, trust, notifications,
 │  │  │  │                      # push, events, admin, metrics
 │  │  │  ├─ routes/
 │  │  │  ├─ app.js

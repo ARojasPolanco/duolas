@@ -13,6 +13,10 @@ const EVENT_TYPE_BY_NOTIFICATION = {
   application_accepted: 'application.updated',
   application_rejected: 'application.updated',
   application_withdrawn: 'application.updated',
+  aram_application_received: 'application.updated',
+  aram_application_accepted: 'application.updated',
+  aram_application_rejected: 'application.updated',
+  aram_application_withdrawn: 'application.updated',
 };
 
 const dispatch = (notification) => {

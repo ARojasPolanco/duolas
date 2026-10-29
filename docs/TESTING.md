@@ -12,8 +12,8 @@ Plan de pruebas del MVP. Sin tests E2E automatizados: el smoke manual es obligat
 
 ### Estado actual
 
-- F0 a F6 cerrados técnicamente con **109 tests pasando**.
-- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, eliminación y recuperación de cuenta, perfiles, país de residencia, Riot ID, roles, rango, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias, suspensiones, tickets SSE, bus de eventos, suscripciones push, métricas, panel admin de usuarios y autorización admin de KPIs.
+- F0 a F6 cerrados técnicamente con **111 tests pasando**.
+- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, eliminación y recuperación de cuenta, perfiles, país de residencia, Riot ID, roles, rango, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias, suspensiones, tickets SSE, bus de eventos, suscripciones push, métricas, panel admin de usuarios, autorización admin de KPIs y ARAM (grupo, disponibilidad individual, postulación y conexión).
 - Smoke técnico: flujo API contra PostgreSQL y rutas web respondiendo 200.
 - Pendiente: smoke visual interactivo en navegador antes del release.
 
@@ -165,6 +165,14 @@ Cuando exista CI, los mismos comandos deben pasar sin servicios externos: Resend
 - Sin email verificado → 403.
 - Sin perfil completo → 403.
 
+### ARAM
+
+- [ ] Publicar un grupo de 2-4 jugadores y confirmar lugares disponibles.
+- [ ] Publicar disponibilidad individual y confirmar que solo permite 1 lugar.
+- [ ] Postularse desde otra cuenta y aceptar desde la publicación.
+- [ ] Confirmar conexión ARAM en Matches y notificación/push.
+- [ ] Confirmar que se descuenta un lugar y el post se llena al completar 5.
+
 ### Disponible ya
 
 - Crear cierra la anterior.
@@ -270,6 +278,14 @@ En ventana incógnita, sin sesión:
 - [ ] Confirmar que el contacto aparece solo en ambos matches.
 - [ ] Archivar y confirmar que desaparece.
 - [ ] Bloquear y confirmar que no vuelve a aparecer.
+
+### ARAM
+
+- [ ] Publicar un grupo de 2-4 jugadores y confirmar lugares disponibles.
+- [ ] Publicar disponibilidad individual y confirmar que solo permite 1 lugar.
+- [ ] Postularse desde otra cuenta y aceptar desde la publicación.
+- [ ] Confirmar conexión ARAM en Matches y notificación/push.
+- [ ] Confirmar que se descuenta un lugar y el post se llena al completar 5.
 
 ### Disponible ya
 

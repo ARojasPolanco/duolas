@@ -57,8 +57,11 @@ export const AVAILABILITY_STATUSES = Object.freeze(['active', 'closed']);
 export const AVAILABILITY_CLOSED_REASONS = Object.freeze(['expired', 'manual', 'matched']);
 
 export const LIKE_STATUSES = Object.freeze(['pending', 'matched', 'cancelled']);
-export const CONNECTION_SOURCES = Object.freeze(['like', 'availability', 'post']);
+export const CONNECTION_SOURCES = Object.freeze(['like', 'availability', 'post', 'aram']);
 export const CONNECTION_STATUSES = Object.freeze(['active', 'archived']);
+
+export const ARAM_MODES = Object.freeze(['solo', 'group']);
+export const ARAM_WINDOWS = Object.freeze(['now', 'tonight']);
 
 export const POST_STATUSES = Object.freeze(['active', 'filled', 'expired', 'cancelled']);
 export const APPLICATION_STATUSES = Object.freeze(['pending', 'accepted', 'rejected', 'withdrawn']);
@@ -104,6 +107,10 @@ export const NOTIFICATION_TYPES = Object.freeze([
   'application_accepted',
   'application_rejected',
   'application_withdrawn',
+  'aram_application_received',
+  'aram_application_accepted',
+  'aram_application_rejected',
+  'aram_application_withdrawn',
   'post_suggested',
   'feedback_revealed',
   'warning_received',
@@ -124,6 +131,9 @@ export const METRIC_EVENT_TYPES = Object.freeze([
   'post_created',
   'application_sent',
   'application_accepted',
+  'aram_post_created',
+  'aram_application_sent',
+  'aram_application_accepted',
   'feedback_submitted',
   'feedback_revealed',
   'report_created',

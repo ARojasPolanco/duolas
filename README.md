@@ -2,12 +2,12 @@
 
 Web mobile-first, gratuita y solo para mayores de 18 años, que conecta jugadores de League of Legends del servidor LAS para jugar duo y subir de elo.
 
-El alcance de este repositorio es el servicio de match y duo: perfil, match por afinidad, "Disponible ya", "Busco 1", invitaciones, notificaciones, reputación, reportes y bloqueos. El coaching, los pagos y el chat interno quedan fuera del MVP.
+El alcance de este repositorio es el servicio de match y duo: perfil, match por afinidad, "Disponible ya", "Busco 1", búsqueda ARAM, invitaciones, notificaciones, reputación, reportes y bloqueos. El coaching, los pagos y el chat interno quedan fuera del MVP.
 
 ## Estado
 
 - **Fase actual:** MVP implementado; preparando release público sin Riot API y solicitud futura de production key.
-- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
+- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, ARAM, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
 - **Rama principal:** `dev`. `main` se reserva para el release final.
 - **Fuente de verdad:** los documentos de `docs/`.
 - **Propuesta original:** `Propuesta plataforma de duos para League of Legends.pdf`.

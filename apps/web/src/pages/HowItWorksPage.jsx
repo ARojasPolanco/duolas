@@ -261,6 +261,33 @@ export default function HowItWorksPage() {
           </article>
         </section>
 
+        <section className="mt-8 rounded-3xl border border-gold/40 bg-gold/10 p-6 sm:p-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <SectionLabel>También para ARAM</SectionLabel>
+              <h2 className="mt-2 text-2xl font-extrabold">ARAM tiene su propia búsqueda.</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                Podés publicar tu grupo o ponerte disponible para jugar ahora. No usa rango ni
+                roles: solo importa quién está para jugar. El contacto se revela cuando aceptás.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-muted">
+                <span className="rounded-full border border-border px-3 py-1">Busco grupo</span>
+                <span className="rounded-full border border-border px-3 py-1">
+                  Disponible ahora
+                </span>
+                <span className="rounded-full border border-border px-3 py-1">Sin rango</span>
+              </div>
+            </div>
+            <Link
+              to={user ? '/aram' : '/register'}
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-gold/50 px-5 py-3 text-sm font-bold text-gold"
+            >
+              {user ? 'Ir a ARAM' : 'Crear cuenta'}
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
+
         <section className="mt-12">
           <SectionLabel>El recorrido completo</SectionLabel>
           <h2 className="mt-2 text-3xl font-extrabold">Cuatro pasos, sin misterio.</h2>

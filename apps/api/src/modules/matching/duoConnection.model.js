@@ -25,7 +25,7 @@ DuoConnection.init(
     source: {
       type: DataTypes.STRING(12),
       allowNull: false,
-      validate: { isIn: [['like', 'availability', 'post']] },
+      validate: { isIn: [['like', 'availability', 'post', 'aram']] },
     },
     status: {
       type: DataTypes.STRING(10),

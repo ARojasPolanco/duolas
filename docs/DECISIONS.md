@@ -281,3 +281,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** crear un `AdminShell` propio con Resumen, Usuarios, Reportes y Métricas. El admin es redirigido desde rutas de jugador a `/admin`. `GET /admin/users` expone búsqueda, filtros y paginación; `GET /admin/users/:id` concentra cuenta, perfil, reportes, sanciones y disponibilidad. Los datos sensibles como contraseña y tokens nunca se devuelven.
 
 **Consecuencias:** los admins operan sin perfil de jugador y no aparecen en el flujo social. El panel queda read-only en esta fase; las acciones de moderación siguen viviendo en reportes y en los endpoints existentes de warn/suspend.
+
+## ADR-036 - ARAM como búsqueda separada
+
+**Contexto:** ARAM no usa rango, roles ni score de afinidad. Meterlo como una cola más de Match, Disponible ya y Busco 1 habría contaminado esos flujos y cargado sus opciones.
+
+**Decisión:** crear una sección /aram con publicaciones propias de dos tipos: solo (disponibilidad individual) y group (grupo de 2-4 que busca completar 5). Una solicitud aceptada descuenta un lugar y crea una conexión con source = 'aram', visible en Matches. No usa rango ni roles.
+
+**Consecuencias:** el flujo de duo queda intacto y ARAM se puede medir por separado. El MVP no modela el roster completo del grupo: el dueño acepta solicitudes y coordina el resto. Una publicación activa por usuario.

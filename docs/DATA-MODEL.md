@@ -461,6 +461,39 @@ Sin `updated_at`: es inmutable. Registra cada advertencia o suspensión aplicada
 
 Sin `updated_at`: es inmutable.
 
+### 3.17 `aram_posts`
+
+| Columna           | Tipo         | Regla                                      |
+| ----------------- | ------------ | ------------------------------------------ |
+| `aram_posts_id`   | UUID         | PK                                         |
+| `owner_id`        | UUID         | FK `users`, obligatorio                    |
+| `mode`            | VARCHAR(8)   | `solo` o `group`                           |
+| `players_present` | SMALLINT     | 1-4                                        |
+| `slots_needed`    | SMALLINT     | 1-4; grupo hasta `5 - players_present`     |
+| `time_window`     | VARCHAR(10)  | `now` o `tonight`                          |
+| `has_mic`         | BOOLEAN      | Default `false`                            |
+| `note`            | VARCHAR(140) | Opcional                                   |
+| `status`          | VARCHAR(10)  | `active`, `filled`, `cancelled`, `expired` |
+| `expires_at`      | TIMESTAMPTZ  | 1 h para `now`, 6 h para `tonight`         |
+| `created_at`      | TIMESTAMPTZ  | Default `now()`                            |
+| `updated_at`      | TIMESTAMPTZ  | Default `now()`                            |
+
+Una sola publicación activa por usuario. Índice único parcial `(owner_id) WHERE status = 'active'`.
+
+### 3.18 `aram_applications`
+
+| Columna                | Tipo         | Regla                                          |
+| ---------------------- | ------------ | ---------------------------------------------- |
+| `aram_applications_id` | UUID         | PK                                             |
+| `post_id`              | UUID         | FK `aram_posts`, obligatorio                   |
+| `applicant_id`         | UUID         | FK `users`, obligatorio                        |
+| `message`              | VARCHAR(140) | Opcional                                       |
+| `status`               | VARCHAR(10)  | `pending`, `accepted`, `rejected`, `withdrawn` |
+| `created_at`           | TIMESTAMPTZ  | Default `now()`                                |
+| `updated_at`           | TIMESTAMPTZ  | Default `now()`                                |
+
+Única por `(post_id, applicant_id)`. Aceptar crea una conexión con `source = 'aram'` y descuenta un lugar.
+
 ## 4. Relaciones
 
 ```text
@@ -526,6 +559,8 @@ Se setea cuando el perfil se crea o actualiza con todos los campos obligatorios.
 - Un reporte abierto es único por par.
 - Una postulación es única por post y usuario.
 - Un post acepta como máximo 10 postulaciones pendientes.
+- Un usuario tiene como máximo una publicación ARAM activa.
+- Una postulación ARAM es única por publicación y usuario.
 - Crear una conexión cierra las disponibilidades activas de ambos con motivo `matched`.
 - Nunca se expone `email`, `riot_id` ni `discord_tag` en un perfil público.
 - Nunca se guardan Riot IDs históricos.

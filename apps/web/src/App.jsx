@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import AccountDeletedPage from './pages/AccountDeletedPage.jsx';
+import AramPage from './pages/AramPage.jsx';
 import AdminMetricsPage from './pages/AdminMetricsPage.jsx';
 import AdminOverviewPage from './pages/AdminOverviewPage.jsx';
 import AdminReportsPage from './pages/AdminReportsPage.jsx';
@@ -96,6 +97,14 @@ function App() {
         element={
           <ProtectedRoute>
             <MatchPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/aram"
+        element={
+          <ProtectedRoute>
+            <AramPage />
           </ProtectedRoute>
         }
       />

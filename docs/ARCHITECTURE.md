@@ -226,6 +226,7 @@ Se usan transacciones con bloqueo de fila en:
 - Like mutuo: crear conexión una sola vez.
 - Aceptar invitación: evitar doble aceptación.
 - Aceptar postulación: cerrar post y rechazar el resto.
+- Aceptar postulación ARAM: descontar lugar y crear conexión.
 - Revelar feedback: actualizar visibilidad y reputación.
 
 Además, índices únicos y parciales como última barrera:
@@ -233,6 +234,8 @@ Además, índices únicos y parciales como última barrera:
 - Una disponibilidad activa por usuario.
 - Una invitación pendiente por par.
 - Una postulación por post y usuario.
+- Una publicación ARAM activa por usuario.
+- Una postulación ARAM por publicación y usuario.
 - Un feedback por conexión y autor.
 - Una conexión por par ordenado.
 - Un reporte abierto por par.
@@ -254,6 +257,7 @@ Además, índices únicos y parciales como última barrera:
 | `011_metrics_events`           | Eventos de métricas                         |
 | `012_account_deletion`         | Baja programada y purga de cuentas          |
 | `013_profile_country`          | País de residencia LAS                      |
+| `014_aram`                     | Publicaciones y postulaciones ARAM          |
 
 ### Jobs internos
 

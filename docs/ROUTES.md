@@ -43,6 +43,7 @@ npm run seed
 | `/onboarding`         | Lista  | Perfil completo, edición y guardado                      |
 | `/inicio`             | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
 | `/match`              | Lista  | Filtros, candidatos, like, pasar y bloquear              |
+| `/aram`               | Lista  | Publicar grupo, ponerse disponible, postular y aceptar   |
 | `/disponible`         | Lista  | Abrir/cerrar disponibilidad, TTL, filtros e invitar      |
 | `/invitaciones`       | Lista  | Recibidas/enviadas, aceptar, rechazar y cancelar         |
 | `/busco-1`            | Lista  | Publicar, explorar, postularse y gestionar postulaciones |
@@ -289,6 +290,15 @@ Requiere rol `admin`.
 4. Aceptar la postulación y confirmar el contacto revelado.
 5. Confirmar que el post pasa a completa y que el match aparece en `/matches`.
 6. Correr `npm run seed` para reiniciar el escenario.
+
+### Flujo 10.1 - ARAM
+
+1. Entrar con una cuenta verificada y abrir `/aram`.
+2. Publicar un grupo con 2-5 jugadores y lugares libres.
+3. Con otra cuenta, abrir `/aram`, pestaña `Busco grupo` y postularse.
+4. Aceptar la postulación desde `Tu publicación`.
+5. Confirmar que la conexión aparece en `/matches` con badge ARAM.
+6. Probar `Disponible ahora` con una publicación individual.
 
 ### Flujo 11 - Feedback doble ciego
 

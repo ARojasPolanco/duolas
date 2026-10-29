@@ -43,6 +43,7 @@ const MATCH_SOURCE = {
   like: 'Like',
   availability: 'Disponible ya',
   post: 'Busco 1',
+  aram: 'ARAM',
 };
 
 const statusBadge = (status, map) => {

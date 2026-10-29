@@ -21,23 +21,24 @@ Mapa de rutas, pantallas, componentes y reglas de interacción. Mobile-first, te
 
 ### Protegidas
 
-| Ruta                  | Pantalla                          |
-| --------------------- | --------------------------------- |
-| `/inicio`             | Hub del jugador                   |
-| `/onboarding`         | Completar perfil                  |
-| `/match`              | Candidatos y likes                |
-| `/disponible`         | Disponibilidad inmediata          |
-| `/busco-1`            | Posts de grupo                    |
-| `/matches`            | Conexiones y contacto             |
-| `/invitaciones`       | Invitaciones recibidas y enviadas |
-| `/notificaciones`     | Centro de notificaciones          |
-| `/perfil`             | Perfil propio                     |
-| `/perfil/:id`         | Perfil público                    |
-| `/admin`              | Resumen admin                     |
-| `/admin/usuarios`     | Buscador de cuentas               |
-| `/admin/usuarios/:id` | Detalle de usuario                |
-| `/admin/reportes`     | Moderación                        |
-| `/admin/metrics`      | KPIs                              |
+| Ruta                  | Pantalla                           |
+| --------------------- | ---------------------------------- |
+| `/inicio`             | Hub del jugador                    |
+| `/onboarding`         | Completar perfil                   |
+| `/match`              | Candidatos y likes                 |
+| `/aram`               | Buscar grupo y disponibilidad ARAM |
+| `/disponible`         | Disponibilidad inmediata           |
+| `/busco-1`            | Posts de grupo                     |
+| `/matches`            | Conexiones y contacto              |
+| `/invitaciones`       | Invitaciones recibidas y enviadas  |
+| `/notificaciones`     | Centro de notificaciones           |
+| `/perfil`             | Perfil propio                      |
+| `/perfil/:id`         | Perfil público                     |
+| `/admin`              | Resumen admin                      |
+| `/admin/usuarios`     | Buscador de cuentas                |
+| `/admin/usuarios/:id` | Detalle de usuario                 |
+| `/admin/reportes`     | Moderación                         |
+| `/admin/metrics`      | KPIs                               |
 
 Reglas:
 
@@ -57,7 +58,7 @@ El logo `Duo LAS` muestra un badge `Beta` en landing, auth, onboarding, app y ad
 ### Mobile
 
 - Top bar fija con logo + badge `Beta`, campana y avatar.
-- Bottom nav fija con cinco ítems: Inicio, Match, Disponible, Busco 1 y Matches.
+- Bottom nav fija con seis ítems: Inicio, Match, ARAM, Disponible, Busco 1 y Matches.
 - Match muestra un badge con la cantidad de candidatos disponibles para likear.
 - El avatar abre el menú de cuenta: Mi perfil, Invitaciones, Notificaciones, Eliminar cuenta y Cerrar sesión.
 - Los accesos admin viven fuera del shell de jugador, en `AdminShell`.
@@ -65,7 +66,7 @@ El logo `Duo LAS` muestra un badge `Beta` en landing, auth, onboarding, app y ad
 
 ### Desktop
 
-Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. Match muestra un badge con la cantidad de candidatos disponibles. A la derecha viven la campana y el menú de avatar con perfil, notificaciones y logout. Los admins usan un top nav propio con Resumen, Usuarios, Reportes y Métricas.
+Top nav con logo, Inicio, Match, ARAM, Disponible, Busco 1, Matches e Invitaciones. Match muestra un badge con la cantidad de candidatos disponibles. A la derecha viven la campana y el menú de avatar con perfil, notificaciones y logout. Los admins usan un top nav propio con Resumen, Usuarios, Reportes y Métricas.
 
 ## 3. Pantallas
 
@@ -85,7 +86,7 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. Ma
 - Página pública y compartible, con CTA a registro o a la app si hay sesión.
 - Explica las tres formas de buscar: Match por afinidad, Disponible ya y Busco 1.
 - Aclara que Flex funciona en Match, Disponible ya y Busco 1, con tolerancia de ±2 tiers donde aplica.
-- Mini tutorial de Disponible ya y Busco 1, pasos del recorrido completo y activación de push.
+- Mini tutorial de Disponible ya, Busco 1 y ARAM, pasos del recorrido completo y activación de push.
 - Accesos desde landing, footer de la app, menú de cuenta y Match.
 
 ### 3.2 Login `/login`
@@ -156,6 +157,16 @@ Reglas:
 - Estado vacío: "No encontramos duos compatibles todavía. Probá ampliar horarios o volver más tarde."
 - Optimistic UI al likear con rollback.
 - El badge de país y diferencia contra ART se reutiliza en todas las cards de jugador.
+
+### 3.7.1 ARAM `/aram`
+
+- Pestañas `Busco grupo` y `Disponible ahora`.
+- Publicar grupo con 2-4 jugadores presentes y lugares libres hasta completar 5.
+- Publicar disponibilidad individual para que un grupo invite.
+- Ventana `Ahora` o `Esta noche`, micrófono y nota.
+- Postulaciones e invitaciones en la misma pantalla; aceptar crea conexión `aram`.
+- El contacto se revela en `/matches` después de aceptar.
+- Una publicación activa por usuario.
 
 ### 3.8 Disponible ya `/disponible`
 

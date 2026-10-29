@@ -5,6 +5,7 @@ import {
   BookOpen,
   ChevronDown,
   ClipboardList,
+  Gamepad2,
   Home,
   LogOut,
   Radio,
@@ -24,6 +25,7 @@ import { initialsOf } from '../utils/labels.js';
 const primaryLinks = [
   { to: '/inicio', label: 'Inicio', icon: Home },
   { to: '/match', label: 'Match', icon: Swords },
+  { to: '/aram', label: 'ARAM', icon: Gamepad2 },
   { to: '/disponible', label: 'Disponible', icon: Radio },
   { to: '/busco-1', label: 'Busco 1', icon: ClipboardList },
   { to: '/matches', label: 'Matches', icon: Users },
