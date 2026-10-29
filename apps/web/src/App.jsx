@@ -17,6 +17,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import LegalPage from './pages/LegalPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
@@ -69,6 +70,14 @@ function App() {
         element={
           <ProtectedRoute>
             <OnboardingPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/perfil"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

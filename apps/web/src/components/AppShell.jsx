@@ -148,7 +148,7 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
 
                   <div className="p-1.5">
                     <Link
-                      to="/onboarding"
+                      to="/perfil"
                       role="menuitem"
                       className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface-2 hover:text-text"
                     >

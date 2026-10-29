@@ -104,7 +104,7 @@ Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A 
 
 ### 3.5 Onboarding `/onboarding`
 
-Seis pasos con barra de progreso:
+Siete pasos con barra de progreso:
 
 1. Riot ID y servidor LAS. Se aclara que el Riot ID no es el nombre de usuario de Duo LAS.
 2. Rol principal y secundario.
@@ -197,12 +197,11 @@ Reglas:
 
 ### 3.13 Perfil `/perfil`
 
-- Editar perfil con los mismos campos del onboarding, incluido el país. Username y email no son editables en el MVP.
-- Reputación con porcentaje y conteos.
-- Estado de verificación de email.
-- Lista de bloqueados con desbloquear.
-- Links a términos y privacidad.
-- Cerrar sesión.
+- Edición directa en una sola pantalla, sin repetir el wizard de onboarding.
+- Prefill con el perfil actual y los mismos campos del onboarding, incluido país, horarios, bio y Discord.
+- Username y email son de solo lectura en el MVP.
+- Banner de verificación de email.
+- Guardar cambios sin salir de la pantalla y volver al inicio.
 
 ### 3.14 Perfil público `/perfil/:id`
 

@@ -236,7 +236,7 @@ export default function HomePage() {
                   <Inbox size={16} aria-hidden="true" />
                   Invitaciones
                 </Link>
-                <Link to="/onboarding" className={`${actionLink} border border-border text-muted`}>
+                <Link to="/perfil" className={`${actionLink} border border-border text-muted`}>
                   <Pencil size={16} aria-hidden="true" />
                   Editar perfil
                 </Link>
