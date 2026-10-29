@@ -70,7 +70,7 @@ const WEEKEND_BLOCKS = ['sat_afternoon', 'sat_night', 'sun_afternoon', 'sun_nigh
 const APEX_TIERS = ['master', 'grandmaster', 'challenger'];
 const RIOT_ID_REGEX = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,14}[\p{L}\p{N}]#[A-Za-z0-9]{3,5}$/u;
 
-const STEPS = ['Riot ID', 'Roles', 'Rango', 'Horarios', 'Estilo', 'Cierre'];
+const STEPS = ['Riot ID', 'Roles', 'Rango', 'Horarios', 'Estilo', 'Contacto', 'Resumen'];
 
 const initialForm = {
   riotId: '',
@@ -103,6 +103,7 @@ export default function OnboardingPage() {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [saveReady, setSaveReady] = useState(false);
   const [error, setError] = useState('');
   const { refreshUser } = useAuth();
   const { toast } = useToast();
@@ -145,6 +146,16 @@ export default function OnboardingPage() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (step !== STEPS.length - 1) {
+      setSaveReady(false);
+      return undefined;
+    }
+
+    const timer = setTimeout(() => setSaveReady(true), 700);
+    return () => clearTimeout(timer);
+  }, [step]);
 
   const isApex = APEX_TIERS.includes(form.rankTier);
 
@@ -214,6 +225,14 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (step !== STEPS.length - 1) {
+      goNext();
+      return;
+    }
+
+    if (!saveReady) return;
+
     if (!canContinue()) {
       setError('Completá este paso antes de continuar.');
       return;
@@ -650,9 +669,10 @@ export default function OnboardingPage() {
             {step === 5 ? (
               <div className="space-y-5">
                 <div>
-                  <h1 className="text-2xl font-bold">Últimos detalles</h1>
-                  <p className="mt-2 text-sm text-muted">
-                    La bio y el Discord son opcionales. El Discord se revela solo tras una conexión.
+                  <h1 className="text-2xl font-bold">¿Cómo te contactan?</h1>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    El Discord se revela solo después de una conexión. Si no lo agregás, tus matches
+                    solo van a poder contactarte por Riot ID.
                   </p>
                 </div>
 
@@ -671,7 +691,7 @@ export default function OnboardingPage() {
                 </label>
 
                 <label className="block text-sm font-semibold">
-                  Discord (opcional)
+                  Discord (recomendado)
                   <input
                     className={`${inputClass} mt-2`}
                     value={form.discordTag}
@@ -680,6 +700,22 @@ export default function OnboardingPage() {
                     placeholder="usuario"
                   />
                 </label>
+
+                <p className="rounded-xl border border-border bg-bg px-4 py-3 text-xs leading-relaxed text-muted">
+                  Poné solo el nombre de usuario, sin @. No se muestra en tu perfil público: se
+                  revela únicamente cuando hay una conexión.
+                </p>
+              </div>
+            ) : null}
+
+            {step === 6 ? (
+              <div className="space-y-5">
+                <div>
+                  <h1 className="text-2xl font-bold">Revisá tu perfil</h1>
+                  <p className="mt-2 text-sm text-muted">
+                    Así va a quedar tu perfil para el match. Podés editarlo cuando quieras.
+                  </p>
+                </div>
 
                 <div className="rounded-xl border border-border bg-bg p-4 text-sm">
                   <p className="font-semibold">Resumen</p>
@@ -695,9 +731,9 @@ export default function OnboardingPage() {
                       <span className="text-text">Roles:</span>{' '}
                       {form.primaryRole
                         ? `${ROLE_LABELS[form.primaryRole]} / ${
-                            form.secondaryRole ? ROLE_LABELS[form.secondaryRole] : '—'
+                            form.secondaryRole ? ROLE_LABELS[form.secondaryRole] : '-'
                           }`
-                        : '—'}
+                        : '-'}
                     </li>
                     <li>
                       <span className="text-text">Rango:</span>{' '}
@@ -705,7 +741,7 @@ export default function OnboardingPage() {
                         ? `${RANK_LABELS[form.rankTier]}${
                             form.rankDivision ? ` ${DIVISION_LABELS[form.rankDivision]}` : ''
                           }`
-                        : '—'}
+                        : '-'}
                     </li>
                     <li>
                       <span className="text-text">Horarios:</span> {form.scheduleBlocks.length}{' '}
@@ -713,22 +749,32 @@ export default function OnboardingPage() {
                     </li>
                     <li>
                       <span className="text-text">Estilo:</span>{' '}
-                      {form.playStyle ? STYLE_LABELS[form.playStyle] : '—'}
+                      {form.playStyle ? STYLE_LABELS[form.playStyle] : '-'}
                     </li>
                     <li>
                       <span className="text-text">Idiomas:</span>{' '}
                       {form.languages.map((language) => LANGUAGE_LABELS[language]).join(', ') ||
-                        '—'}
+                        '-'}
                     </li>
                     <li>
                       <span className="text-text">Micrófono:</span> {form.hasMic ? 'Sí' : 'No'}
                     </li>
+                    <li>
+                      <span className="text-text">Discord:</span>{' '}
+                      {form.discordTag.trim() || 'Sin especificar'}
+                    </li>
                   </ul>
                 </div>
 
+                {!form.discordTag.trim() ? (
+                  <p className="rounded-xl border border-gold/40 bg-gold/10 px-4 py-3 text-xs leading-relaxed text-gold">
+                    No agregaste Discord. Si querés, volvé atrás y completalo para que tus matches
+                    tengan otra forma de contactarte.
+                  </p>
+                ) : null}
+
                 <p className="text-xs text-muted">
-                  Al guardar, tu perfil queda visible para otros jugadores de LAS. Podés editarlo
-                  cuando quieras.
+                  Al guardar, tu perfil queda visible para otros jugadores de LAS.
                 </p>
               </div>
             ) : null}
@@ -758,7 +804,7 @@ export default function OnboardingPage() {
             ) : (
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || !saveReady}
                 className="rounded-xl bg-accent px-6 py-3 text-sm font-bold text-bg disabled:opacity-60"
               >
                 {submitting ? 'Guardando...' : 'Guardar perfil'}

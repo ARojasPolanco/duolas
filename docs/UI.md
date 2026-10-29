@@ -111,7 +111,8 @@ Seis pasos con barra de progreso:
 3. Rango y LP.
 4. Horarios por día con bloques de 6 horas, atajos y selección múltiple. Incluye país opcional y equivalencia local de cada bloque.
 5. Estilo, idiomas y micrófono.
-6. Bio, Discord opcional y resumen.
+6. Contacto: bio y Discord recomendado, con aviso de que sin Discord solo queda el Riot ID.
+7. Resumen y guardado final.
 
 Reglas:
 
