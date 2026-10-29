@@ -42,6 +42,15 @@ describe('Admin usuarios', () => {
 
     expect(overview.status).toBe(200);
     expect(overview.body.overview.users).toBeGreaterThanOrEqual(2);
+    expect(overview.body.overview).toMatchObject({
+      likesTotal: expect.any(Number),
+      likesPending: expect.any(Number),
+      likes24h: expect.any(Number),
+      matchesTotal: expect.any(Number),
+      matches24h: expect.any(Number),
+      recentLikes: expect.any(Array),
+      recentMatches: expect.any(Array),
+    });
     expect(users.status).toBe(200);
     expect(users.body.pagination.total).toBeGreaterThanOrEqual(2);
   });

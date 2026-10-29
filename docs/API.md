@@ -747,6 +747,9 @@ Resumen operativo: usuarios activos, jugadores, admins, altas de 7 días, emails
 perfiles completos, suspendidos, bajas pendientes, reportes abiertos, matches activos y
 disponibilidades activas.
 
+Incluye actividad de matching: `likesTotal`, `likesPending`, `likes24h`, `matchesTotal`,
+`matches24h`, `recentLikes` y `recentMatches` (últimos 8, sin emails ni datos de contacto).
+
 ### `GET /admin/users`
 
 Query:

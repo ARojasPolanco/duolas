@@ -214,7 +214,8 @@ Reglas:
 ### 3.15 Admin resumen `/admin`
 
 - `AdminShell` con logo, badge Admin, navegación y logout.
-- Cards de usuarios activos, altas de 7 días, email verificado, perfiles completos, suspendidos, reportes abiertos, matches activos, disponibilidad y bajas pendientes.
+- Cards de usuarios activos, altas de 7 días, email verificado, perfiles completos, suspendidos, reportes abiertos, matches activos, likes enviados, likes pendientes, disponibilidad y bajas pendientes.
+- Actividad reciente: últimos 8 likes y últimos 8 matches con usuarios, estado y fecha.
 - Cada card enlaza al listado o sección correspondiente.
 
 ### 3.16 Admin usuarios `/admin/usuarios`

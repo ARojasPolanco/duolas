@@ -5,8 +5,10 @@ import {
   BarChart3,
   CheckCircle2,
   Clock3,
+  Heart,
   Radio,
   RefreshCw,
+  Send,
   ShieldAlert,
   UserRoundCheck,
   UserX,
@@ -17,6 +19,43 @@ import api from '../config/api.js';
 
 const numberFormatter = new Intl.NumberFormat('es-AR');
 const formatNumber = (value) => numberFormatter.format(Number(value || 0));
+
+const dateFormatter = new Intl.DateTimeFormat('es-AR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+  timeZone: 'America/Argentina/Buenos_Aires',
+});
+
+const formatDate = (value) => (value ? dateFormatter.format(new Date(value)) : '-');
+
+const LIKE_STATUS = {
+  pending: { label: 'Pendiente', className: 'border-gold/40 bg-gold/10 text-gold' },
+  matched: { label: 'Match', className: 'border-success/40 bg-success/10 text-success' },
+  cancelled: { label: 'Cancelado', className: 'border-border bg-surface-2 text-muted' },
+};
+
+const MATCH_STATUS = {
+  active: { label: 'Activo', className: 'border-success/40 bg-success/10 text-success' },
+  archived: { label: 'Archivado', className: 'border-border bg-surface-2 text-muted' },
+};
+
+const MATCH_SOURCE = {
+  like: 'Like',
+  availability: 'Disponible ya',
+  post: 'Busco 1',
+};
+
+const statusBadge = (status, map) => {
+  const value = map[status] || {
+    label: status,
+    className: 'border-border bg-surface-2 text-muted',
+  };
+  return (
+    <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${value.className}`}>
+      {value.label}
+    </span>
+  );
+};
 
 const cards = (overview) => [
   {
@@ -66,8 +105,24 @@ const cards = (overview) => [
   {
     label: 'Matches activos',
     value: overview.activeConnections,
-    detail: 'Conexiones vigentes',
+    detail: `${formatNumber(overview.matches24h)} en 24 h · ${formatNumber(
+      overview.matchesTotal
+    )} totales`,
     icon: Clock3,
+    to: '/admin/usuarios',
+  },
+  {
+    label: 'Likes enviados',
+    value: overview.likesTotal,
+    detail: `${formatNumber(overview.likes24h)} en las últimas 24 h`,
+    icon: Heart,
+    to: '/admin/usuarios',
+  },
+  {
+    label: 'Likes pendientes',
+    value: overview.likesPending,
+    detail: 'Esperando respuesta',
+    icon: Send,
     to: '/admin/usuarios',
   },
   {
@@ -165,6 +220,113 @@ export default function AdminOverviewPage() {
               );
             })}
           </div>
+        ) : null}
+
+        {overview ? (
+          <section id="actividad" className="grid gap-4 lg:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-surface p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                    Actividad
+                  </p>
+                  <h2 className="mt-1 text-lg font-bold">Últimos likes</h2>
+                </div>
+                <Heart className="text-accent" size={20} aria-hidden="true" />
+              </div>
+
+              {overview.recentLikes?.length ? (
+                <div className="mt-4 divide-y divide-border">
+                  {overview.recentLikes.map((like) => (
+                    <div
+                      key={like.id}
+                      className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold">
+                          {like.from ? (
+                            <Link
+                              to={`/admin/usuarios/${like.from.id}`}
+                              className="text-accent hover:underline"
+                            >
+                              {like.from.username}
+                            </Link>
+                          ) : (
+                            'Usuario'
+                          )}
+                          <span className="px-1.5 text-muted">→</span>
+                          {like.to ? (
+                            <Link
+                              to={`/admin/usuarios/${like.to.id}`}
+                              className="text-accent hover:underline"
+                            >
+                              {like.to.username}
+                            </Link>
+                          ) : (
+                            'Usuario'
+                          )}
+                        </p>
+                        <p className="mt-1 text-[11px] text-muted">{formatDate(like.createdAt)}</p>
+                      </div>
+                      {statusBadge(like.status, LIKE_STATUS)}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-4 rounded-xl border border-border bg-bg px-4 py-5 text-sm text-muted">
+                  Todavía no hay likes registrados.
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-2xl border border-border bg-surface p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                    Actividad
+                  </p>
+                  <h2 className="mt-1 text-lg font-bold">Últimos matches</h2>
+                </div>
+                <Clock3 className="text-accent" size={20} aria-hidden="true" />
+              </div>
+
+              {overview.recentMatches?.length ? (
+                <div className="mt-4 divide-y divide-border">
+                  {overview.recentMatches.map((match) => (
+                    <div
+                      key={match.id}
+                      className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold">
+                          {match.users.map((user, index) => (
+                            <span key={user.id}>
+                              {index > 0 ? <span className="px-1.5 text-muted">↔</span> : null}
+                              <Link
+                                to={`/admin/usuarios/${user.id}`}
+                                className="text-accent hover:underline"
+                              >
+                                {user.username}
+                              </Link>
+                            </span>
+                          ))}
+                        </p>
+                        <p className="mt-1 text-[11px] text-muted">
+                          {MATCH_SOURCE[match.source] || match.source} ·{' '}
+                          {formatDate(match.createdAt)}
+                        </p>
+                      </div>
+                      {statusBadge(match.status, MATCH_STATUS)}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-4 rounded-xl border border-border bg-bg px-4 py-5 text-sm text-muted">
+                  Todavía no hay matches registrados.
+                </p>
+              )}
+            </div>
+          </section>
         ) : null}
 
         <section className="grid gap-4 lg:grid-cols-3">

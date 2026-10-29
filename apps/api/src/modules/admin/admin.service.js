@@ -4,6 +4,7 @@ import PlayerProfile from '../profiles/profile.model.js';
 import Report from '../trust/report.model.js';
 import Sanction from '../trust/sanction.model.js';
 import DuoConnection from '../matching/duoConnection.model.js';
+import DuoLike from '../matching/duoLike.model.js';
 import AvailabilitySession from '../availability/availability.model.js';
 import { AppError } from '../../errors/appError.js';
 
@@ -128,6 +129,25 @@ const toSanctionView = (sanction) => ({
   expiresAt: sanction.expiresAt,
   createdAt: sanction.createdAt,
   admin: sanction.admin ? { id: sanction.admin.id, username: sanction.admin.username } : null,
+});
+
+const toLikeActivity = (like) => ({
+  id: like.id,
+  status: like.status,
+  createdAt: like.createdAt,
+  from: like.fromUser ? { id: like.fromUser.id, username: like.fromUser.username } : null,
+  to: like.toUser ? { id: like.toUser.id, username: like.toUser.username } : null,
+});
+
+const toMatchActivity = (match) => ({
+  id: match.id,
+  source: match.source,
+  status: match.status,
+  createdAt: match.createdAt,
+  archivedAt: match.archivedAt,
+  users: [match.userLow, match.userHigh]
+    .filter(Boolean)
+    .map((user) => ({ id: user.id, username: user.username })),
 });
 
 const emptyCounts = () => ({
@@ -348,6 +368,7 @@ export class AdminService {
   async overview() {
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
     const [
       users,
@@ -381,6 +402,38 @@ export class AdminService {
       }),
     ]);
 
+    const [
+      likesTotal,
+      likesPending,
+      likes24h,
+      matchesTotal,
+      matches24h,
+      recentLikes,
+      recentMatches,
+    ] = await Promise.all([
+      DuoLike.count(),
+      DuoLike.count({ where: { status: 'pending' } }),
+      DuoLike.count({ where: { createdAt: { [Op.gte]: dayAgo } } }),
+      DuoConnection.count(),
+      DuoConnection.count({ where: { createdAt: { [Op.gte]: dayAgo } } }),
+      DuoLike.findAll({
+        include: [
+          { model: User, as: 'fromUser', attributes: ['id', 'username'] },
+          { model: User, as: 'toUser', attributes: ['id', 'username'] },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit: 8,
+      }),
+      DuoConnection.findAll({
+        include: [
+          { model: User, as: 'userLow', attributes: ['id', 'username'] },
+          { model: User, as: 'userHigh', attributes: ['id', 'username'] },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit: 8,
+      }),
+    ]);
+
     return {
       users,
       players,
@@ -394,6 +447,13 @@ export class AdminService {
       openReports,
       activeConnections,
       activeAvailability,
+      likesTotal,
+      likesPending,
+      likes24h,
+      matchesTotal,
+      matches24h,
+      recentLikes: recentLikes.map(toLikeActivity),
+      recentMatches: recentMatches.map(toMatchActivity),
     };
   }
 }

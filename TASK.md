@@ -200,6 +200,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Badge `Beta` en landing, auth, onboarding, app, admin, emails y PWA.
 - [x] Onboarding separa contacto y resumen; Discord visible y guardado final protegido contra doble submit.
 - [x] `/perfil` permite editar todos los campos directamente sin repetir el onboarding.
+- [x] Admin muestra likes enviados/pendientes, matches totales/24 h y actividad reciente.
   - Migración 013 con `country` opcional y check de los cinco países.
   - Selector en onboarding, badge de país/diferencia horaria en cards, matches, invitaciones, Disponible y Busco 1.
   - 109 tests pasando, lint y build verdes, migración 013 down/up verificada y seed actualizado.
