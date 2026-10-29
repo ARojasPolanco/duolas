@@ -14,6 +14,7 @@ import { Pencil } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
+import RoleIcon from '../components/RoleIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useMatching } from '../context/MatchingContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -77,6 +78,13 @@ const inputClass =
 
 const choiceClass = (selected) =>
   `rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${
+    selected
+      ? 'border-accent bg-accent/15 text-accent'
+      : 'border-border bg-bg text-muted hover:border-accent/50'
+  }`;
+
+const roleChoiceClass = (selected) =>
+  `flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 rounded-xl border px-1.5 py-2 text-[11px] font-semibold leading-tight transition ${
     selected
       ? 'border-accent bg-accent/15 text-accent'
       : 'border-border bg-bg text-muted hover:border-accent/50'
@@ -367,15 +375,16 @@ export default function ProfilePage() {
             <div className="mt-5 grid gap-5 sm:grid-cols-2">
               <div>
                 <p className="mb-2 text-sm font-semibold">Rol principal</p>
-                <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                <div className="grid grid-cols-3 gap-2">
                   {ROLES.map((role) => (
                     <button
                       key={role}
                       type="button"
                       onClick={() => setForm((current) => ({ ...current, primaryRole: role }))}
-                      className={choiceClass(form.primaryRole === role)}
+                      className={roleChoiceClass(form.primaryRole === role)}
                     >
-                      {ROLE_LABELS[role]}
+                      <RoleIcon role={role} size={20} />
+                      <span>{ROLE_LABELS[role]}</span>
                     </button>
                   ))}
                 </div>
@@ -383,15 +392,16 @@ export default function ProfilePage() {
 
               <div>
                 <p className="mb-2 text-sm font-semibold">Rol secundario</p>
-                <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                <div className="grid grid-cols-3 gap-2">
                   {ROLES.map((role) => (
                     <button
                       key={role}
                       type="button"
                       onClick={() => setForm((current) => ({ ...current, secondaryRole: role }))}
-                      className={choiceClass(form.secondaryRole === role)}
+                      className={roleChoiceClass(form.secondaryRole === role)}
                     >
-                      {ROLE_LABELS[role]}
+                      <RoleIcon role={role} size={20} />
+                      <span>{ROLE_LABELS[role]}</span>
                     </button>
                   ))}
                 </div>
