@@ -5,7 +5,7 @@ import logger from '../logger.js';
 const mailEnabled = Boolean(envs.RESEND_API_KEY) && envs.NODE_ENV !== 'test';
 const resend = mailEnabled ? new Resend(envs.RESEND_API_KEY) : null;
 const from = envs.OWNER_EMAIL || 'onboarding@resend.dev';
-const support = envs.SUPPORT_EMAIL || 'soporte@duolas.app';
+const support = envs.SUPPORT_EMAIL || 'soporte@duolas.online';
 
 const HTML_ESCAPES = {
   '&': '&amp;',
@@ -51,7 +51,7 @@ const layout = (title, preheader, body) => `
             <td style="border-top:1px solid #1558c9;padding:18px 28px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#94a3b8;">
               ¿Dudas? Escribinos a ${escapeHtml(support)}.<br />
               Duo LAS no está avalado por Riot Games. ·
-              <a href="${escapeHtml(appUrl)}" style="color:#b0cf5c;text-decoration:none;">duolas.app</a>
+              <a href="${escapeHtml(appUrl)}" style="color:#b0cf5c;text-decoration:none;">duolas.online</a>
             </td>
           </tr>
         </table>

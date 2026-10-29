@@ -5,7 +5,7 @@ export const pushEnabled = Boolean(envs.VAPID_PUBLIC_KEY && envs.VAPID_PRIVATE_K
 
 if (pushEnabled) {
   webpush.setVapidDetails(
-    envs.VAPID_SUBJECT || 'mailto:soporte@duolas.app',
+    envs.VAPID_SUBJECT || 'mailto:soporte@duolas.online',
     envs.VAPID_PUBLIC_KEY,
     envs.VAPID_PRIVATE_KEY
   );

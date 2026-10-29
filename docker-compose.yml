@@ -29,10 +29,10 @@ services:
       DB_URI: postgresql://duo_lol:duo_lol123@postgres:5432/duo_lol
       SECRET_JWT_SEED: dev_duo_las_secret_0123456789abcdef0123456789abcdef
       JWT_EXPIRE_IN: 1d
-      SUPPORT_EMAIL: soporte@duolas.app
+      SUPPORT_EMAIL: soporte@duolas.online
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
-      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:soporte@duolas.app}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:soporte@duolas.online}
       RIOT_API_KEY: ${RIOT_API_KEY:-}
       RIOT_PLATFORM: ${RIOT_PLATFORM:-la2}
       RIOT_REGION: ${RIOT_REGION:-americas}

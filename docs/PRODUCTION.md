@@ -37,41 +37,41 @@ Además, antes de producción hay que reemplazar los valores de desarrollo:
 
 ## 2. Variables de la API
 
-| Variable               | ¿Obligatoria?           | Ejemplo                                          | Dónde se obtiene             | Notas                                            |
-| ---------------------- | ----------------------- | ------------------------------------------------ | ---------------------------- | ------------------------------------------------ |
-| `PORT`                 | La define la plataforma | `3000`                                           | Render/Railway               | No hace falta fijarla si el proveedor la inyecta |
-| `NODE_ENV`             | Sí                      | `production`                                     | Manual                       | Activa errores genéricos y rate limits estrictos |
-| `TRUST_PROXY`          | No                      | `1`                                              | Render/Railway               | 1 proxy; subir si agregás Cloudflare             |
-| `CORS_ORIGIN`          | Sí                      | `https://duolas.app,https://www.duolas.app`      | Dominio de la web            | HTTPS obligatorio; sin wildcard                  |
-| `APP_URL`              | Sí                      | `https://duolas.app`                             | Dominio de la web            | Se usa en links de email                         |
-| `DB_URI`               | Sí                      | `postgresql://user:pass@host/db?sslmode=require` | Neon                         | Usar la cadena con SSL                           |
-| `TEST_DB_URI`          | No                      | —                                                | —                            | Solo test/local; no va en producción             |
-| `SECRET_JWT_SEED`      | Sí                      | `REPLACE_WITH_RANDOM_64_CHARS`                   | Generar                      | No reutilizar el de desarrollo                   |
-| `JWT_EXPIRE_IN`        | No                      | `1d`                                             | Manual                       | Default `1d`                                     |
-| `HCAPTCHA_SECRET`      | Sí                      | `REPLACE_WITH_HCAPTCHA_SECRET`                   | Dashboard de hCaptcha        | Si falta, el captcha se salta                    |
-| `RESEND_API_KEY`       | Sí                      | `re_REPLACE_ME`                                  | Dashboard de Resend          | Si falta, no se envían emails                    |
-| `OWNER_EMAIL`          | Sí                      | `noreply@duolas.app`                             | Dominio verificado en Resend | Debe ser un remitente verificado                 |
-| `SUPPORT_EMAIL`        | Recomendada             | `soporte@duolas.app`                             | Dominio de la web            | Reply-to y textos de soporte                     |
-| `VAPID_PUBLIC_KEY`     | Sí antes de push        | `REPLACE_WITH_VAPID_PUBLIC`                      | Generar                      | Fase 5                                           |
-| `VAPID_PRIVATE_KEY`    | Sí antes de push        | `REPLACE_WITH_VAPID_PRIVATE`                     | Generar                      | Secreto, nunca exponer                           |
-| `VAPID_SUBJECT`        | Sí antes de push        | `mailto:soporte@duolas.app`                      | Dominio de la web            | Formato `mailto:`                                |
-| `RIOT_API_KEY`         | Solo integración futura | `RGAPI-REPLACE_ME`                               | Developer Portal             | Solo backend; personal key no va a producción    |
-| `RIOT_PLATFORM`        | Solo integración futura | `la2`                                            | Manual                       | LAS                                              |
-| `RIOT_REGION`          | Solo integración futura | `americas`                                       | Manual                       | Routing regional                                 |
-| `RIOT_API_TIMEOUT_MS`  | No                      | `8000`                                           | Manual                       | Timeout de llamadas                              |
-| `RATE_LIMIT_WINDOW_MS` | No                      | `900000`                                         | Manual                       | Default 15 minutos                               |
-| `RATE_LIMIT_MAX`       | No                      | `600`                                            | Manual                       | Por IP; default 600                              |
-| `RATE_LIMIT_USER_MAX`  | No                      | `600`                                            | Manual                       | Por usuario autenticado; default 600             |
-| `LOG_LEVEL`            | No                      | `info`                                           | Manual                       | Usar `info` en producción                        |
-| `ADMIN_EMAIL`          | Solo seed               | `admin@duolas.app`                               | Manual                       | Se usa al correr `npm run seed:admin`            |
-| `ADMIN_PASSWORD`       | Solo seed               | `REPLACE_WITH_STRONG_PASSWORD`                   | Manual                       | Quitarla después del seed                        |
+| Variable               | ¿Obligatoria?           | Ejemplo                                           | Dónde se obtiene             | Notas                                            |
+| ---------------------- | ----------------------- | ------------------------------------------------- | ---------------------------- | ------------------------------------------------ |
+| `PORT`                 | La define la plataforma | `3000`                                            | Render/Railway               | No hace falta fijarla si el proveedor la inyecta |
+| `NODE_ENV`             | Sí                      | `production`                                      | Manual                       | Activa errores genéricos y rate limits estrictos |
+| `TRUST_PROXY`          | No                      | `1`                                               | Render/Railway               | 1 proxy; subir si agregás Cloudflare             |
+| `CORS_ORIGIN`          | Sí                      | `https://duolas.online,https://www.duolas.online` | Dominio de la web            | HTTPS obligatorio; sin wildcard                  |
+| `APP_URL`              | Sí                      | `https://duolas.online`                           | Dominio de la web            | Se usa en links de email                         |
+| `DB_URI`               | Sí                      | `postgresql://user:pass@host/db?sslmode=require`  | Neon                         | Usar la cadena con SSL                           |
+| `TEST_DB_URI`          | No                      | —                                                 | —                            | Solo test/local; no va en producción             |
+| `SECRET_JWT_SEED`      | Sí                      | `REPLACE_WITH_RANDOM_64_CHARS`                    | Generar                      | No reutilizar el de desarrollo                   |
+| `JWT_EXPIRE_IN`        | No                      | `1d`                                              | Manual                       | Default `1d`                                     |
+| `HCAPTCHA_SECRET`      | Sí                      | `REPLACE_WITH_HCAPTCHA_SECRET`                    | Dashboard de hCaptcha        | Si falta, el captcha se salta                    |
+| `RESEND_API_KEY`       | Sí                      | `re_REPLACE_ME`                                   | Dashboard de Resend          | Si falta, no se envían emails                    |
+| `OWNER_EMAIL`          | Sí                      | `noreply@duolas.online`                           | Dominio verificado en Resend | Debe ser un remitente verificado                 |
+| `SUPPORT_EMAIL`        | Recomendada             | `soporte@duolas.online`                           | Dominio de la web            | Reply-to y textos de soporte                     |
+| `VAPID_PUBLIC_KEY`     | Sí antes de push        | `REPLACE_WITH_VAPID_PUBLIC`                       | Generar                      | Fase 5                                           |
+| `VAPID_PRIVATE_KEY`    | Sí antes de push        | `REPLACE_WITH_VAPID_PRIVATE`                      | Generar                      | Secreto, nunca exponer                           |
+| `VAPID_SUBJECT`        | Sí antes de push        | `mailto:soporte@duolas.online`                    | Dominio de la web            | Formato `mailto:`                                |
+| `RIOT_API_KEY`         | Solo integración futura | `RGAPI-REPLACE_ME`                                | Developer Portal             | Solo backend; personal key no va a producción    |
+| `RIOT_PLATFORM`        | Solo integración futura | `la2`                                             | Manual                       | LAS                                              |
+| `RIOT_REGION`          | Solo integración futura | `americas`                                        | Manual                       | Routing regional                                 |
+| `RIOT_API_TIMEOUT_MS`  | No                      | `8000`                                            | Manual                       | Timeout de llamadas                              |
+| `RATE_LIMIT_WINDOW_MS` | No                      | `900000`                                          | Manual                       | Default 15 minutos                               |
+| `RATE_LIMIT_MAX`       | No                      | `600`                                             | Manual                       | Por IP; default 600                              |
+| `RATE_LIMIT_USER_MAX`  | No                      | `600`                                             | Manual                       | Por usuario autenticado; default 600             |
+| `LOG_LEVEL`            | No                      | `info`                                            | Manual                       | Usar `info` en producción                        |
+| `ADMIN_EMAIL`          | Solo seed               | `admin@duolas.online`                             | Manual                       | Se usa al correr `npm run seed:admin`            |
+| `ADMIN_PASSWORD`       | Solo seed               | `REPLACE_WITH_STRONG_PASSWORD`                    | Manual                       | Quitarla después del seed                        |
 
 ## 3. Variables de la web
 
-| Variable                 | ¿Obligatoria? | Ejemplo                      | Dónde se configura | Notas                              |
-| ------------------------ | ------------- | ---------------------------- | ------------------ | ---------------------------------- |
-| `VITE_API_URL`           | Sí            | `https://api.duolas.app/api` | Vercel             | **Incluye `/api`**; es build-time  |
-| `VITE_HCAPTCHA_SITE_KEY` | Sí            | `REPLACE_WITH_SITE_KEY`      | Vercel             | Es pública; el secret va en la API |
+| Variable                 | ¿Obligatoria? | Ejemplo                         | Dónde se configura | Notas                              |
+| ------------------------ | ------------- | ------------------------------- | ------------------ | ---------------------------------- |
+| `VITE_API_URL`           | Sí            | `https://api.duolas.online/api` | Vercel             | **Incluye `/api`**; es build-time  |
+| `VITE_HCAPTCHA_SITE_KEY` | Sí            | `REPLACE_WITH_SITE_KEY`         | Vercel             | Es pública; el secret va en la API |
 
 `VITE_*` se inyecta al construir. Después de cambiarlas hay que redeployar la web.
 

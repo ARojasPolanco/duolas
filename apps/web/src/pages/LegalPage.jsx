@@ -70,10 +70,10 @@ export default function LegalPage({ title, intro, sections }) {
           <div className="mt-8 flex flex-col gap-2 border-t border-border pt-4 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
             <p>Última actualización: {LEGAL_LAST_UPDATED}.</p>
             <a
-              href="mailto:soporte@duolas.app"
+              href="mailto:soporte@duolas.online"
               className="inline-flex min-h-11 items-center text-accent hover:underline"
             >
-              soporte@duolas.app
+              soporte@duolas.online
             </a>
           </div>
         </article>

@@ -97,21 +97,21 @@ npm run dev
 npm run dev:web
 ```
 
-| Cuenta                    | Contraseña   | Uso                                           |
-| ------------------------- | ------------ | --------------------------------------------- |
-| `demo_mid@duolas.app`     | `Demo12345!` | Cuenta principal para probar Match y Matches  |
-| `demo_jungle@duolas.app`  | `Demo12345!` | Tiene un match activo con `demo_mid`          |
-| `demo_adc@duolas.app`     | `Demo12345!` | Candidato con like pendiente hacia `demo_mid` |
-| `demo_support@duolas.app` | `Demo12345!` | Candidato compatible adicional                |
-| `demo_admin@duolas.app`   | `Demo12345!` | Admin de reportes y sanciones                 |
+| Cuenta                       | Contraseña   | Uso                                           |
+| ---------------------------- | ------------ | --------------------------------------------- |
+| `demo_mid@duolas.online`     | `Demo12345!` | Cuenta principal para probar Match y Matches  |
+| `demo_jungle@duolas.online`  | `Demo12345!` | Tiene un match activo con `demo_mid`          |
+| `demo_adc@duolas.online`     | `Demo12345!` | Candidato con like pendiente hacia `demo_mid` |
+| `demo_support@duolas.online` | `Demo12345!` | Candidato compatible adicional                |
+| `demo_admin@duolas.online`   | `Demo12345!` | Admin de reportes y sanciones                 |
 
 Flujo rápido:
 
-1. Abrí `http://localhost:5173/login` e iniciá sesión con `demo_mid@duolas.app`.
+1. Abrí `http://localhost:5173/login` e iniciá sesión con `demo_mid@duolas.online`.
 2. En `/match` vas a ver `demo_adc` y `demo_support`.
 3. Si le das like a `demo_adc`, como ya existe un like pendiente suyo, el match se concreta al instante y aparece en `/matches`.
 4. En `/matches` vas a ver el contacto de `demo_jungle` y podés probar feedback, reportar, copiar, archivar y bloquear.
-5. Con `demo_admin@duolas.app` entrás directo a `/admin/reportes`; también podés abrir `/admin/metrics`.
+5. Con `demo_admin@duolas.online` entrás directo a `/admin/reportes`; también podés abrir `/admin/metrics`.
 6. El seed completo crea 12 jugadores con perfiles variados y el admin.
 7. Si querés reiniciar el escenario, volvé a correr `npm run seed`.
 

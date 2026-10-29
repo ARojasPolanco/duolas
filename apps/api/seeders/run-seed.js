@@ -26,7 +26,7 @@ const demoPlayers = [
   {
     key: 'mid',
     username: 'demo_mid',
-    email: 'demo_mid@duolas.app',
+    email: 'demo_mid@duolas.online',
     riotId: 'DemoMid#LAS',
     primaryRole: 'mid',
     secondaryRole: 'jungle',
@@ -46,7 +46,7 @@ const demoPlayers = [
   {
     key: 'jungle',
     username: 'demo_jungle',
-    email: 'demo_jungle@duolas.app',
+    email: 'demo_jungle@duolas.online',
     riotId: 'DemoJungle#LAS',
     primaryRole: 'jungle',
     secondaryRole: 'top',
@@ -66,7 +66,7 @@ const demoPlayers = [
   {
     key: 'adc',
     username: 'demo_adc',
-    email: 'demo_adc@duolas.app',
+    email: 'demo_adc@duolas.online',
     riotId: 'DemoAdc#LAS',
     primaryRole: 'adc',
     secondaryRole: 'support',
@@ -86,7 +86,7 @@ const demoPlayers = [
   {
     key: 'support',
     username: 'demo_support',
-    email: 'demo_support@duolas.app',
+    email: 'demo_support@duolas.online',
     riotId: 'DemoSupport#LAS',
     primaryRole: 'support',
     secondaryRole: 'top',
@@ -106,7 +106,7 @@ const demoPlayers = [
   {
     key: 'top1',
     username: 'demo_top1',
-    email: 'demo_top1@duolas.app',
+    email: 'demo_top1@duolas.online',
     riotId: 'DemoTop1#LAS',
     primaryRole: 'top',
     secondaryRole: 'jungle',
@@ -126,7 +126,7 @@ const demoPlayers = [
   {
     key: 'mid2',
     username: 'demo_mid2',
-    email: 'demo_mid2@duolas.app',
+    email: 'demo_mid2@duolas.online',
     riotId: 'DemoMid2#LAS',
     primaryRole: 'mid',
     secondaryRole: 'adc',
@@ -146,7 +146,7 @@ const demoPlayers = [
   {
     key: 'jungle2',
     username: 'demo_jungle2',
-    email: 'demo_jungle2@duolas.app',
+    email: 'demo_jungle2@duolas.online',
     riotId: 'DemoJungle2#LAS',
     primaryRole: 'jungle',
     secondaryRole: 'support',
@@ -166,7 +166,7 @@ const demoPlayers = [
   {
     key: 'adc2',
     username: 'demo_adc2',
-    email: 'demo_adc2@duolas.app',
+    email: 'demo_adc2@duolas.online',
     riotId: 'DemoAdc2#LAS',
     primaryRole: 'adc',
     secondaryRole: 'mid',
@@ -186,7 +186,7 @@ const demoPlayers = [
   {
     key: 'support2',
     username: 'demo_support2',
-    email: 'demo_support2@duolas.app',
+    email: 'demo_support2@duolas.online',
     riotId: 'DemoSupport2#LAS',
     primaryRole: 'support',
     secondaryRole: 'adc',
@@ -206,7 +206,7 @@ const demoPlayers = [
   {
     key: 'top2',
     username: 'demo_top2',
-    email: 'demo_top2@duolas.app',
+    email: 'demo_top2@duolas.online',
     riotId: 'DemoTop2#LAS',
     primaryRole: 'top',
     secondaryRole: 'mid',
@@ -226,7 +226,7 @@ const demoPlayers = [
   {
     key: 'jungle3',
     username: 'demo_jungle3',
-    email: 'demo_jungle3@duolas.app',
+    email: 'demo_jungle3@duolas.online',
     riotId: 'DemoJungle3#LAS',
     primaryRole: 'jungle',
     secondaryRole: 'mid',
@@ -246,7 +246,7 @@ const demoPlayers = [
   {
     key: 'support3',
     username: 'demo_support3',
-    email: 'demo_support3@duolas.app',
+    email: 'demo_support3@duolas.online',
     riotId: 'DemoSupport3#LAS',
     primaryRole: 'support',
     secondaryRole: 'jungle',
@@ -346,7 +346,7 @@ const createOrUpdateDemoUser = async (player) => {
 const createOrUpdateDemoAdmin = async () => {
   const now = new Date();
   const [admin, created] = await User.findOrCreate({
-    where: { email: 'demo_admin@duolas.app' },
+    where: { email: 'demo_admin@duolas.online' },
     defaults: {
       username: 'demo_admin',
       password: DEMO_PASSWORD,
@@ -561,7 +561,7 @@ const main = async () => {
     for (const player of demoPlayers) {
       console.log(`- ${player.email} / ${DEMO_PASSWORD}`);
     }
-    console.log(`- demo_admin@duolas.app / ${DEMO_PASSWORD} (admin)`);
+    console.log(`- demo_admin@duolas.online / ${DEMO_PASSWORD} (admin)`);
     console.log('Match activo: demo_mid <-> demo_jungle');
     console.log('Like pendiente: demo_adc -> demo_mid');
     console.log('Disponible ya: demo_support');

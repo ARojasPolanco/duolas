@@ -46,14 +46,14 @@ export const termsSections = [
   },
   {
     title: 'Ley aplicable y contacto',
-    body: 'Estos términos se interpretan según la legislación de la República Argentina. Ante cualquier consulta, reclamo o solicitud relacionada con la cuenta, escribinos a soporte@duolas.app. Si la cuenta se elimina, algunos registros de moderación, reportes, feedback y métricas agregadas pueden conservarse por seguridad y prevención de abuso.',
+    body: 'Estos términos se interpretan según la legislación de la República Argentina. Ante cualquier consulta, reclamo o solicitud relacionada con la cuenta, escribinos a soporte@duolas.online. Si la cuenta se elimina, algunos registros de moderación, reportes, feedback y métricas agregadas pueden conservarse por seguridad y prevención de abuso.',
   },
 ];
 
 export const privacySections = [
   {
     title: 'Responsable y alcance',
-    body: 'Duo LAS es responsable de los datos personales que trata para operar la plataforma. Esta política explica qué datos recopilamos, para qué los usamos, con quién los compartimos y cómo podés ejercer tus derechos. El contacto de privacidad es soporte@duolas.app.',
+    body: 'Duo LAS es responsable de los datos personales que trata para operar la plataforma. Esta política explica qué datos recopilamos, para qué los usamos, con quién los compartimos y cómo podés ejercer tus derechos. El contacto de privacidad es soporte@duolas.online.',
   },
   {
     title: 'Datos que recopilamos',
@@ -85,11 +85,11 @@ export const privacySections = [
   },
   {
     title: 'Seguridad',
-    body: 'Aplicamos medidas técnicas y organizativas razonables: contraseñas con hash bcrypt, tokens de verificación y reset con vencimiento, HTTPS, control de acceso, límites de uso y minimización de datos. Ningún sistema es completamente infalible. Si detectás un incidente de seguridad, escribinos de inmediato a soporte@duolas.app.',
+    body: 'Aplicamos medidas técnicas y organizativas razonables: contraseñas con hash bcrypt, tokens de verificación y reset con vencimiento, HTTPS, control de acceso, límites de uso y minimización de datos. Ningún sistema es completamente infalible. Si detectás un incidente de seguridad, escribinos de inmediato a soporte@duolas.online.',
   },
   {
     title: 'Tus derechos',
-    body: 'Podés eliminar tu cuenta desde la app o solicitar acceso, rectificación, actualización, confidencialidad u oposición al tratamiento escribiendo a soporte@duolas.app. También podés pedir información sobre el uso de tus datos y revocar el consentimiento para push desde la configuración del navegador. En Argentina podés dirigirte a la Agencia de Acceso a la Información Pública si considerás que no atendimos correctamente tu solicitud.',
+    body: 'Podés eliminar tu cuenta desde la app o solicitar acceso, rectificación, actualización, confidencialidad u oposición al tratamiento escribiendo a soporte@duolas.online. También podés pedir información sobre el uso de tus datos y revocar el consentimiento para push desde la configuración del navegador. En Argentina podés dirigirte a la Agencia de Acceso a la Información Pública si considerás que no atendimos correctamente tu solicitud.',
   },
   {
     title: 'Menores de edad',
@@ -97,7 +97,7 @@ export const privacySections = [
   },
   {
     title: 'Cambios y contacto',
-    body: 'Podemos actualizar esta política para reflejar cambios del producto, de los proveedores o de la ley. Publicaremos la versión vigente en esta página. Las consultas de privacidad se reciben en soporte@duolas.app.',
+    body: 'Podemos actualizar esta política para reflejar cambios del producto, de los proveedores o de la ley. Publicaremos la versión vigente en esta página. Las consultas de privacidad se reciben en soporte@duolas.online.',
   },
 ];
 
@@ -120,6 +120,6 @@ export const riotSections = [
   },
   {
     title: 'Contacto',
-    body: 'Consultas sobre este aviso o sobre el uso de marcas: soporte@duolas.app.',
+    body: 'Consultas sobre este aviso o sobre el uso de marcas: soporte@duolas.online.',
   },
 ];

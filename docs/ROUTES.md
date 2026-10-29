@@ -381,7 +381,7 @@ Crear un `.env` en la raíz (ignorado por git) con:
 ```env
 VAPID_PUBLIC_KEY=...
 VAPID_PRIVATE_KEY=...
-VAPID_SUBJECT=mailto:soporte@duolas.app
+VAPID_SUBJECT=mailto:soporte@duolas.online
 ```
 
 Recrear la API:
@@ -394,13 +394,13 @@ docker compose up -d --force-recreate api
 
 ## 5. Cuentas demo
 
-| Cuenta                    | Contraseña   | Rol en la demo                  |
-| ------------------------- | ------------ | ------------------------------- |
-| `demo_mid@duolas.app`     | `Demo12345!` | Cuenta principal                |
-| `demo_jungle@duolas.app`  | `Demo12345!` | Match activo con `demo_mid`     |
-| `demo_adc@duolas.app`     | `Demo12345!` | Like pendiente hacia `demo_mid` |
-| `demo_support@duolas.app` | `Demo12345!` | Candidato adicional             |
-| `demo_admin@duolas.app`   | `Demo12345!` | Admin de reportes y sanciones   |
+| Cuenta                       | Contraseña   | Rol en la demo                  |
+| ---------------------------- | ------------ | ------------------------------- |
+| `demo_mid@duolas.online`     | `Demo12345!` | Cuenta principal                |
+| `demo_jungle@duolas.online`  | `Demo12345!` | Match activo con `demo_mid`     |
+| `demo_adc@duolas.online`     | `Demo12345!` | Like pendiente hacia `demo_mid` |
+| `demo_support@duolas.online` | `Demo12345!` | Candidato adicional             |
+| `demo_admin@duolas.online`   | `Demo12345!` | Admin de reportes y sanciones   |
 
 `npm run seed` reinicia perfiles, likes, matches, bloqueos, notificaciones, suscripciones push, disponibilidades, invitaciones, publicaciones, postulaciones, feedbacks, reportes y sanciones de estas cuentas. También deja una disponibilidad de `demo_support`, una invitación de `demo_adc` a `demo_support`, un Busco 1 de `demo_adc` con postulación de `demo_mid`, un feedback pendiente de `demo_jungle` a `demo_mid` y un reporte abierto de `demo_support` contra `demo_jungle`. El seed completo crea **12 jugadores** con perfiles variados y `demo_admin`.
 
@@ -427,7 +427,7 @@ node -e "console.log(require('node:crypto').createHash('sha256').update('demores
 
 ```bash
 docker exec duo-lol-fullstack-postgres-1 psql -U duo_lol -d duo_lol -c \
-  "UPDATE users SET password_reset_token='HASH', password_reset_expires=now()+interval '1 hour' WHERE email='demo_mid@duolas.app';"
+  "UPDATE users SET password_reset_token='HASH', password_reset_expires=now()+interval '1 hour' WHERE email='demo_mid@duolas.online';"
 ```
 
 Abrir:

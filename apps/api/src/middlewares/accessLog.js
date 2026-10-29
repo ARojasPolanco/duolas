@@ -4,11 +4,16 @@ export const accessLog = (req, res, next) => {
   const start = process.hrtime.bigint();
 
   res.on('finish', () => {
+    const path = String(req.originalUrl || '').split('?')[0];
+    const isHealthCheck = path === '/health';
+
+    if (isHealthCheck && res.statusCode < 400) return;
+
     const durationMs = Number(process.hrtime.bigint() - start) / 1e6;
-    logger.info('request', {
+    logger.log(isHealthCheck ? 'warn' : 'info', 'request', {
       requestId: req.id,
       method: req.method,
-      path: String(req.originalUrl || '').split('?')[0],
+      path,
       statusCode: res.statusCode,
       durationMs: Math.round(durationMs * 100) / 100,
       userId: req.sessionUser?.id || null,
