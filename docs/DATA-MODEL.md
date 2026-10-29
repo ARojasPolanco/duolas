@@ -179,6 +179,32 @@ Checks:
 - `(reputation_score)`.
 - No se indexa `country`: no es filtro de matching en el MVP.
 
+### 3.3.1 `username_change_requests`
+
+| Columna                       | Tipo         | Restricciones                     |
+| ----------------------------- | ------------ | --------------------------------- |
+| `username_change_requests_id` | UUID         | PK                                |
+| `user_id`                     | UUID         | NOT NULL, FK `users` CASCADE      |
+| `admin_id`                    | UUID         | NULL, FK `users` SET NULL         |
+| `suggested_username`          | VARCHAR(20)  | NULL hasta que el usuario propone |
+| `status`                      | VARCHAR(20)  | NOT NULL, default `pending_user`  |
+| `admin_note`                  | VARCHAR(500) | NULL                              |
+| `resolution_note`             | VARCHAR(500) | NULL                              |
+| `resolved_at`                 | TIMESTAMPTZ  | NULL                              |
+| `created_at`                  | TIMESTAMPTZ  | NOT NULL                          |
+| `updated_at`                  | TIMESTAMPTZ  | NOT NULL                          |
+
+Checks:
+
+- `status IN ('pending_user', 'pending_admin', 'approved', 'rejected')`.
+- `pending_admin` y `approved` requieren `suggested_username`.
+
+Índices:
+
+- Único parcial `(user_id)` donde el estado es `pending_user` o `pending_admin`.
+- `(status, created_at)`.
+- `(admin_id, status)`.
+
 ### 3.4 `availability_sessions`
 
 | Columna                    | Tipo         | Restricciones                     |

@@ -213,10 +213,11 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Backend para grupo, disponibilidad individual, postulaciones y aceptación.
 - [x] Conexiones ARAM visibles en Matches y notificaciones/push.
 - [x] Frontend `/aram` con pestañas Busco grupo y Disponible ahora.
-- [x] 118 tests pasando y build verde.
+- [x] 122 tests pasando y build verde.
 - [x] Smoke visual y prueba manual en dev.
 - [x] Perú agregado a LAS con zona `America/Lima` y migración 015.
 - [x] Rango Flex separado y rol Comodín con migración 016.
+- [x] Solicitud in-app de cambio de username con aprobación manual, reservas y migración 017.
 
 ## Hardening previo a producción
 

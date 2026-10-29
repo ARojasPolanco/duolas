@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import {
+  AtSign,
   Bell,
   CheckCheck,
   ClipboardList,
@@ -12,6 +13,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useNotifications } from '../context/NotificationsContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import usePush from '../hooks/usePush.js';
@@ -41,6 +43,10 @@ const iconByType = {
   feedback_revealed: MessageSquare,
   warning_received: ShieldAlert,
   account_suspended: ShieldAlert,
+  username_change_requested: AtSign,
+  username_change_suggested: AtSign,
+  username_changed: CheckCheck,
+  username_change_rejected: AtSign,
 };
 
 const SSE_LABELS = {
@@ -54,6 +60,7 @@ const SSE_LABELS = {
 export default function NotificationsPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { refreshUser } = useAuth();
   const {
     notifications,
     unreadCount,
@@ -71,6 +78,9 @@ export default function NotificationsPage() {
     try {
       if (!notification.isRead) {
         await markRead(notification.id);
+      }
+      if (notification.type === 'username_changed') {
+        await refreshUser();
       }
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos abrir la notificación.');

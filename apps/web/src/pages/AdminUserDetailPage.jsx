@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import {
   AlertTriangle,
   ArrowLeft,
+  AtSign,
+  Check,
   Clock3,
   Gavel,
   MailCheck,
@@ -10,6 +12,7 @@ import {
   Radio,
   ShieldAlert,
   UserRound,
+  X,
 } from 'lucide-react';
 import AdminShell from '../components/AdminShell.jsx';
 import api from '../config/api.js';
@@ -39,6 +42,20 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
 const formatDateTime = (value) => (value ? dateTimeFormatter.format(new Date(value)) : '-');
 const formatDate = (value) => (value ? dateFormatter.format(new Date(value)) : '-');
 
+const USERNAME_REQUEST_LABELS = {
+  pending_user: 'Esperando al usuario',
+  pending_admin: 'Propuesta para revisar',
+  approved: 'Aprobada',
+  rejected: 'Rechazada',
+};
+
+const USERNAME_REQUEST_STYLES = {
+  pending_user: 'border-gold/40 bg-gold/10 text-gold',
+  pending_admin: 'border-accent/40 bg-accent/10 text-accent',
+  approved: 'border-success/40 bg-success/10 text-success',
+  rejected: 'border-danger/40 bg-danger/10 text-danger',
+};
+
 const SANCTION_LABELS = {
   warned: 'Advertencia',
   suspended_7d: 'Suspensión 7 días',
@@ -65,6 +82,9 @@ export default function AdminUserDetailPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [usernameNote, setUsernameNote] = useState('');
+  const [usernameBusy, setUsernameBusy] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -83,6 +103,42 @@ export default function AdminUserDetailPage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  const runUsernameAction = async (action) => {
+    setUsernameBusy(true);
+    setUsernameError('');
+
+    try {
+      await action();
+      setUsernameNote('');
+      await load();
+    } catch (requestError) {
+      setUsernameError(requestError.response?.data?.message || 'No pudimos procesar la solicitud.');
+    } finally {
+      setUsernameBusy(false);
+    }
+  };
+
+  const createUsernameRequest = () =>
+    runUsernameAction(() =>
+      api.post(`/v1/admin/users/${id}/username-request`, {
+        note: usernameNote.trim() || null,
+      })
+    );
+
+  const approveUsernameRequest = (requestId) =>
+    runUsernameAction(() =>
+      api.post(`/v1/admin/username-changes/${requestId}/approve`, {
+        note: usernameNote.trim() || null,
+      })
+    );
+
+  const rejectUsernameRequest = (requestId) =>
+    runUsernameAction(() =>
+      api.post(`/v1/admin/username-changes/${requestId}/reject`, {
+        note: usernameNote.trim() || null,
+      })
+    );
 
   return (
     <AdminShell>
@@ -262,6 +318,134 @@ export default function AdminUserDetailPage() {
                 ) : null}
               </section>
             </div>
+
+            <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <AtSign className="text-accent" size={18} aria-hidden="true" />
+                <h2 className="text-lg font-bold">Solicitud de cambio de username</h2>
+                {user.usernameChangeRequest ? (
+                  <span
+                    className={`ml-auto rounded-full border px-2.5 py-1 text-[10px] font-bold ${
+                      USERNAME_REQUEST_STYLES[user.usernameChangeRequest.status]
+                    }`}
+                  >
+                    {USERNAME_REQUEST_LABELS[user.usernameChangeRequest.status] ||
+                      user.usernameChangeRequest.status}
+                  </span>
+                ) : null}
+              </div>
+
+              {usernameError ? (
+                <p className="mt-4 rounded-xl border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
+                  {usernameError}
+                </p>
+              ) : null}
+
+              {user.usernameChangeRequest ? (
+                <div className="mt-4 space-y-3 text-sm">
+                  <p className="text-muted">
+                    Estado actual: <span className="font-semibold text-text">@{user.username}</span>
+                    {user.usernameChangeRequest.suggestedUsername ? (
+                      <>
+                        {' '}
+                        · propuesta:{' '}
+                        <span className="font-semibold text-accent">
+                          @{user.usernameChangeRequest.suggestedUsername}
+                        </span>
+                      </>
+                    ) : null}
+                  </p>
+                  {user.usernameChangeRequest.adminNote ? (
+                    <p className="rounded-xl border border-border bg-bg px-4 py-3 text-xs leading-relaxed text-muted">
+                      Nota enviada: {user.usernameChangeRequest.adminNote}
+                    </p>
+                  ) : null}
+                  {user.usernameChangeRequest.resolutionNote ? (
+                    <p className="rounded-xl border border-border bg-bg px-4 py-3 text-xs leading-relaxed text-muted">
+                      Resolución: {user.usernameChangeRequest.resolutionNote}
+                    </p>
+                  ) : null}
+                </div>
+              ) : (
+                <p className="mt-4 text-sm text-muted">
+                  No hay una solicitud de username para esta cuenta.
+                </p>
+              )}
+
+              {user.usernameChangeRequest?.status === 'pending_user' ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => rejectUsernameRequest(user.usernameChangeRequest.id)}
+                    disabled={usernameBusy}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-danger/40 px-4 py-2 text-xs font-bold text-danger disabled:opacity-60"
+                  >
+                    <X size={14} aria-hidden="true" />
+                    Cancelar solicitud
+                  </button>
+                </div>
+              ) : null}
+
+              {user.usernameChangeRequest?.status === 'pending_admin' ? (
+                <div className="mt-4">
+                  <label className="block text-sm font-semibold">
+                    Nota de resolución (opcional)
+                    <input
+                      value={usernameNote}
+                      onChange={(event) => setUsernameNote(event.target.value)}
+                      className="mt-2 w-full rounded-xl border border-border bg-bg px-4 py-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none"
+                      placeholder="Motivo o aclaración"
+                      maxLength={500}
+                    />
+                  </label>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => approveUsernameRequest(user.usernameChangeRequest.id)}
+                      disabled={usernameBusy}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-accent px-4 py-2 text-xs font-bold text-bg disabled:opacity-60"
+                    >
+                      <Check size={14} aria-hidden="true" />
+                      Aprobar @{user.usernameChangeRequest.suggestedUsername}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => rejectUsernameRequest(user.usernameChangeRequest.id)}
+                      disabled={usernameBusy}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-danger/40 px-4 py-2 text-xs font-bold text-danger disabled:opacity-60"
+                    >
+                      <X size={14} aria-hidden="true" />
+                      Rechazar
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              {!user.usernameChangeRequest ||
+              !['pending_user', 'pending_admin'].includes(user.usernameChangeRequest.status) ? (
+                <div className="mt-4">
+                  <label className="block text-sm font-semibold">
+                    Mensaje para el usuario (opcional)
+                    <input
+                      value={usernameNote}
+                      onChange={(event) => setUsernameNote(event.target.value)}
+                      className="mt-2 w-full rounded-xl border border-border bg-bg px-4 py-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none"
+                      placeholder="Ej: tu nombre puede confundirse con la marca"
+                      maxLength={500}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={createUsernameRequest}
+                    disabled={usernameBusy}
+                    className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-accent px-4 py-2 text-xs font-bold text-bg disabled:opacity-60"
+                  >
+                    <AtSign size={14} aria-hidden="true" />
+                    Solicitar cambio de username
+                  </button>
+                </div>
+              ) : null}
+            </section>
 
             <div className="grid gap-4 lg:grid-cols-2">
               <section className="rounded-2xl border border-border bg-surface p-5">

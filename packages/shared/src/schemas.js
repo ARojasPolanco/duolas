@@ -6,6 +6,7 @@ import {
   QUEUES,
   RANK_DIVISIONS,
   RANK_TIERS,
+  RESERVED_USERNAMES,
   ROLES,
 } from './constants.js';
 
@@ -17,7 +18,10 @@ export const usernameSchema = z
   .trim()
   .min(3, 'El nombre de usuario debe tener al menos 3 caracteres')
   .max(20, 'El nombre de usuario no puede exceder 20 caracteres')
-  .regex(/^[\p{L}\p{N}_]+$/u, 'Solo letras, números y guión bajo (sin espacios ni símbolos)');
+  .regex(/^[\p{L}\p{N}_]+$/u, 'Solo letras, números y guión bajo (sin espacios ni símbolos)')
+  .refine((value) => !RESERVED_USERNAMES.includes(value.toLowerCase()), {
+    message: 'Ese nombre de usuario está reservado',
+  });
 
 export const emailSchema = z.string().trim().toLowerCase().email('Email inválido');
 

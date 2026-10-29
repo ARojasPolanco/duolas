@@ -41,6 +41,7 @@ npm run seed
 | Ruta                  | Estado | Qué probar                                               |
 | --------------------- | ------ | -------------------------------------------------------- |
 | `/onboarding`         | Lista  | Perfil completo, edición y guardado                      |
+| `/solicitud-username` | Lista  | Solicitud de cambio de nombre y propuesta del usuario    |
 | `/inicio`             | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
 | `/match`              | Lista  | Filtros, candidatos, like, pasar y bloquear              |
 | `/aram`               | Lista  | Publicar grupo, ponerse disponible, postular y aceptar   |

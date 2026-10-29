@@ -7,7 +7,7 @@ import api from '../config/api.js';
 const NotificationsContext = createContext(null);
 
 export function NotificationsProvider({ children }) {
-  const { token, user } = useAuth();
+  const { token, user, refreshUser } = useAuth();
   const { toast } = useToast();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -46,9 +46,13 @@ export function NotificationsProvider({ children }) {
         toast.info(info.title, { description: info.message || undefined });
       }
 
+      if (info?.notificationType === 'username_changed') {
+        refreshUser();
+      }
+
       load();
     },
-    [load, toast]
+    [load, refreshUser, toast]
   );
 
   const { status } = useSSE({

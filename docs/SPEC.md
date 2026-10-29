@@ -128,7 +128,9 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 - Se aceptan términos y privacidad al registrarse; se guarda `terms_accepted_at`.
 - Username de 3 a 20 caracteres, letras, números y guión bajo. Único sin distinguir mayúsculas.
 - Email único, normalizado a minúsculas.
-- Username y email no se pueden cambiar en el MVP.
+- El email no se puede cambiar en el MVP.
+- El username solo cambia mediante una solicitud asistida por un admin. No hay autoservicio.
+- Nombres reservados: `duolas`, `duo_las`, `admin`, `soporte`, `staff`, `oficial` y variantes de la marca.
 - Contraseña de 10 a 128 caracteres, hasheada con bcrypt 12.
 - Verificación de email obligatoria para interactuar. Token de 24 horas.
 - Reset de contraseña con token de 1 hora, un solo uso y respuesta genérica.
@@ -214,6 +216,15 @@ Detalle completo en `docs/MATCHING.md`.
 - Aceptar crea una conexión `aram` y descuenta un lugar.
 - Al llenarse, el post pasa a `filled` y rechaza las solicitudes pendientes.
 - El contacto se revela en Matches.
+
+### 6.7 Cambio de username
+
+1. Un admin detecta un username problemático y crea una solicitud desde el detalle del usuario.
+2. El usuario recibe una notificación in-app y puede proponer un nombre nuevo.
+3. La propuesta no se aplica automáticamente: queda pendiente de revisión.
+4. El admin puede aprobar el nombre sugerido o rechazar la solicitud con una nota.
+5. Al aprobar, se actualiza el username y se notifica al usuario.
+6. Solo puede haber una solicitud abierta por usuario. Los nombres reservados y ya usados se rechazan.
 
 ## 12. Reglas de feedback y reputación
 

@@ -305,3 +305,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** conservar `rank_tier`, `rank_division`, `rank_lp` y `rank_index` como rango de Solo/Dúo, y agregar `flex_rank_tier`, `flex_rank_division`, `flex_rank_lp` y `flex_rank_index` para Flex. La cola Flex usa el rango Flex; si el perfil no lo declaró, usa Solo/Dúo como respaldo. Agregar el rol `fill` (Comodín) como rol válido y compatible con cualquier rol, tanto en candidatos como en Disponible ya y Busco 1.
 
 **Consecuencias:** los rangos de cada cola se comparan con la tolerancia correcta. Los perfiles existentes siguen siendo compatibles sin backfill. El rango Flex es opcional para no bloquear a quienes no lo juegan, pero se muestra por separado. `fill` no reemplaza el rango ni el historial: solo amplía la compatibilidad de roles.
+
+## ADR-039 - Cambio de username asistido y nombres reservados
+
+**Contexto:** el username es inmutable en el MVP, pero puede generar confusión usar nombres muy parecidos a la marca o al staff. No hay chat ni buzon corporativo para coordinar un cambio.
+
+**Decisión:** agregar un flujo de solicitud in-app. Un admin crea la solicitud, el usuario propone un nombre y el admin lo aprueba o rechaza manualmente. El cambio se aplica en una transacción con validación de formato, nombres reservados y unicidad. También se reservan nombres como `duolas`, `duo_las`, `admin` y `soporte` para registros nuevos.
+
+**Consecuencias:** el cambio no es automático ni autoservicio. El admin mantiene control sobre nombres sensibles y queda registro de quién solicitó, propuso y resolvió. Las cuentas existentes con nombres problemáticos se corrigen mediante este flujo.

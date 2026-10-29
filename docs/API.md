@@ -96,7 +96,7 @@ Errores: 422 si falta +18 o términos; 409 si email o username existen; 422 si e
 { "identifier": "faker@example.com", "password": "password123" }
 ```
 
-`identifier` acepta email o username. `200` con token y usuario. 401 si las credenciales son incorrectas. 403 si la suspensión está vigente; si la suspensión temporal venció, se permite el login y el estado se corrige. El username y el email no se pueden modificar en el MVP.
+`identifier` acepta email o username. `200` con token y usuario. 401 si las credenciales son incorrectas. 403 si la suspensión está vigente; si la suspensión temporal venció, se permite el login y el estado se corrige. El email no se puede modificar en el MVP. El username solo cambia con una solicitud asistida por admin.
 
 ### `GET /auth/verify-email?token=...`
 
@@ -276,6 +276,14 @@ Protegido. Perfil público:
 ```
 
 Nunca incluye email, Riot ID ni Discord.
+
+### `GET /username-changes/mine`
+
+Protegido. Devuelve la última solicitud de cambio de username del usuario y su username actual.
+
+### `POST /username-changes/:id/suggest`
+
+Protegido. Solo el dueño de la solicitud. Body: `{ "username": "nuevo_nombre" }`. Valida formato, nombres reservados y disponibilidad. Pasa la solicitud a `pending_admin`. `422` si el nombre no es válido, `409` si ya está en uso.
 
 ## 6. Matching
 
@@ -809,6 +817,7 @@ disponibilidades activas.
 
 Incluye actividad de matching: `likesTotal`, `likesPending`, `likes24h`, `matchesTotal`,
 `matches24h`, `recentLikes` y `recentMatches` (últimos 8, sin emails ni datos de contacto).
+También incluye `pendingUsernameChanges` y `recentUsernameChanges`.
 
 ### `GET /admin/users`
 
@@ -858,6 +867,18 @@ Valores: `dismissed`, `warned`, `suspended_7d`, `suspended_30d`, `suspended_perm
 ```json
 { "days": 30, "reason": "Conducta reiterada." }
 ```
+
+### `POST /admin/users/:id/username-request`
+
+Solo admin. Crea una solicitud de cambio de username y notifica al usuario. Body opcional: `{ "note": "..." }`. Solo puede haber una solicitud abierta por usuario.
+
+### `POST /admin/username-changes/:id/approve`
+
+Solo admin. Aprueba la propuesta pendiente. Body opcional: `{ "username": "...", "note": "..." }`. Actualiza `users.username`, libera el anterior y notifica al usuario.
+
+### `POST /admin/username-changes/:id/reject`
+
+Solo admin. Rechaza o cancela una solicitud abierta. Body opcional: `{ "note": "..." }`.
 
 `days` 7, 30 o `null` para permanente. `200`. Envía email y notificación. 400 si el admin intenta suspenderse a sí mismo.
 

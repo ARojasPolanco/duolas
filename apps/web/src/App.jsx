@@ -20,6 +20,7 @@ import LegalPage from './pages/LegalPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import UsernameRequestPage from './pages/UsernameRequestPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
@@ -81,6 +82,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/solicitud-username"
+        element={
+          <ProtectedRoute>
+            <UsernameRequestPage />
           </ProtectedRoute>
         }
       />

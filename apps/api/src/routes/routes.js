@@ -13,6 +13,7 @@ import reportsRouter from '../modules/trust/report.route.js';
 import adminRouter from '../modules/admin/admin.route.js';
 import eventsRouter from '../modules/events/events.route.js';
 import pushRouter from '../modules/push/push.route.js';
+import usernameChangesRouter from '../modules/usernameChanges/usernameChange.route.js';
 
 const router = Router();
 
@@ -35,6 +36,7 @@ router.use('/aram', aramRouter);
 router.use('/feedback', feedbackRouter);
 router.use('/reports', reportsRouter);
 router.use('/admin', adminRouter);
+router.use('/username-changes', usernameChangesRouter);
 router.use('/events', eventsRouter);
 router.use('/push', pushRouter);
 

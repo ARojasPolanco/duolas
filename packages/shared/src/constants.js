@@ -1,6 +1,34 @@
 export const USER_ROLES = Object.freeze(['player', 'admin']);
 export const USER_STATUSES = Object.freeze(['active', 'suspended']);
 
+export const RESERVED_USERNAMES = Object.freeze([
+  'duolas',
+  'duo_las',
+  'duolasoficial',
+  'duolas_oficial',
+  'admin',
+  'administrador',
+  'soporte',
+  'support',
+  'staff',
+  'oficial',
+  'official',
+  'moderador',
+  'mod',
+  'sistema',
+  'system',
+  'riot',
+  'riotgames',
+  'leagueoflegends',
+]);
+
+export const USERNAME_CHANGE_STATUSES = Object.freeze([
+  'pending_user',
+  'pending_admin',
+  'approved',
+  'rejected',
+]);
+
 export const ROLES = Object.freeze(['top', 'jungle', 'mid', 'adc', 'support', 'fill']);
 
 export const RANK_TIERS = Object.freeze([
@@ -116,6 +144,10 @@ export const NOTIFICATION_TYPES = Object.freeze([
   'feedback_revealed',
   'warning_received',
   'account_suspended',
+  'username_change_requested',
+  'username_change_suggested',
+  'username_changed',
+  'username_change_rejected',
 ]);
 
 export const METRIC_EVENT_TYPES = Object.freeze([

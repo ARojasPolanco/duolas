@@ -158,7 +158,8 @@ Reglas:
 
 - Zod por módulo, con `.strict()` en escrituras para rechazar campos desconocidos.
 - `validateX()` devuelve `{ hasError, errorMessages, data }` y el controller responde 422 con los mensajes unidos.
-- Normalización: email a minúsculas, trim en textos, Riot ID normalizado, username único.
+- Normalización: email a minúsculas, trim en textos, Riot ID normalizado, username único y no reservado.
+- El username solo se cambia con una solicitud in-app aprobada por un admin.
 - Los enums viven en `packages/shared` y se reutilizan en API y web.
 - No se confía en datos del cliente para IDs de autor, target, owner ni admin: siempre salen de la sesión o se validan por ownership.
 

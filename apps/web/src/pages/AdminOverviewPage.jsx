@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Activity,
+  AtSign,
   BarChart3,
   CheckCircle2,
   Clock3,
@@ -102,6 +103,13 @@ const cards = (overview) => [
     detail: 'Pendientes de revisión',
     icon: ShieldAlert,
     to: '/admin/reportes',
+  },
+  {
+    label: 'Usernames para revisar',
+    value: overview.pendingUsernameChanges,
+    detail: 'Propuestas esperando aprobación',
+    icon: AtSign,
+    to: '/admin#solicitudes-username',
   },
   {
     label: 'Matches activos',
@@ -221,6 +229,56 @@ export default function AdminOverviewPage() {
               );
             })}
           </div>
+        ) : null}
+
+        {overview?.recentUsernameChanges?.length ? (
+          <section
+            id="solicitudes-username"
+            className="rounded-2xl border border-border bg-surface p-5"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                  Pendientes
+                </p>
+                <h2 className="mt-1 text-lg font-bold">Cambios de username</h2>
+              </div>
+              <AtSign className="text-accent" size={20} aria-hidden="true" />
+            </div>
+
+            <div className="mt-4 divide-y divide-border">
+              {overview.recentUsernameChanges.map((request) => (
+                <div
+                  key={request.id}
+                  className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold">
+                      {request.user ? (
+                        <Link
+                          to={`/admin/usuarios/${request.user.id}`}
+                          className="text-accent hover:underline"
+                        >
+                          @{request.user.username}
+                        </Link>
+                      ) : (
+                        'Usuario'
+                      )}
+                      <span className="px-1.5 text-muted">→</span>
+                      <span>@{request.suggestedUsername}</span>
+                    </p>
+                    <p className="mt-1 text-[11px] text-muted">{formatDate(request.updatedAt)}</p>
+                  </div>
+                  <Link
+                    to={`/admin/usuarios/${request.user?.id || ''}`}
+                    className="inline-flex min-h-9 items-center rounded-lg border border-accent/40 px-3 text-xs font-bold text-accent"
+                  >
+                    Revisar
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
         ) : null}
 
         {overview ? (

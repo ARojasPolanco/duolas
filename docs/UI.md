@@ -33,6 +33,7 @@ Mapa de rutas, pantallas, componentes y reglas de interacción. Mobile-first, te
 | `/invitaciones`       | Invitaciones recibidas y enviadas  |
 | `/notificaciones`     | Centro de notificaciones           |
 | `/perfil`             | Perfil propio                      |
+| `/solicitud-username` | Solicitud de cambio de username    |
 | `/perfil/:id`         | Perfil público                     |
 | `/admin`              | Resumen admin                      |
 | `/admin/usuarios`     | Buscador de cuentas                |
@@ -131,6 +132,15 @@ Reglas:
 - Se puede volver.
 - Al terminar, `profile_completed_at` y CTA a Match.
 - Si se edita después y queda incompleto, se avisa y se bloquean las acciones sociales.
+
+### 3.5.1 Solicitud de username `/solicitud-username`
+
+- Muestra el username actual y el estado de la solicitud.
+- Si está pendiente del usuario, incluye un campo para proponer un nombre nuevo.
+- Valida formato, nombres reservados y disponibilidad antes de enviar.
+- Si está pendiente del admin, muestra el nombre propuesto.
+- Si fue aprobada, muestra el nuevo username; si fue rechazada, muestra la nota.
+- El admin crea la solicitud y aprueba o rechaza desde `/admin/usuarios/:id`.
 
 ### 3.6 Inicio `/inicio`
 
@@ -253,6 +263,7 @@ Reglas:
 - Cabecera con username, email, rol, estado y contadores.
 - Cuenta: ID, verificación, alta, último login, última actividad, suspensión y baja.
 - Perfil de jugador: Riot ID, Discord, rango Solo/Dúo, rango Flex, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
+- Solicitud de cambio de username: crear, ver propuesta y aprobar/rechazar.
 - Reportes recibidos y sanciones recientes.
 - Disponibilidad activa y conexiones históricas.
 - Si la cuenta no tiene perfil, se muestra un aviso; es esperable en admins.

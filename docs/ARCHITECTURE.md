@@ -260,6 +260,7 @@ Además, índices únicos y parciales como última barrera:
 | `014_aram`                       | Publicaciones y postulaciones ARAM          |
 | `015_profile_country_peru`       | Perú dentro del check de países LAS         |
 | `016_profile_flex_rank_and_fill` | Rango Flex separado y rol Comodín           |
+| `017_username_change_requests`   | Solicitudes de cambio de username           |
 
 ### Jobs internos
 

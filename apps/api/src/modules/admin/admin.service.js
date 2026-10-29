@@ -6,6 +6,8 @@ import Sanction from '../trust/sanction.model.js';
 import DuoConnection from '../matching/duoConnection.model.js';
 import DuoLike from '../matching/duoLike.model.js';
 import AvailabilitySession from '../availability/availability.model.js';
+import UsernameChangeRequest from '../usernameChanges/usernameChangeRequest.model.js';
+import { usernameChangeService } from '../usernameChanges/usernameChange.service.js';
 import { AppError } from '../../errors/appError.js';
 
 const USER_ATTRIBUTES = [
@@ -314,6 +316,7 @@ export class AdminService {
       activeConnections,
       totalConnections,
       availability,
+      usernameChangeRequest,
     ] = await Promise.all([
       Report.findAll({
         where: { reportedId: userId },
@@ -346,6 +349,7 @@ export class AdminService {
         },
         attributes: ['id', 'roles', 'queue', 'note', 'startedAt', 'expiresAt'],
       }),
+      usernameChangeService.getLatestForAdmin(userId),
     ]);
 
     return {
@@ -372,6 +376,7 @@ export class AdminService {
             expiresAt: availability.expiresAt,
           }
         : null,
+      usernameChangeRequest,
     };
   }
 
@@ -420,6 +425,8 @@ export class AdminService {
       matches24h,
       recentLikes,
       recentMatches,
+      pendingUsernameChanges,
+      recentUsernameChanges,
     ] = await Promise.all([
       DuoLike.count(),
       DuoLike.count({ where: { status: 'pending' } }),
@@ -441,6 +448,13 @@ export class AdminService {
         ],
         order: [['createdAt', 'DESC']],
         limit: 8,
+      }),
+      UsernameChangeRequest.count({ where: { status: 'pending_admin' } }),
+      UsernameChangeRequest.findAll({
+        where: { status: 'pending_admin' },
+        include: [{ model: User, as: 'user', attributes: ['id', 'username'] }],
+        order: [['updatedAt', 'DESC']],
+        limit: 5,
       }),
     ]);
 
@@ -464,6 +478,14 @@ export class AdminService {
       matches24h,
       recentLikes: recentLikes.map(toLikeActivity),
       recentMatches: recentMatches.map(toMatchActivity),
+      pendingUsernameChanges,
+      recentUsernameChanges: recentUsernameChanges.map((request) => ({
+        id: request.id,
+        suggestedUsername: request.suggestedUsername,
+        createdAt: request.createdAt,
+        updatedAt: request.updatedAt,
+        user: request.user ? { id: request.user.id, username: request.user.username } : null,
+      })),
     };
   }
 }
