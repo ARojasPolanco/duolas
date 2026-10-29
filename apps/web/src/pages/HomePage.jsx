@@ -19,6 +19,7 @@ import HowItWorksCarousel from '../components/HowItWorksCarousel.jsx';
 import PlayerPreviewCard from '../components/PlayerPreviewCard.jsx';
 import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useMatching } from '../context/MatchingContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import { formatRank, formatRoles, initialsOf } from '../utils/labels.js';
@@ -29,6 +30,7 @@ const actionLink =
 
 export default function HomePage() {
   const { user } = useAuth();
+  const { refresh: refreshCandidateCount } = useMatching();
   const { toast } = useToast();
   const [profile, setProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -125,6 +127,7 @@ export default function HomePage() {
       }
 
       await Promise.all([loadCandidates(), loadMatches()]);
+      await refreshCandidateCount();
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos registrar el interés.');
     } finally {
@@ -142,6 +145,7 @@ export default function HomePage() {
     try {
       await api.post('/v1/blocks', { userId: player.id });
       setCandidates((current) => current.filter((item) => item.profile.id !== player.id));
+      await refreshCandidateCount();
       toast.success('Usuario bloqueado.');
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos bloquear al usuario.');
@@ -328,6 +332,7 @@ export default function HomePage() {
                 onClick={() => {
                   loadCandidates();
                   loadMatches();
+                  refreshCandidateCount();
                 }}
                 className="rounded-lg border border-border p-2 text-muted"
                 aria-label="Actualizar jugadores"

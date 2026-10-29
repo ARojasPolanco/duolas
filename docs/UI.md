@@ -57,13 +57,14 @@ El logo `Duo LAS` muestra un badge `Beta` en landing, auth, onboarding, app y ad
 
 - Top bar fija con logo + badge `Beta`, campana y avatar.
 - Bottom nav fija con cinco ítems: Inicio, Match, Disponible, Busco 1 y Matches.
+- Match muestra un badge con la cantidad de candidatos disponibles para likear.
 - El avatar abre el menú de cuenta: Mi perfil, Invitaciones, Notificaciones, Eliminar cuenta y Cerrar sesión.
 - Los accesos admin viven fuera del shell de jugador, en `AdminShell`.
 - El pie de las pantallas protegidas incluye Términos, Privacidad, Aviso de Riot y el disclaimer legal de Riot.
 
 ### Desktop
 
-Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. A la derecha viven la campana y el menú de avatar con perfil, notificaciones y logout. Los admins usan un top nav propio con Resumen, Usuarios, Reportes y Métricas.
+Top nav con logo, Inicio, Match, Disponible, Busco 1, Matches e Invitaciones. Match muestra un badge con la cantidad de candidatos disponibles. A la derecha viven la campana y el menú de avatar con perfil, notificaciones y logout. Los admins usan un top nav propio con Resumen, Usuarios, Reportes y Métricas.
 
 ## 3. Pantallas
 
@@ -142,6 +143,7 @@ Reglas:
   - Botón "Me interesa" y "Pasar".
   - Indicador de disponibilidad activa.
 - Lista de likes enviados.
+- El badge de navegación cuenta candidatos disponibles, se actualiza al likear, bloquear, editar el perfil y cada 60 segundos.
 - Estado vacío: "No encontramos duos compatibles todavía. Probá ampliar horarios o volver más tarde."
 - Optimistic UI al likear con rollback.
 - El badge de país y diferencia contra ART se reutiliza en todas las cards de jugador.

@@ -16,6 +16,7 @@ import BetaBadge from './BetaBadge.jsx';
 import DeleteAccountDialog from './DeleteAccountDialog.jsx';
 import RiotDisclaimer from './RiotDisclaimer.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useMatching } from '../context/MatchingContext.jsx';
 import { useNotifications } from '../context/NotificationsContext.jsx';
 import { initialsOf } from '../utils/labels.js';
 
@@ -39,12 +40,14 @@ const mobileLinkClass = ({ isActive }) =>
 
 export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
   const { user, logout } = useAuth();
+  const { candidateCount } = useMatching();
   const { unreadCount } = useNotifications();
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const candidateBadge = candidateCount > 99 ? '99+' : candidateCount;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -90,11 +93,27 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
           </Link>
 
           <nav className="ml-4 hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
-            {primaryLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} className={desktopLinkClass}>
-                {link.label}
-              </NavLink>
-            ))}
+            {primaryLinks.map((link) => {
+              const badge = link.to === '/match' && candidateCount ? candidateBadge : null;
+
+              return (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={(state) => `${desktopLinkClass(state)} relative`}
+                  aria-label={
+                    badge ? `${link.label}: ${candidateCount} candidatos disponibles` : undefined
+                  }
+                >
+                  {link.label}
+                  {badge ? (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
+                      {badge}
+                    </span>
+                  ) : null}
+                </NavLink>
+              );
+            })}
             <NavLink to="/invitaciones" className={desktopLinkClass}>
               Invitaciones
             </NavLink>
@@ -233,9 +252,25 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
         <div className="mx-auto flex max-w-2xl items-stretch">
           {primaryLinks.map((link) => {
             const Icon = link.icon;
+            const badge = link.to === '/match' && candidateCount ? candidateBadge : null;
+
             return (
-              <NavLink key={link.to} to={link.to} className={mobileLinkClass}>
-                <Icon size={19} aria-hidden="true" />
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={mobileLinkClass}
+                aria-label={
+                  badge ? `${link.label}: ${candidateCount} candidatos disponibles` : undefined
+                }
+              >
+                <span className="relative inline-flex">
+                  <Icon size={19} aria-hidden="true" />
+                  {badge ? (
+                    <span className="absolute -right-3 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
+                      {badge}
+                    </span>
+                  ) : null}
+                </span>
                 <span>{link.label}</span>
               </NavLink>
             );

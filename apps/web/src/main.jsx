@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { MatchingProvider } from './context/MatchingContext.jsx';
 import { NotificationsProvider } from './context/NotificationsContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { registerServiceWorker } from './utils/pwa.js';
@@ -18,7 +19,9 @@ createRoot(document.getElementById('root')).render(
         <AuthProvider>
           <ToastProvider>
             <NotificationsProvider>
-              <App />
+              <MatchingProvider>
+                <App />
+              </MatchingProvider>
             </NotificationsProvider>
           </ToastProvider>
         </AuthProvider>

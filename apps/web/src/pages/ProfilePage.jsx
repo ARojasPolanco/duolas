@@ -15,6 +15,7 @@ import AppShell from '../components/AppShell.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useMatching } from '../context/MatchingContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import { COUNTRY_LABELS } from '../utils/labels.js';
@@ -102,6 +103,7 @@ export default function ProfilePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const { user, refreshUser } = useAuth();
+  const { refresh: refreshCandidateCount } = useMatching();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -237,6 +239,7 @@ export default function ProfilePage() {
       });
 
       await refreshUser();
+      await refreshCandidateCount();
       toast.success('Perfil actualizado.');
     } catch (requestError) {
       setError(

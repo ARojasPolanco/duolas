@@ -18,6 +18,7 @@ import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
 import UsernameHint from '../components/UsernameHint.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useMatching } from '../context/MatchingContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
 import {
@@ -34,6 +35,7 @@ const queueOptions = ['solo_duo', 'flex'];
 
 export default function MatchPage() {
   const { user } = useAuth();
+  const { refresh: refreshCandidateCount } = useMatching();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [queue, setQueue] = useState('solo_duo');
@@ -103,11 +105,13 @@ export default function MatchPage() {
 
       if (res.data.matched) {
         toast.success('¡Es un match! Ya pueden coordinar su duo.');
+        await refreshCandidateCount();
         navigate('/matches');
       } else {
         removeCandidate(candidate.profile.id);
         toast.success('Interés enviado.');
         await loadOutgoing();
+        await refreshCandidateCount();
       }
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos registrar el interés.');
@@ -127,6 +131,7 @@ export default function MatchPage() {
       setOutgoing((current) => current.filter((item) => item.target.id !== targetUserId));
       toast.success('Interés retirado.');
       await load();
+      await refreshCandidateCount();
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos retirar el interés.');
     } finally {
@@ -147,6 +152,7 @@ export default function MatchPage() {
       removeCandidate(candidate.profile.id);
       setOutgoing((current) => current.filter((item) => item.target.id !== candidate.profile.id));
       toast.success('Usuario bloqueado.');
+      await refreshCandidateCount();
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos bloquear al usuario.');
     } finally {
