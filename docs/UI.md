@@ -118,8 +118,8 @@ Top nav con logo, Inicio, Match, ARAM, Disponible, Busco 1, Matches e Invitacion
 Siete pasos con barra de progreso:
 
 1. Riot ID y servidor LAS. Se aclara que el Riot ID no es el nombre de usuario de Duo LAS.
-2. Rol principal y secundario.
-3. Rango y LP.
+2. Rol principal y secundario, con Comodín para quien juega todas las líneas.
+3. Rango Solo/Dúo con LP y rango Flex opcional con LP separado.
 4. Horarios por día con bloques de 6 horas, atajos y selección múltiple. Incluye país opcional y equivalencia local de cada bloque.
 5. Estilo, idiomas y micrófono.
 6. Contacto: bio y Discord recomendado, con aviso de que sin Discord solo queda el Riot ID.
@@ -135,7 +135,7 @@ Reglas:
 ### 3.6 Inicio `/inicio`
 
 - Hero con saludo, email, país y perfil propio.
-- Stats de rango, roles, reputación y estado de cuenta.
+- Stats de rango Solo/Dúo y Flex, roles, reputación y estado de cuenta.
 - Card de perfil propio con Riot ID y Discord visibles solo para el dueño.
 - Accesos rápidos a Match, Matches y edición de perfil.
 - Carrusel compacto "Cómo funciona".
@@ -252,7 +252,7 @@ Reglas:
 
 - Cabecera con username, email, rol, estado y contadores.
 - Cuenta: ID, verificación, alta, último login, última actividad, suspensión y baja.
-- Perfil de jugador: Riot ID, Discord, rango, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
+- Perfil de jugador: Riot ID, Discord, rango Solo/Dúo, rango Flex, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
 - Reportes recibidos y sanciones recientes.
 - Disponibilidad activa y conexiones históricas.
 - Si la cuenta no tiene perfil, se muestra un aviso; es esperable en admins.

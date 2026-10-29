@@ -12,7 +12,7 @@ La propuesta original está en `Propuesta plataforma de duos para League of Lege
 
 ## 2. Estado del repositorio
 
-- Fase actual: MVP completo en producción, con ARAM y Perú dentro de LAS.
+- Fase actual: MVP completo en producción, con ARAM, rango Flex, Comodín y Perú dentro de LAS.
 - Código: monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, ARAM, confianza, SSE, push, PWA, métricas, conexiones, bloqueos y notificaciones persistidas.
 - No hay credenciales, claves ni secretos en el repositorio.
 - Toda decisión de producto y técnica está registrada en `docs/DECISIONS.md`.

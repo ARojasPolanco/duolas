@@ -137,6 +137,11 @@ Sin `updated_at`.
 | `rank_division`            | VARCHAR(3)   | NULL, check; obligatorio hasta Diamante       |
 | `rank_lp`                  | INTEGER      | NULL, check >= 0                              |
 | `rank_index`               | SMALLINT     | NOT NULL, check >= 0                          |
+| `flex_rank_tier`           | VARCHAR(12)  | NULL, check                                   |
+| `flex_rank_division`       | VARCHAR(3)   | NULL, check; obligatorio hasta Diamante       |
+| `flex_rank_lp`             | INTEGER      | NULL, check >= 0                              |
+| `flex_rank_index`          | SMALLINT     | NULL, check >= 0                              |
+| `flex_rank_source`         | VARCHAR(10)  | NOT NULL, default `declared`, check           |
 | `play_style`               | VARCHAR(10)  | NOT NULL, check                               |
 | `languages`                | TEXT[]       | NOT NULL, cardinalidad 1-3                    |
 | `has_mic`                  | BOOLEAN      | NOT NULL                                      |
@@ -157,14 +162,18 @@ Sin `updated_at`.
 Checks:
 
 - `country IS NULL OR country IN ('AR', 'CL', 'BO', 'PY', 'UY', 'PE')`.
-- `secondary_role <> primary_role`.
+- `primary_role` y `secondary_role` aceptan `top`, `jungle`, `mid`, `adc`, `support`, `fill`.
+- `secondary_role <> primary_role` salvo que alguno sea `fill`.
 - `(rank_tier IN ('master','grandmaster','challenger') AND rank_division IS NULL)` o `(rank_tier NOT IN (...) AND rank_division IS NOT NULL)`.
+- `flex_rank_tier IS NULL` implica división e índice nulos; si existe, sigue la misma regla de división que Solo/Dúo.
+- `rank_source` y `flex_rank_source` aceptan `declared` o `riot`.
 
 Índices:
 
 - Único `user_id`.
 - Único `riot_id_normalized`.
 - `(server, rank_index)`.
+- `(server, flex_rank_index)`.
 - `(primary_role)`.
 - GIN `(schedule_blocks)`.
 - `(reputation_score)`.

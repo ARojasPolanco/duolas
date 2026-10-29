@@ -242,23 +242,24 @@ Además, índices únicos y parciales como última barrera:
 
 ### Migraciones planificadas
 
-| Migración                      | Contenido                                   |
-| ------------------------------ | ------------------------------------------- |
-| `001_initial`                  | `users` completa + `errors` completa        |
-| `002_auth_hardening`           | `changed_password_at` para invalidar JWT    |
-| `003_player_profiles`          | Perfiles, `rank_index`, Riot ID normalizado |
-| `004_matching`                 | Likes, conexiones y bloqueos                |
-| `005_notifications`            | Notificaciones                              |
-| `006_fix_rank_division_length` | `rank_division` a VARCHAR(3)                |
-| `007_availability_invites`     | Disponibilidades e invitaciones             |
-| `008_duo_posts_applications`   | Posts y postulaciones                       |
-| `009_trust_safety`             | Reportes y feedbacks                        |
-| `010_push_subscriptions`       | Suscripciones push                          |
-| `011_metrics_events`           | Eventos de métricas                         |
-| `012_account_deletion`         | Baja programada y purga de cuentas          |
-| `013_profile_country`          | País de residencia LAS                      |
-| `014_aram`                     | Publicaciones y postulaciones ARAM          |
-| `015_profile_country_peru`     | Perú dentro del check de países LAS         |
+| Migración                        | Contenido                                   |
+| -------------------------------- | ------------------------------------------- |
+| `001_initial`                    | `users` completa + `errors` completa        |
+| `002_auth_hardening`             | `changed_password_at` para invalidar JWT    |
+| `003_player_profiles`            | Perfiles, `rank_index`, Riot ID normalizado |
+| `004_matching`                   | Likes, conexiones y bloqueos                |
+| `005_notifications`              | Notificaciones                              |
+| `006_fix_rank_division_length`   | `rank_division` a VARCHAR(3)                |
+| `007_availability_invites`       | Disponibilidades e invitaciones             |
+| `008_duo_posts_applications`     | Posts y postulaciones                       |
+| `009_trust_safety`               | Reportes y feedbacks                        |
+| `010_push_subscriptions`         | Suscripciones push                          |
+| `011_metrics_events`             | Eventos de métricas                         |
+| `012_account_deletion`           | Baja programada y purga de cuentas          |
+| `013_profile_country`            | País de residencia LAS                      |
+| `014_aram`                       | Publicaciones y postulaciones ARAM          |
+| `015_profile_country_peru`       | Perú dentro del check de países LAS         |
+| `016_profile_flex_rank_and_fill` | Rango Flex separado y rol Comodín           |
 
 ### Jobs internos
 

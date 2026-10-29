@@ -25,6 +25,7 @@ const ROLE_LABELS = {
   mid: 'Mid',
   adc: 'ADC',
   support: 'Support',
+  fill: 'Comodín',
 };
 
 const RANK_LABELS = {
@@ -80,6 +81,9 @@ const initialForm = {
   rankTier: '',
   rankDivision: '',
   rankLp: '',
+  flexRankTier: '',
+  flexRankDivision: '',
+  flexRankLp: '',
   playStyle: '',
   languages: [],
   hasMic: false,
@@ -126,6 +130,9 @@ export default function OnboardingPage() {
           rankTier: profile.rankTier || '',
           rankDivision: profile.rankDivision || '',
           rankLp: profile.rankLp ?? '',
+          flexRankTier: profile.flexRankTier || '',
+          flexRankDivision: profile.flexRankDivision || '',
+          flexRankLp: profile.flexRankLp ?? '',
           playStyle: profile.playStyle || '',
           languages: profile.languages || [],
           hasMic: Boolean(profile.hasMic),
@@ -158,6 +165,7 @@ export default function OnboardingPage() {
   }, [step]);
 
   const isApex = APEX_TIERS.includes(form.rankTier);
+  const flexIsApex = APEX_TIERS.includes(form.flexRankTier);
 
   const setField = (field) => (event) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
@@ -169,6 +177,14 @@ export default function OnboardingPage() {
       ...current,
       rankTier: tier,
       rankDivision: APEX_TIERS.includes(tier) ? '' : current.rankDivision,
+    }));
+  };
+
+  const setFlexRankTier = (tier) => {
+    setForm((current) => ({
+      ...current,
+      flexRankTier: tier,
+      flexRankDivision: !tier || APEX_TIERS.includes(tier) ? '' : current.flexRankDivision,
     }));
   };
 
@@ -200,10 +216,16 @@ export default function OnboardingPage() {
       return (
         Boolean(form.primaryRole) &&
         Boolean(form.secondaryRole) &&
-        form.primaryRole !== form.secondaryRole
+        (form.primaryRole !== form.secondaryRole || form.primaryRole === 'fill')
       );
     }
-    if (step === 2) return Boolean(form.rankTier) && (isApex || Boolean(form.rankDivision));
+    if (step === 2) {
+      return (
+        Boolean(form.rankTier) &&
+        (isApex || Boolean(form.rankDivision)) &&
+        (!form.flexRankTier || flexIsApex || Boolean(form.flexRankDivision))
+      );
+    }
     if (step === 3) return form.scheduleBlocks.length > 0;
     if (step === 4) return Boolean(form.playStyle) && form.languages.length > 0;
     return true;
@@ -249,6 +271,9 @@ export default function OnboardingPage() {
       rankTier: form.rankTier,
       rankDivision: isApex ? null : form.rankDivision,
       rankLp: form.rankLp === '' ? null : Number(form.rankLp),
+      flexRankTier: form.flexRankTier || null,
+      flexRankDivision: flexIsApex ? null : form.flexRankDivision || null,
+      flexRankLp: form.flexRankLp === '' ? null : Number(form.flexRankLp),
       playStyle: form.playStyle,
       languages: form.languages,
       hasMic: form.hasMic,
@@ -349,13 +374,14 @@ export default function OnboardingPage() {
                 <div>
                   <h1 className="text-2xl font-bold">Tus roles</h1>
                   <p className="mt-2 text-sm text-muted">
-                    Elegí tu rol principal y uno secundario. Deben ser distintos.
+                    Elegí tu rol principal y uno secundario. Podés marcar Comodín si jugás todas las
+                    líneas.
                   </p>
                 </div>
 
                 <div>
                   <p className="mb-2 text-sm font-semibold">Rol principal</p>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                     {ROLES.map((role) => (
                       <button
                         key={role}
@@ -371,7 +397,7 @@ export default function OnboardingPage() {
 
                 <div>
                   <p className="mb-2 text-sm font-semibold">Rol secundario</p>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                     {ROLES.map((role) => (
                       <button
                         key={role}
@@ -385,7 +411,9 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                {form.primaryRole && form.primaryRole === form.secondaryRole ? (
+                {form.primaryRole &&
+                form.primaryRole === form.secondaryRole &&
+                form.primaryRole !== 'fill' ? (
                   <p className="text-sm text-danger">
                     El rol principal y el secundario tienen que ser distintos.
                   </p>
@@ -455,6 +483,64 @@ export default function OnboardingPage() {
                     placeholder="0"
                   />
                 </label>
+
+                <div className="rounded-2xl border border-border bg-bg p-4">
+                  <p className="text-sm font-semibold">Rango Flex (opcional)</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">
+                    Si jugás Flex, declaralo acá. El match de Flex usa este rango y no el de
+                    Solo/Dúo.
+                  </p>
+
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <label className="block text-sm font-semibold">
+                      Tier Flex
+                      <select
+                        value={form.flexRankTier}
+                        onChange={(event) => setFlexRankTier(event.target.value)}
+                        className={`${inputClass} mt-2`}
+                      >
+                        <option value="">Sin declarar</option>
+                        {RANK_TIERS.map((tier) => (
+                          <option key={tier} value={tier}>
+                            {RANK_LABELS[tier]}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    {form.flexRankTier && !flexIsApex ? (
+                      <label className="block text-sm font-semibold">
+                        División Flex
+                        <select
+                          value={form.flexRankDivision}
+                          onChange={setField('flexRankDivision')}
+                          className={`${inputClass} mt-2`}
+                        >
+                          <option value="">Elegí una división</option>
+                          {RANK_DIVISIONS.map((division) => (
+                            <option key={division} value={division}>
+                              {DIVISION_LABELS[division]}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    ) : null}
+                  </div>
+
+                  {form.flexRankTier ? (
+                    <label className="mt-3 block text-sm font-semibold">
+                      LP Flex (opcional)
+                      <input
+                        type="number"
+                        min="0"
+                        className={`${inputClass} mt-2`}
+                        value={form.flexRankLp}
+                        onChange={setField('flexRankLp')}
+                        placeholder="0"
+                      />
+                    </label>
+                  ) : null}
+                </div>
               </div>
             ) : null}
 
@@ -736,12 +822,22 @@ export default function OnboardingPage() {
                         : '-'}
                     </li>
                     <li>
-                      <span className="text-text">Rango:</span>{' '}
+                      <span className="text-text">Rango Solo/Dúo:</span>{' '}
                       {form.rankTier
                         ? `${RANK_LABELS[form.rankTier]}${
                             form.rankDivision ? ` ${DIVISION_LABELS[form.rankDivision]}` : ''
                           }`
                         : '-'}
+                    </li>
+                    <li>
+                      <span className="text-text">Rango Flex:</span>{' '}
+                      {form.flexRankTier
+                        ? `${RANK_LABELS[form.flexRankTier]}${
+                            form.flexRankDivision
+                              ? ` ${DIVISION_LABELS[form.flexRankDivision]}`
+                              : ''
+                          }`
+                        : 'Sin declarar'}
                     </li>
                     <li>
                       <span className="text-text">Horarios:</span> {form.scheduleBlocks.length}{' '}

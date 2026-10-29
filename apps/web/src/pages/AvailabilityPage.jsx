@@ -16,6 +16,7 @@ import {
   formatRank,
   formatRoles,
   initialsOf,
+  rankTierForQueue,
 } from '../utils/labels.js';
 
 const roleOptions = Object.keys(ROLE_LABELS);
@@ -429,9 +430,13 @@ export default function AvailabilityPage() {
                               <h3 className="truncate font-bold">@{player.profile.username}</h3>
                               <UsernameHint className="mt-0.5" />
                               <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
-                                <RankIcon tier={player.profile.rankTier} size={16} />
+                                <RankIcon
+                                  tier={rankTierForQueue(player.profile, player.session.queue)}
+                                  size={16}
+                                />
                                 <span className="truncate">
-                                  {formatRank(player.profile)} · {formatRoles(player.profile)}
+                                  {formatRank(player.profile, player.session.queue)} �{' '}
+                                  {formatRoles(player.profile)}
                                 </span>
                               </p>
                               {player.profile.country ? (

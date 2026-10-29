@@ -231,13 +231,13 @@ export class AvailabilityService {
     const items = [];
 
     for (const session of sessions) {
-      if (role && !session.roles.includes(role)) continue;
+      if (role && !session.roles.includes(role) && !session.roles.includes('fill')) continue;
 
       const profile = profilesByUser.get(session.userId);
       if (!profile) continue;
 
       const tolerance = maxRankDistance(session.queue);
-      if (rankDistance(viewer, profile) > tolerance) continue;
+      if (rankDistance(viewer, profile, session.queue) > tolerance) continue;
 
       const sessionRoles = {
         primaryRole: session.roles[0],
@@ -307,7 +307,7 @@ export class AvailabilityService {
       throw new AppError('No podés invitarte a vos mismo.', 400);
     }
 
-    if (!session.roles.includes(role)) {
+    if (!session.roles.includes(role) && !session.roles.includes('fill')) {
       throw new AppError('Ese jugador no está disponible para ese rol.', 422);
     }
 

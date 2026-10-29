@@ -1,7 +1,7 @@
 export const USER_ROLES = Object.freeze(['player', 'admin']);
 export const USER_STATUSES = Object.freeze(['active', 'suspended']);
 
-export const ROLES = Object.freeze(['top', 'jungle', 'mid', 'adc', 'support']);
+export const ROLES = Object.freeze(['top', 'jungle', 'mid', 'adc', 'support', 'fill']);
 
 export const RANK_TIERS = Object.freeze([
   'iron',

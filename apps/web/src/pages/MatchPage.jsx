@@ -29,6 +29,7 @@ import {
   formatRank,
   formatRoles,
   initialsOf,
+  rankTierForQueue,
 } from '../utils/labels.js';
 
 const queueOptions = ['solo_duo', 'flex'];
@@ -300,9 +301,9 @@ export default function MatchPage() {
                             <h3 className="truncate font-bold">@{profile.username}</h3>
                             <UsernameHint className="mt-0.5" />
                             <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
-                              <RankIcon tier={profile.rankTier} size={16} />
+                              <RankIcon tier={rankTierForQueue(profile, queue)} size={16} />
                               <span className="truncate">
-                                {formatRank(profile)} · {formatRoles(profile)}
+                                {formatRank(profile, queue)} · {formatRoles(profile)}
                               </span>
                             </p>
                             {profile.country ? (

@@ -96,6 +96,50 @@ describe('Matching', () => {
       expect(res.body.candidates.some((item) => item.profile.id === target.user.id)).toBe(false);
     });
 
+    it('usa el rango Flex para candidatos de la cola Flex', async () => {
+      const viewer = await createMatchUser({
+        scheduleBlocks: ['thu_early'],
+        rankTier: 'iron',
+        rankDivision: 'iv',
+        flexRankTier: 'diamond',
+        flexRankDivision: 'ii',
+        primaryRole: 'mid',
+        secondaryRole: 'jungle',
+      });
+      const target = await createMatchUser({
+        scheduleBlocks: ['thu_early'],
+        rankTier: 'diamond',
+        rankDivision: 'ii',
+        flexRankTier: 'emerald',
+        flexRankDivision: 'iv',
+        primaryRole: 'jungle',
+        secondaryRole: 'top',
+      });
+
+      const solo = await candidates(viewer.token, '?queue=solo_duo&limit=50');
+      const flex = await candidates(viewer.token, '?queue=flex&limit=50');
+
+      expect(solo.body.candidates.some((item) => item.profile.id === target.user.id)).toBe(false);
+      expect(flex.body.candidates.some((item) => item.profile.id === target.user.id)).toBe(true);
+    });
+
+    it('incluye candidatos Comodín en cualquier búsqueda de rol', async () => {
+      const viewer = await createMatchUser({
+        scheduleBlocks: ['thu_morning'],
+        primaryRole: 'mid',
+        secondaryRole: 'jungle',
+      });
+      const target = await createMatchUser({
+        scheduleBlocks: ['thu_morning'],
+        primaryRole: 'fill',
+        secondaryRole: 'fill',
+      });
+
+      const res = await candidates(viewer.token, '?role=support&limit=50');
+
+      expect(res.body.candidates.some((item) => item.profile.id === target.user.id)).toBe(true);
+    });
+
     it('excluye candidatos sin solape horario', async () => {
       const viewer = await createMatchUser({ scheduleBlocks: ['sun_afternoon'] });
       const target = await compatibleTarget(['mon_early']);

@@ -62,6 +62,35 @@ describe('Perfiles', () => {
       expect(res.body.profile.country).toBe('PE');
     });
 
+    it('guarda un rango Flex separado del rango Solo/Dúo', async () => {
+      const { token, user } = await registerUser();
+      const { res } = await completeProfile(token, {
+        flexRankTier: 'platinum',
+        flexRankDivision: 'ii',
+        flexRankLp: 50,
+      });
+      const stored = await PlayerProfile.findOne({ where: { userId: user.id } });
+
+      expect(res.status).toBe(200);
+      expect(res.body.profile.flexRankTier).toBe('platinum');
+      expect(res.body.profile.flexRankDivision).toBe('ii');
+      expect(res.body.profile.flexRankLp).toBe(50);
+      expect(stored.flexRankIndex).toBe(18);
+    });
+
+    it('acepta Comodín como rol principal y secundario', async () => {
+      const { token, user } = await registerUser();
+      const { res } = await completeProfile(token, {
+        primaryRole: 'fill',
+        secondaryRole: 'fill',
+      });
+      const stored = await PlayerProfile.findOne({ where: { userId: user.id } });
+
+      expect(res.status).toBe(200);
+      expect(stored.primaryRole).toBe('fill');
+      expect(stored.secondaryRole).toBe('fill');
+    });
+
     it('actualiza el país de residencia', async () => {
       const { token } = await registerUser();
       await completeProfile(token, { country: 'AR' });

@@ -297,3 +297,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** agregar `PE` con zona `America/Lima` a `COUNTRIES` y `COUNTRY_TIMEZONES`, y migrar el check de `player_profiles.country` para aceptarlo.
 
 **Consecuencias:** los perfiles peruanos pueden declarar su país y ver la equivalencia local de los bloques contra ART. El matching no cambia porque todos los horarios siguen guardados en ART. El `down` de la migración limpia los perfiles `PE` a `NULL` antes de restaurar el check anterior.
+
+## ADR-038 - Rango Flex separado y rol Comodín
+
+**Contexto:** el perfil solo guardaba un rango declarado y el matching usaba ese mismo valor para Solo/Dúo y Flex. Además, muchos jugadores juegan todas las líneas y no tenían una opción que los representara.
+
+**Decisión:** conservar `rank_tier`, `rank_division`, `rank_lp` y `rank_index` como rango de Solo/Dúo, y agregar `flex_rank_tier`, `flex_rank_division`, `flex_rank_lp` y `flex_rank_index` para Flex. La cola Flex usa el rango Flex; si el perfil no lo declaró, usa Solo/Dúo como respaldo. Agregar el rol `fill` (Comodín) como rol válido y compatible con cualquier rol, tanto en candidatos como en Disponible ya y Busco 1.
+
+**Consecuencias:** los rangos de cada cola se comparan con la tolerancia correcta. Los perfiles existentes siguen siendo compatibles sin backfill. El rango Flex es opcional para no bloquear a quienes no lo juegan, pero se muestra por separado. `fill` no reemplaza el rango ni el historial: solo amplía la compatibilidad de roles.

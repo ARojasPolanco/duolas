@@ -110,6 +110,32 @@ PlayerProfile.init(
       allowNull: true,
       field: 'rank_verified_at',
     },
+    flexRankTier: {
+      type: DataTypes.STRING(12),
+      allowNull: true,
+      field: 'flex_rank_tier',
+    },
+    flexRankDivision: {
+      type: DataTypes.STRING(3),
+      allowNull: true,
+      field: 'flex_rank_division',
+    },
+    flexRankLp: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'flex_rank_lp',
+    },
+    flexRankIndex: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+      field: 'flex_rank_index',
+    },
+    flexRankSource: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      defaultValue: 'declared',
+      field: 'flex_rank_source',
+    },
     reputationPositive: {
       type: DataTypes.INTEGER,
       allowNull: false,

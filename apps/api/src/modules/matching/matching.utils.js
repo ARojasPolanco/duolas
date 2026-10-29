@@ -10,9 +10,16 @@ const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
 export const rolesOf = (profile) => [profile?.primaryRole, profile?.secondaryRole].filter(Boolean);
 
+export const canPlayRole = (profile, role) => {
+  if (!role) return true;
+  const roles = rolesOf(profile);
+  return roles.includes(role) || roles.includes('fill');
+};
+
 export const areRolesComplementary = (a, b) => {
   const aRoles = rolesOf(a);
   const bRoles = rolesOf(b);
+  if (aRoles.includes('fill') || bRoles.includes('fill')) return true;
   return aRoles.some((aRole) => bRoles.some((bRole) => aRole !== bRole));
 };
 
@@ -21,13 +28,25 @@ export const orderedPair = (a, b) => (a < b ? [a, b] : [b, a]);
 export const maxRankDistance = (queue = 'solo_duo') =>
   RANK_TOLERANCE[queue] ?? RANK_TOLERANCE.solo_duo;
 
-export const rankDistance = (a, b) => {
-  const distance = Math.abs(Number(a?.rankIndex) - Number(b?.rankIndex));
-  return Number.isFinite(distance) ? distance : Infinity;
+export const rankIndexForQueue = (profile, queue = 'solo_duo') => {
+  const value =
+    queue === 'flex' && profile?.flexRankIndex !== null && profile?.flexRankIndex !== undefined
+      ? profile.flexRankIndex
+      : profile?.rankIndex;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+};
+
+export const rankDistance = (a, b, queue = 'solo_duo') => {
+  const aIndex = rankIndexForQueue(a, queue);
+  const bIndex = rankIndexForQueue(b, queue);
+  if (aIndex === null || bIndex === null) return Infinity;
+
+  return Math.abs(aIndex - bIndex);
 };
 
 export const isRankCompatible = (a, b, queue = 'solo_duo') =>
-  rankDistance(a, b) <= maxRankDistance(queue);
+  rankDistance(a, b, queue) <= maxRankDistance(queue);
 
 export const scheduleOverlap = (a, b) => {
   const aBlocks = a?.scheduleBlocks || [];
@@ -64,12 +83,13 @@ export const micScore = (a, b) => (a?.hasMic === b?.hasMic ? 1 : 0);
 export const rankProximity = (a, b, queue = 'solo_duo') => {
   const max = maxRankDistance(queue);
   if (!max) return 0;
-  const distance = rankDistance(a, b);
+  const distance = rankDistance(a, b, queue);
   if (!Number.isFinite(distance)) return 0;
   return clamp(1 - distance / max);
 };
 
 export const roleFit = (a, b) => {
+  if (rolesOf(a).includes('fill') || rolesOf(b).includes('fill')) return 1;
   if (!areRolesComplementary(a, b)) return 0;
   return a?.primaryRole !== b?.primaryRole ? 1 : 0.6;
 };
@@ -146,18 +166,21 @@ export const computePostFitScore = (applicant, post, owner) => {
   const maxIndex = Number(post?.rankMaxIndex ?? 36);
   const midpoint = (minIndex + maxIndex) / 2;
   const halfRange = Math.max(1, (maxIndex - minIndex) / 2);
-  const applicantIndex = Number(applicant?.rankIndex);
+  const applicantIndex = rankIndexForQueue(applicant, post?.queue);
 
-  const rankFit = Number.isFinite(applicantIndex)
-    ? clamp(1 - Math.abs(applicantIndex - midpoint) / halfRange)
-    : 0;
+  const rankFit =
+    applicantIndex !== null ? clamp(1 - Math.abs(applicantIndex - midpoint) / halfRange) : 0;
 
   const rolesNeeded = post?.rolesNeeded || [];
-  const roleScore = rolesNeeded.includes(applicant?.primaryRole)
-    ? 1
-    : rolesNeeded.includes(applicant?.secondaryRole)
-      ? 0.6
-      : 0;
+  const applicantHasFill = rolesOf(applicant).includes('fill');
+  const roleScore =
+    rolesNeeded.includes('fill') || applicantHasFill
+      ? 1
+      : rolesNeeded.includes(applicant?.primaryRole)
+        ? 1
+        : rolesNeeded.includes(applicant?.secondaryRole)
+          ? 0.6
+          : 0;
 
   const breakdown = {
     rank: Math.round(POST_WEIGHTS.rank * rankFit),

@@ -58,26 +58,33 @@ Maestro, Gran Maestro y Challenger no tienen división (`divisionIndex = 0`).
 ### Compatibilidad
 
 ```text
-distance = |rank_index_a - rank_index_b|
+rankIndex(x, queue) =
+  queue === 'flex' && x.flexRankIndex != null
+    ? x.flexRankIndex
+    : x.rankIndex
+
+distance = |rankIndex(a, queue) - rankIndex(b, queue)|
 maxDistance = queue === 'solo_duo' ? 4 : 8
 compatible = distance <= maxDistance
 ```
 
-- Solo/Dúo: ±1 tier.
-- Flex: ±2 tiers.
+- Solo/Dúo: ±1 tier y usa `rank_index`.
+- Flex: ±2 tiers y usa `flex_rank_index`.
+- Si un perfil no declaró Flex, se usa su `rank_index` de Solo/Dúo como respaldo.
 - Dentro del mismo tier se permiten todas las divisiones.
 - Un Diamante IV y un Esmeralda IV tienen distancia 4: compatibles en Solo/Dúo.
 - Un Diamante I (27) y un Maestro (28) tienen distancia 1: compatibles.
 
 ## 3. Roles
 
-Valores: `top`, `jungle`, `mid`, `adc`, `support`.
+Valores: `top`, `jungle`, `mid`, `adc`, `support`, `fill`.
 
-Cada perfil declara principal y secundario, distintos.
+Cada perfil declara principal y secundario; deben ser distintos salvo que alguno sea `fill`.
 
 ```text
 rolesComplementary(a, b) =
-  existe ra en roles(a) y rb en roles(b) tal que ra !== rb
+  'fill' en roles(a) o 'fill' en roles(b)
+  o existe ra en roles(a) y rb en roles(b) tal que ra !== rb
 ```
 
 Donde `roles(x) = [x.primaryRole, x.secondaryRole]`.
@@ -85,7 +92,7 @@ Donde `roles(x) = [x.primaryRole, x.secondaryRole]`.
 - Mid + Jungla contra Jungla + Top: compatibles.
 - Mid + Support contra Support + Mid: compatibles (existe par distinto).
 - Mid + Mid contra Mid + Mid: incompatibles.
-- Si se filtra por un rol concreto, el candidato debe poder jugarlo (principal o secundario).
+- `fill` es comodín: es compatible con cualquier rol y puede cubrir cualquier filtro de rol.
 
 ## 4. Horarios
 
@@ -232,10 +239,10 @@ Así se incluyen todas las divisiones del tier máximo. Un post de Oro a Platino
 ```text
 midpoint = (post.rankMinIndex + post.rankMaxIndex) / 2
 halfRange = max(1, (post.rankMaxIndex - post.rankMinIndex) / 2)
-rankFit = clamp(1 - |applicant.rankIndex - midpoint| / halfRange, 0, 1)
+rankFit = clamp(1 - |rankIndex(applicant, post.queue) - midpoint| / halfRange, 0, 1)
 
 roleFit =
-  1.0 si el rol principal del postulante está en rolesNeeded
+  1.0 si el postulante es fill, el post pide fill o su rol principal está en rolesNeeded
   0.6 si su rol secundario está en rolesNeeded
   0   si no cumple (no debería llegar por filtro)
 
@@ -251,14 +258,14 @@ Un candidato debe cumplir todo:
 3. Email verificado.
 4. Perfil completo.
 5. Edad confirmada.
-6. `distance <= maxDistance` para la cola.
-7. Roles complementarios.
+6. `distance <= maxDistance` para la cola, usando el rango Flex en Flex.
+7. Roles complementarios; `fill` siempre cumple.
 8. `overlap >= 1` bloque horario (configurable).
 9. No es uno mismo.
 10. No hay bloqueo en ninguna dirección.
 11. No hay conexión activa.
 12. El viewer no le dio like pendiente ni está en match.
-13. Si se filtra por rol, el candidato puede jugarlo.
+13. Si se filtra por rol, el candidato puede jugarlo o es `fill`.
 
 No se exige que el candidato esté disponible ahora. Eso es exclusivo de "Disponible ya".
 

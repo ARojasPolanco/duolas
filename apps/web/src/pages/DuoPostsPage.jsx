@@ -30,6 +30,7 @@ import {
   formatRank,
   formatRoles,
   initialsOf,
+  rankTierForQueue,
 } from '../utils/labels.js';
 
 const roleOptions = Object.keys(ROLE_LABELS);
@@ -611,11 +612,14 @@ export default function DuoPostsPage() {
                                 <UsernameHint className="mt-0.5" />
                                 <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
                                   {post.owner ? (
-                                    <RankIcon tier={post.owner.rankTier} size={16} />
+                                    <RankIcon
+                                      tier={rankTierForQueue(post.owner, post.queue)}
+                                      size={16}
+                                    />
                                   ) : null}
                                   <span className="truncate">
-                                    {post.owner ? formatRank(post.owner) : 'Sin rango'} ·{' '}
-                                    {post.owner ? formatRoles(post.owner) : 'Sin roles'}
+                                    {post.owner ? formatRank(post.owner, post.queue) : 'Sin rango'}{' '}
+                                    � {post.owner ? formatRoles(post.owner) : 'Sin roles'}
                                   </span>
                                 </p>
                                 {post.owner?.country ? (
@@ -802,11 +806,14 @@ export default function DuoPostsPage() {
                                           </p>
                                           <p className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted">
                                             <RankIcon
-                                              tier={application.applicant.rankTier}
+                                              tier={rankTierForQueue(
+                                                application.applicant,
+                                                post.queue
+                                              )}
                                               size={14}
                                             />
                                             <span className="truncate">
-                                              {formatRank(application.applicant)} ·{' '}
+                                              {formatRank(application.applicant, post.queue)} �{' '}
                                               {formatRoles(application.applicant)}
                                             </span>
                                           </p>

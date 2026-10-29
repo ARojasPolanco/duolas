@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DUO_WEIGHTS, NOW_WEIGHTS, POST_WEIGHTS, RANK_TOLERANCE } from '../config/matching.js';
 import {
   areRolesComplementary,
+  canPlayRole,
   computeDuoScore,
   computeNowScore,
   computePostFitScore,
@@ -10,6 +11,7 @@ import {
   maxRankDistance,
   orderedPair,
   rankDistance,
+  rankIndexForQueue,
   rolesOf,
   scheduleOverlap,
 } from '../modules/matching/matching.utils.js';
@@ -67,6 +69,23 @@ describe('Matching utils', () => {
         { primaryRole: 'mid', secondaryRole: null }
       )
     ).toBe(false);
+  });
+
+  it('trata a Comodín como compatible con cualquier rol', () => {
+    const fill = { primaryRole: 'fill', secondaryRole: 'fill' };
+    expect(areRolesComplementary(viewer, fill)).toBe(true);
+    expect(canPlayRole(fill, 'support')).toBe(true);
+    expect(canPlayRole(viewer, 'support')).toBe(false);
+  });
+
+  it('usa el rango Flex cuando la cola es Flex', () => {
+    const soloViewer = { rankIndex: 4, flexRankIndex: 26 };
+    const soloTarget = { rankIndex: 26, flexRankIndex: 20 };
+
+    expect(rankIndexForQueue(soloViewer, 'solo_duo')).toBe(4);
+    expect(rankIndexForQueue(soloViewer, 'flex')).toBe(26);
+    expect(rankDistance(soloViewer, soloTarget, 'solo_duo')).toBe(22);
+    expect(rankDistance(soloViewer, soloTarget, 'flex')).toBe(6);
   });
 
   it('calcula el solape de horarios', () => {

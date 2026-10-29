@@ -13,7 +13,7 @@ import { connectionService } from '../matching/connection.service.js';
 import { notificationService } from '../notifications/notification.service.js';
 import { metricsService } from '../metrics/metrics.service.js';
 import { AppError } from '../../errors/appError.js';
-import { computePostFitScore } from '../matching/matching.utils.js';
+import { computePostFitScore, rankIndexForQueue } from '../matching/matching.utils.js';
 
 const APEX_TIERS = ['master', 'grandmaster', 'challenger'];
 const MAX_ACTIVE_POSTS = 3;
@@ -164,11 +164,22 @@ export class DuoPostService {
 
     for (const session of sessions) {
       if (excluded.has(session.userId)) continue;
-      if (!session.roles.some((role) => post.rolesNeeded.includes(role))) continue;
+      const roleMatches =
+        session.roles.includes('fill') ||
+        post.rolesNeeded.includes('fill') ||
+        session.roles.some((role) => post.rolesNeeded.includes(role));
+      if (!roleMatches) continue;
 
       const profile = profilesByUser.get(session.userId);
       if (!profile) continue;
-      if (profile.rankIndex < post.rankMinIndex || profile.rankIndex > post.rankMaxIndex) continue;
+      const candidateRankIndex = rankIndexForQueue(profile, post.queue);
+      if (
+        candidateRankIndex === null ||
+        candidateRankIndex < post.rankMinIndex ||
+        candidateRankIndex > post.rankMaxIndex
+      ) {
+        continue;
+      }
 
       suggested.push(session.userId);
       if (suggested.length >= SUGGESTION_LIMIT) break;
@@ -287,7 +298,9 @@ export class DuoPostService {
     );
 
     return posts
-      .filter((post) => !role || post.rolesNeeded.includes(role))
+      .filter(
+        (post) => !role || post.rolesNeeded.includes(role) || post.rolesNeeded.includes('fill')
+      )
       .map((post) => {
         const ownerProfile = profilesByUser.get(post.ownerId);
         if (!ownerProfile) return null;
@@ -398,11 +411,19 @@ export class DuoPostService {
 
     const applicant = await this.getViewerProfile(applicantId);
 
-    if (applicant.rankIndex < post.rankMinIndex || applicant.rankIndex > post.rankMaxIndex) {
+    const applicantRankIndex = rankIndexForQueue(applicant, post.queue);
+    if (
+      applicantRankIndex === null ||
+      applicantRankIndex < post.rankMinIndex ||
+      applicantRankIndex > post.rankMaxIndex
+    ) {
       throw new AppError('Tu rango no entra en el rango pedido por la publicación.', 422);
     }
 
     const roleCompatible =
+      post.rolesNeeded.includes('fill') ||
+      applicant.primaryRole === 'fill' ||
+      applicant.secondaryRole === 'fill' ||
       post.rolesNeeded.includes(applicant.primaryRole) ||
       post.rolesNeeded.includes(applicant.secondaryRole);
 

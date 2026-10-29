@@ -15,10 +15,11 @@ import { connectionService } from './connection.service.js';
 import { AppError } from '../../errors/appError.js';
 import {
   areRolesComplementary,
+  canPlayRole,
   computeDuoScore,
   maxRankDistance,
   orderedPair,
-  rolesOf,
+  rankIndexForQueue,
 } from './matching.utils.js';
 
 const USER_ATTRIBUTES = [
@@ -144,11 +145,29 @@ export class MatchingService {
     const viewer = await this.getViewerProfile(viewerId);
     const excluded = await this.getExcludedIds(viewerId);
     const tolerance = maxRankDistance(queue);
+    const viewerRankIndex = rankIndexForQueue(viewer, queue);
 
     const userFilter = { [Op.ne]: viewerId };
     if (excluded.length) {
       userFilter[Op.notIn] = excluded;
     }
+
+    const minRankIndex = viewerRankIndex - tolerance;
+    const maxRankIndex = viewerRankIndex + tolerance;
+    const rankFilter =
+      queue === 'flex'
+        ? {
+            [Op.or]: [
+              { flexRankIndex: { [Op.between]: [minRankIndex, maxRankIndex] } },
+              {
+                flexRankIndex: null,
+                rankIndex: { [Op.between]: [minRankIndex, maxRankIndex] },
+              },
+            ],
+          }
+        : {
+            rankIndex: { [Op.between]: [minRankIndex, maxRankIndex] },
+          };
 
     const candidates = await PlayerProfile.findAll({
       where: {
@@ -156,9 +175,7 @@ export class MatchingService {
         isDeleted: false,
         profileCompletedAt: { [Op.ne]: null },
         userId: userFilter,
-        rankIndex: {
-          [Op.between]: [viewer.rankIndex - tolerance, viewer.rankIndex + tolerance],
-        },
+        ...rankFilter,
         [Op.and]: [
           sqlWhere(cast(col('schedule_blocks'), 'text[]'), {
             [Op.overlap]: viewer.scheduleBlocks,
@@ -182,7 +199,7 @@ export class MatchingService {
 
     for (const candidate of candidates) {
       if (!areRolesComplementary(viewer, candidate)) continue;
-      if (role && !rolesOf(candidate).includes(role)) continue;
+      if (role && !canPlayRole(candidate, role)) continue;
 
       const result = computeDuoScore(viewer, candidate, { queue });
       scored.push({ candidate, ...result });

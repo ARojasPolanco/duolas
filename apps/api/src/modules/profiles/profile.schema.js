@@ -22,6 +22,9 @@ export const updateProfileSchema = z
     rankTier: rankTierSchema.optional(),
     rankDivision: rankDivisionSchema.nullable().optional(),
     rankLp: z.number().int().min(0).nullable().optional(),
+    flexRankTier: rankTierSchema.nullable().optional(),
+    flexRankDivision: rankDivisionSchema.nullable().optional(),
+    flexRankLp: z.number().int().min(0).nullable().optional(),
     playStyle: playStyleSchema.optional(),
     languages: z
       .array(languageSchema)
@@ -53,6 +56,9 @@ const fieldLabels = {
   rankTier: 'Rango',
   rankDivision: 'División',
   rankLp: 'LP',
+  flexRankTier: 'Rango Flex',
+  flexRankDivision: 'División Flex',
+  flexRankLp: 'LP Flex',
   playStyle: 'Estilo de juego',
   languages: 'Idiomas',
   hasMic: 'Micrófono',

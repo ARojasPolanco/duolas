@@ -142,10 +142,11 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 | Riot ID        | Formato `nombre#TAG`; nombre 3-16, tag 3-5 alfanumérico; único sin distinguir mayúsculas         |
 | Servidor       | Fijo `LAS` en el MVP                                                                             |
 | País           | Opcional: Argentina, Chile, Bolivia, Paraguay, Uruguay o Perú; se usa para mostrar la hora local |
-| Rol principal  | Obligatorio: top, jungle, mid, adc o support                                                     |
-| Rol secundario | Obligatorio y distinto del principal                                                             |
-| Rango          | Tier + división obligatorios hasta Diamante; Maestro, Gran Maestro y Challenger sin división     |
-| LP             | Opcional, entero mayor o igual a 0                                                               |
+| Rol principal  | Obligatorio: top, jungle, mid, adc, support o fill (Comodín)                                     |
+| Rol secundario | Obligatorio; distinto del principal salvo cuando alguno es Comodín                               |
+| Rango Solo/Dúo | Tier + división obligatorios hasta Diamante; Maestro, Gran Maestro y Challenger sin división     |
+| Rango Flex     | Opcional; si se declara, se usa para el matching de la cola Flex                                 |
+| LP             | Opcional, entero mayor o igual a 0; hay LP separado para Solo/Dúo y Flex                         |
 | Horarios       | Mínimo 1 de 28 bloques semanales, en hora Argentina                                              |
 | Idioma         | 1 a 3 de español, inglés y portugués; el primero es principal                                    |
 | Estilo         | casual, ranked o tryhard                                                                         |
@@ -154,6 +155,8 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 | Discord        | Opcional, 2-32 caracteres alfanuméricos, punto o guión bajo                                      |
 
 - El rango es declarado (`rank_source = declared`). Se muestra como declarado.
+- `fill` representa a quien juega todas las líneas y es compatible con cualquier rol.
+- Si un perfil no declara Flex, el matching de Flex usa su rango Solo/Dúo como respaldo.
 - El nombre de usuario es el identificador de Duo LAS y no debe ser el Riot ID.
 - No se admiten jugadores sin clasificar en el MVP.
 - El Riot ID y el Discord no se muestran en el perfil público.
@@ -166,8 +169,8 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 Detalle completo en `docs/MATCHING.md`.
 
 - **Filtros duros:** LAS, rango compatible, roles complementarios, al menos un bloque horario en común, email verificado, perfil completo, cuenta activa, sin bloqueo, sin conexión activa y sin like previo.
-- **Rango compatible:** ±1 tier en Solo/Dúo y ±2 tiers en Flex.
-- **Roles complementarios:** debe existir un par de roles distintos entre principal y secundario de ambos.
+- **Rango compatible:** ±1 tier en Solo/Dúo y ±2 tiers en Flex. Flex compara el rango Flex; si falta, usa Solo/Dúo.
+- **Roles complementarios:** debe existir un par de roles distintos entre principal y secundario de ambos. `fill` es comodín y es compatible con cualquier rol.
 - **Interés mutuo:** el like es doble ciego; no se revela quién likeó hasta que sea recíproco.
 - **Contacto:** se revela Riot ID y Discord opcional solo a los dos integrantes de la conexión.
 - **Likes:** máximo 30 por hora, idempotentes y retirables.

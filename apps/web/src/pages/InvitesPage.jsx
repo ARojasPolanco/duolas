@@ -9,7 +9,14 @@ import UsernameHint from '../components/UsernameHint.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
-import { QUEUE_LABELS, ROLE_LABELS, formatRank, formatRoles, initialsOf } from '../utils/labels.js';
+import {
+  QUEUE_LABELS,
+  ROLE_LABELS,
+  formatRank,
+  formatRoles,
+  initialsOf,
+  rankTierForQueue,
+} from '../utils/labels.js';
 
 const STATUS_LABELS = {
   pending: 'Pendiente',
@@ -253,9 +260,16 @@ export default function InvitesPage() {
                             <h2 className="truncate font-bold">@{invite.counterpart.username}</h2>
                             <UsernameHint className="mt-0.5" />
                             <p className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted">
-                              <RankIcon tier={invite.counterpart.rankTier} size={16} />
+                              <RankIcon
+                                tier={rankTierForQueue(
+                                  invite.counterpart,
+                                  invite.availability?.queue
+                                )}
+                                size={16}
+                              />
                               <span className="truncate">
-                                {formatRank(invite.counterpart)} · {formatRoles(invite.counterpart)}
+                                {formatRank(invite.counterpart, invite.availability?.queue)} �{' '}
+                                {formatRoles(invite.counterpart)}
                               </span>
                             </p>
                             {invite.counterpart.country ? (

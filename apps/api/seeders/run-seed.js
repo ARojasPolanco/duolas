@@ -248,8 +248,8 @@ const demoPlayers = [
     username: 'demo_support3',
     email: 'demo_support3@duolas.online',
     riotId: 'DemoSupport3#LAS',
-    primaryRole: 'support',
-    secondaryRole: 'jungle',
+    primaryRole: 'fill',
+    secondaryRole: 'support',
     rankTier: 'platinum',
     rankDivision: 'ii',
     rankLp: 19,
@@ -257,7 +257,7 @@ const demoPlayers = [
     languages: ['es'],
     hasMic: true,
     scheduleBlocks: ['mon_night', 'fri_night'],
-    bio: 'Support de engage, hablo por Discord.',
+    bio: 'Juego todas las líneas y hablo por Discord.',
     discordTag: 'demosupport3',
     reputationPositive: 6,
     reputationNegative: 0,
@@ -280,6 +280,13 @@ const DEMO_COUNTRIES = {
   support3: 'PY',
 };
 
+const DEMO_FLEX_RANKS = {
+  mid: { tier: 'emerald', division: 'ii', lp: 18 },
+  support2: { tier: 'platinum', division: 'i', lp: 44 },
+};
+
+const flexRankOf = (key) => DEMO_FLEX_RANKS[key] || null;
+
 const createOrUpdateDemoUser = async (player) => {
   const profileData = {
     riotId: player.riotId,
@@ -292,6 +299,13 @@ const createOrUpdateDemoUser = async (player) => {
     rankDivision: player.rankDivision,
     rankLp: player.rankLp,
     rankIndex: computeRankIndex(player.rankTier, player.rankDivision),
+    flexRankTier: flexRankOf(player.key)?.tier || null,
+    flexRankDivision: flexRankOf(player.key)?.division || null,
+    flexRankLp: flexRankOf(player.key)?.lp || null,
+    flexRankIndex: flexRankOf(player.key)
+      ? computeRankIndex(flexRankOf(player.key).tier, flexRankOf(player.key).division)
+      : null,
+    flexRankSource: 'declared',
     playStyle: player.playStyle,
     languages: player.languages,
     hasMic: player.hasMic,

@@ -4,6 +4,7 @@ export const ROLE_LABELS = {
   mid: 'Mid',
   adc: 'ADC',
   support: 'Support',
+  fill: 'Comodín',
 };
 
 export const RANK_LABELS = {
@@ -87,12 +88,29 @@ export const USER_STATUS_LABELS = {
   deleted: 'Eliminado',
 };
 
-export const formatRank = (profile) => {
-  const tier = RANK_LABELS[profile?.rankTier];
-  if (!tier) return 'Sin rango';
+const formatRankValue = (tierValue, divisionValue) => {
+  const tier = RANK_LABELS[tierValue];
+  if (!tier) return null;
 
-  const division = DIVISION_LABELS[profile?.rankDivision];
+  const division = DIVISION_LABELS[divisionValue];
   return division ? `${tier} ${division}` : tier;
+};
+
+export const rankTierForQueue = (profile, queue = 'solo_duo') =>
+  queue === 'flex' && profile?.flexRankTier ? profile.flexRankTier : profile?.rankTier;
+
+export const formatRank = (profile, queue) => {
+  const soloRank = formatRankValue(profile?.rankTier, profile?.rankDivision);
+  const flexRank = formatRankValue(profile?.flexRankTier, profile?.flexRankDivision);
+  const resolvedSolo = soloRank || 'Sin rango';
+
+  if (queue === 'flex') {
+    return flexRank || `${resolvedSolo} (Flex sin declarar)`;
+  }
+
+  if (queue === 'solo_duo') return resolvedSolo;
+
+  return flexRank ? `${resolvedSolo} · Flex ${flexRank}` : resolvedSolo;
 };
 
 export const formatRoles = (profile) => {

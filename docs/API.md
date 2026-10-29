@@ -193,6 +193,10 @@ Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` 
     "rankDivision": "ii",
     "rankLp": 42,
     "rankSource": "declared",
+    "flexRankTier": "platinum",
+    "flexRankDivision": "ii",
+    "flexRankLp": 50,
+    "flexRankSource": "declared",
     "playStyle": "ranked",
     "languages": ["es", "en"],
     "hasMic": true,
@@ -221,15 +225,16 @@ Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` 
 
 Protegido. Acepta actualización parcial de:
 
-`riotId`, `country`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`.
+`riotId`, `country`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `flexRankTier`, `flexRankDivision`, `flexRankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`.
 
 El servicio exige que el estado final quede completo. Para crear el perfil hay que enviar todos los campos obligatorios; si falta alguno responde 422 con la lista. Una vez creado, acepta actualizaciones parciales que mantengan el perfil completo. `profile_completed_at` se setea al completar. `200` con perfil y completitud.
 
 Reglas:
 
 - Riot ID único case-insensitive.
-- `country` opcional: `AR`, `CL`, `BO`, `PY` o `UY`.
-- Roles distintos.
+- `country` opcional: `AR`, `CL`, `BO`, `PY`, `UY` o `PE`.
+- Roles `top`, `jungle`, `mid`, `adc`, `support` o `fill`; distintos salvo Comodín.
+- Rango Solo/Dúo obligatorio; Flex opcional y separado.
 - Hasta Diamante con división; Maestro+ sin división.
 - 1-3 idiomas.
 - 1-28 bloques.
@@ -253,6 +258,10 @@ Protegido. Perfil público:
     "rankDivision": "ii",
     "rankLp": 42,
     "rankSource": "declared",
+    "flexRankTier": "platinum",
+    "flexRankDivision": "ii",
+    "flexRankLp": 50,
+    "flexRankSource": "declared",
     "playStyle": "ranked",
     "languages": ["es", "en"],
     "hasMic": true,

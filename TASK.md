@@ -4,7 +4,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** MVP completo, ARAM y Perú implementados. Release aprobado para `main`.
+- **Fase:** MVP completo, ARAM, rango Flex, Comodín y Perú implementados. Release aprobado para `main`.
 - **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, ARAM, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
 - **Demo:** `npm run seed` crea 12 jugadores demo, una cuenta admin, un match activo, likes pendientes, disponibilidad, invitación, Busco 1, feedback pendiente y un reporte abierto.
 - **Dev:** `npm run docker:app` levanta PostgreSQL, API y web en contenedores persistentes.
@@ -213,9 +213,10 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Backend para grupo, disponibilidad individual, postulaciones y aceptación.
 - [x] Conexiones ARAM visibles en Matches y notificaciones/push.
 - [x] Frontend `/aram` con pestañas Busco grupo y Disponible ahora.
-- [x] 112 tests pasando y build verde.
+- [x] 118 tests pasando y build verde.
 - [x] Smoke visual y prueba manual en dev.
 - [x] Perú agregado a LAS con zona `America/Lima` y migración 015.
+- [x] Rango Flex separado y rol Comodín con migración 016.
 
 ## Hardening previo a producción
 

@@ -53,6 +53,9 @@ const missingFields = (profile) => {
   if (profile?.rankTier && !isApexTier(profile.rankTier) && !profile.rankDivision) {
     missing.push('División');
   }
+  if (profile?.flexRankTier && !isApexTier(profile.flexRankTier) && !profile.flexRankDivision) {
+    missing.push('División Flex');
+  }
   if (!profile?.playStyle) missing.push('Estilo de juego');
   if (!profile?.languages?.length) missing.push('Idiomas');
   if (typeof profile?.hasMic !== 'boolean') missing.push('Micrófono');
@@ -73,6 +76,10 @@ const toPrivateProfile = (profile, user) => ({
   rankDivision: profile.rankDivision,
   rankLp: profile.rankLp,
   rankSource: profile.rankSource,
+  flexRankTier: profile.flexRankTier,
+  flexRankDivision: profile.flexRankDivision,
+  flexRankLp: profile.flexRankLp,
+  flexRankSource: profile.flexRankSource,
   playStyle: profile.playStyle,
   languages: profile.languages,
   hasMic: profile.hasMic,
@@ -95,6 +102,10 @@ const toPublicProfile = (profile, user) => ({
   rankDivision: profile.rankDivision,
   rankLp: profile.rankLp,
   rankSource: profile.rankSource,
+  flexRankTier: profile.flexRankTier,
+  flexRankDivision: profile.flexRankDivision,
+  flexRankLp: profile.flexRankLp,
+  flexRankSource: profile.flexRankSource,
   playStyle: profile.playStyle,
   languages: profile.languages,
   hasMic: profile.hasMic,
@@ -144,6 +155,10 @@ export class ProfileService {
       rankTier: data.rankTier !== undefined ? data.rankTier : current?.rankTier,
       rankDivision: data.rankDivision !== undefined ? data.rankDivision : current?.rankDivision,
       rankLp: data.rankLp !== undefined ? data.rankLp : current?.rankLp,
+      flexRankTier: data.flexRankTier !== undefined ? data.flexRankTier : current?.flexRankTier,
+      flexRankDivision:
+        data.flexRankDivision !== undefined ? data.flexRankDivision : current?.flexRankDivision,
+      flexRankLp: data.flexRankLp !== undefined ? data.flexRankLp : current?.flexRankLp,
       playStyle: data.playStyle !== undefined ? data.playStyle : current?.playStyle,
       languages: data.languages !== undefined ? unique(data.languages) : current?.languages,
       hasMic: data.hasMic !== undefined ? data.hasMic : current?.hasMic,
@@ -156,12 +171,23 @@ export class ProfileService {
           : current?.discordTag,
     };
 
-    if (merged.primaryRole && merged.primaryRole === merged.secondaryRole) {
+    if (
+      merged.primaryRole &&
+      merged.primaryRole === merged.secondaryRole &&
+      merged.primaryRole !== 'fill'
+    ) {
       throw new AppError('El rol principal y el secundario deben ser distintos.', 422);
     }
 
     if (merged.rankTier && isApexTier(merged.rankTier)) {
       merged.rankDivision = null;
+    }
+
+    if (merged.flexRankTier === null) {
+      merged.flexRankDivision = null;
+      merged.flexRankLp = null;
+    } else if (merged.flexRankTier && isApexTier(merged.flexRankTier)) {
+      merged.flexRankDivision = null;
     }
 
     const missing = missingFields(merged);
@@ -172,6 +198,13 @@ export class ProfileService {
     const rankIndex = computeRankIndex(merged.rankTier, merged.rankDivision);
     if (rankIndex === null) {
       throw new AppError('El rango o la división no son válidos.', 422);
+    }
+
+    const flexRankIndex = merged.flexRankTier
+      ? computeRankIndex(merged.flexRankTier, merged.flexRankDivision)
+      : null;
+    if (merged.flexRankTier && flexRankIndex === null) {
+      throw new AppError('El rango Flex o su división no son válidos.', 422);
     }
 
     const riotIdNormalized = normalizeRiotId(merged.riotId);
@@ -194,6 +227,11 @@ export class ProfileService {
       rankDivision: merged.rankDivision,
       rankLp: merged.rankLp ?? null,
       rankIndex,
+      flexRankTier: merged.flexRankTier ?? null,
+      flexRankDivision: merged.flexRankDivision ?? null,
+      flexRankLp: merged.flexRankLp ?? null,
+      flexRankIndex,
+      flexRankSource: current?.flexRankSource || 'declared',
       playStyle: merged.playStyle,
       languages: merged.languages,
       hasMic: merged.hasMic,
@@ -210,7 +248,10 @@ export class ProfileService {
       const profile = current ? await current.update(payload) : await PlayerProfile.create(payload);
 
       if (!wasCompleted) {
-        void metricsService.track('profile_completed', userId, { rankTier: merged.rankTier });
+        void metricsService.track('profile_completed', userId, {
+          rankTier: merged.rankTier,
+          flexRankTier: merged.flexRankTier,
+        });
       }
 
       return profile;
