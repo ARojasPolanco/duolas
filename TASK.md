@@ -212,7 +212,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] CORS de producción exige HTTPS y rechaza wildcard.
 - [x] `TRUST_PROXY` configurable.
 - [x] CSP, HSTS, Referrer-Policy, X-Frame-Options, Permissions-Policy y CORP en Vercel.
-- [x] Access log omite health checks exitosos y solo alerta si `/health` falla.
+- [x] Access log deja los requests normales en `debug`; solo alerta fallos o requests lentos.
 - [x] Dominio final `duolas.online` en Vercel, Hostinger, Render y textos públicos.
 - [x] Zod actualizado a 4.6.7; audit sin vulnerabilidades high.
 - [ ] Revisar las 2 moderadas restantes de `uuid` al migrar a Sequelize 7.

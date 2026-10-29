@@ -186,6 +186,7 @@ Al pasar a producción: verificar el dominio en Resend, cambiar `OWNER_EMAIL` a 
 - Nunca crear variables `VITE_RIOT_*`: expondrían la key en el bundle de la web.
 - No commitear `.env`, `.env.production` ni logs.
 - No loguear tokens de verificación, reset, tickets SSE ni emails completos.
+- Los requests exitosos quedan en nivel `debug`; con `LOG_LEVEL=info` solo se ven fallos, errores y requests de más de 1,5 s.
 - Si `HCAPTCHA_SECRET` falta, el captcha se salta: no deployar así.
 - Si `RESEND_API_KEY` falta, los emails se omiten: no deployar así.
 - Los rate limits en memoria asumen una sola instancia. Si se escala, mover el store a Redis.
