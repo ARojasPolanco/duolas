@@ -47,6 +47,8 @@ const block = (token, userId) => api.post('/api/v1/blocks').set(authHeader(token
 
 const unblock = (token, userId) => api.delete(`/api/v1/blocks/${userId}`).set(authHeader(token));
 
+const reminder = (token) => api.get('/api/v1/matching/reminder').set(authHeader(token));
+
 const notifications = (token) => api.get('/api/v1/notifications').set(authHeader(token));
 
 const compatibleTarget = (scheduleBlocks) =>
@@ -314,6 +316,25 @@ describe('Matching', () => {
 
       const cannotUnlike = await unlike(a.token, b.user.id);
       expect(cannotUnlike.status).toBe(409);
+    });
+
+    it('muestra el recordatorio cuando hay un like recibido pendiente', async () => {
+      const viewer = await createMatchUser({ scheduleBlocks: ['tue_early'] });
+      const sender = await compatibleTarget(['tue_early']);
+
+      const before = await reminder(viewer.token);
+      expect(before.status).toBe(200);
+      expect(before.body.reminder.show).toBe(false);
+
+      await like(sender.token, viewer.user.id);
+
+      const pending = await reminder(viewer.token);
+      expect(pending.body.reminder.show).toBe(true);
+
+      await like(viewer.token, sender.user.id);
+
+      const matched = await reminder(viewer.token);
+      expect(matched.body.reminder.show).toBe(false);
     });
 
     it('rechaza el like a uno mismo y a un usuario inexistente', async () => {

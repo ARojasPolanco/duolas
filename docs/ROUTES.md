@@ -103,15 +103,16 @@ Base: `http://localhost:3000/api/v1`. Las rutas protegidas usan `Authorization: 
 
 Requieren usuario autenticado, email verificado y perfil completo.
 
-| Método | Ruta                                                    | Descripción                     |
-| ------ | ------------------------------------------------------- | ------------------------------- |
-| GET    | `/matching/candidates?queue=solo_duo&role=mid&limit=20` | Candidatos con score y motivos  |
-| POST   | `/matching/likes`                                       | Dar like con `{ targetUserId }` |
-| DELETE | `/matching/likes/:targetUserId`                         | Retirar like pendiente          |
-| GET    | `/matching/likes`                                       | Likes salientes                 |
-| GET    | `/matching/matches`                                     | Matches activos                 |
-| GET    | `/matching/matches/:id`                                 | Detalle de un match             |
-| POST   | `/matching/matches/:id/archive`                         | Archivar match                  |
+| Método | Ruta                                                    | Descripción                      |
+| ------ | ------------------------------------------------------- | -------------------------------- |
+| GET    | `/matching/candidates?queue=solo_duo&role=mid&limit=20` | Candidatos con score y motivos   |
+| GET    | `/matching/reminder`                                    | Estado del recordatorio de likes |
+| POST   | `/matching/likes`                                       | Dar like con `{ targetUserId }`  |
+| DELETE | `/matching/likes/:targetUserId`                         | Retirar like pendiente           |
+| GET    | `/matching/likes`                                       | Likes salientes                  |
+| GET    | `/matching/matches`                                     | Matches activos                  |
+| GET    | `/matching/matches/:id`                                 | Detalle de un match              |
+| POST   | `/matching/matches/:id/archive`                         | Archivar match                   |
 
 ### Bloqueos
 

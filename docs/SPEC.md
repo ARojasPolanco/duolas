@@ -284,6 +284,7 @@ Detalle completo en `docs/MATCHING.md`.
 | `feedback_revealed`          | Se revela feedback               | No            |
 | `warning_received`           | Advertencia del admin            | Sí            |
 | `account_suspended`          | Suspensión                       | Sí, más email |
+| `match_reminder`             | Like recibido pendiente          | Sí            |
 
 - La notificación se persiste antes de emitir SSE y antes de enviar push.
 - Si el usuario estaba desconectado, la recupera por API.
@@ -313,7 +314,7 @@ El MVP mide cuatro KPIs. Las metas numéricas se fijan con los primeros datos re
 
 Eventos registrados en `metrics_events`:
 
-`user_registered`, `email_verified`, `profile_completed`, `availability_opened`, `availability_closed`, `like_sent`, `match_created`, `contact_revealed`, `invite_sent`, `invite_accepted`, `post_created`, `application_sent`, `application_accepted`, `feedback_submitted`, `feedback_revealed`, `report_created`, `user_suspended`, `push_subscribed`.
+`user_registered`, `email_verified`, `profile_completed`, `availability_opened`, `availability_closed`, `like_sent`, `match_created`, `contact_revealed`, `invite_sent`, `invite_accepted`, `post_created`, `application_sent`, `application_accepted`, `feedback_submitted`, `feedback_revealed`, `report_created`, `user_suspended`, `push_subscribed`, `match_reminder_sent`.
 
 ## 17. Criterios de aceptación del MVP
 

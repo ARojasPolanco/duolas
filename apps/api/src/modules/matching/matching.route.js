@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getCandidates,
+  getMatchReminder,
   likeUser,
   unlikeUser,
   getOutgoingLikes,
@@ -16,6 +17,7 @@ const router = Router();
 router.use(protect, requireVerifiedEmail, requireCompleteProfile);
 
 router.get('/candidates', getCandidates);
+router.get('/reminder', getMatchReminder);
 router.post('/likes', likeLimiter, likeUser);
 router.delete('/likes/:targetUserId', unlikeUser);
 router.get('/likes', getOutgoingLikes);

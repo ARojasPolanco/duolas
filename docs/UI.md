@@ -152,6 +152,7 @@ Reglas:
 - Sección "Jugadores para vos" con hasta 3 cards de candidatos, score, motivos, like y bloqueo.
 - Sección "Tus matches" con hasta 2 conexiones y contacto disponible para copiar.
 - Banner de email sin verificar y CTA de onboarding si falta perfil.
+- Banner descartable de “Hay gente compatible esperando” cuando hay likes recibidos pendientes; CTA a `/match`. Se oculta por el resto del día al cerrarlo.
 - Estados de carga, vacío y error.
 
 ### 3.7 Match `/match`

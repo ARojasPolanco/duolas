@@ -8,15 +8,18 @@ import { feedbackService } from './modules/trust/feedback.service.js';
 import { accountService } from './modules/auth/account.service.js';
 import { eventBus } from './modules/events/event.bus.js';
 import { ticketStore } from './modules/events/ticket.store.js';
+import { matchReminderService } from './modules/matching/matchReminder.service.js';
 
 const FEEDBACK_SWEEP_MS = 5 * 60 * 1000;
 const SSE_TICKET_SWEEP_MS = 30 * 1000;
 const ACCOUNT_DELETION_SWEEP_MS = 60 * 60 * 1000;
+const MATCH_REMINDER_SWEEP_MS = 6 * 60 * 60 * 1000;
 
 let server;
 let feedbackTimer;
 let ticketCleanupTimer;
 let deletionTimer;
+let matchReminderTimer;
 
 const shutdown = async (signal) => {
   logger.info('Cerrando API', { signal });
@@ -31,6 +34,10 @@ const shutdown = async (signal) => {
 
   if (deletionTimer) {
     clearInterval(deletionTimer);
+  }
+
+  if (matchReminderTimer) {
+    clearInterval(matchReminderTimer);
   }
 
   eventBus.closeAll();
@@ -83,9 +90,28 @@ const start = async () => {
   purgeDeletedAccounts();
   deletionTimer = setInterval(purgeDeletedAccounts, ACCOUNT_DELETION_SWEEP_MS);
 
+  const sendMatchReminders = () => {
+    matchReminderService
+      .sendPendingLikeReminders()
+      .then((count) => {
+        if (count > 0) {
+          logger.info('Recordatorios de Match enviados', { count });
+        }
+      })
+      .catch((error) => {
+        logger.warn('No se pudieron enviar los recordatorios de Match', {
+          message: error.message,
+        });
+      });
+  };
+
+  sendMatchReminders();
+  matchReminderTimer = setInterval(sendMatchReminders, MATCH_REMINDER_SWEEP_MS);
+
   feedbackTimer.unref();
   ticketCleanupTimer.unref();
   deletionTimer.unref();
+  matchReminderTimer.unref();
   eventBus.startHeartbeat();
 };
 

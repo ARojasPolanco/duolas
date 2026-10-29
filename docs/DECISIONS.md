@@ -313,3 +313,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** agregar un flujo de solicitud in-app. Un admin crea la solicitud, el usuario propone un nombre y el admin lo aprueba o rechaza manualmente. El cambio se aplica en una transacción con validación de formato, nombres reservados y unicidad. También se reservan nombres como `duolas`, `duo_las`, `admin` y `soporte` para registros nuevos.
 
 **Consecuencias:** el cambio no es automático ni autoservicio. El admin mantiene control sobre nombres sensibles y queda registro de quién solicitó, propuso y resolvió. Las cuentas existentes con nombres problemáticos se corrigen mediante este flujo.
+
+## ADR-040 - Recordatorio de likes recibidos pendientes
+
+**Contexto:** una parte importante de los likes enviados no recibe respuesta. El doble ciego impide revelar quién likeó, pero el usuario con likes pendientes recibidos puede necesitar un recordatorio para volver a Match.
+
+**Decisión:** agregar un job cada 6 horas que detecta usuarios con likes recibidos pendientes, perfil completo, email verificado, sin likes enviados en los últimos 7 días y sin recordatorio en las últimas 72 horas. Se persiste una notificación `match_reminder`, se emite por SSE y se intenta push si hay suscripción. En Inicio se muestra un banner descartable con CTA a Match.
+
+**Consecuencias:** se empuja la reciprocidad sin revelar la identidad de quien likeó. El recordatorio puede omitirse si el usuario está activo en las últimas 2 horas. No agrega tablas nuevas: la deduplicación usa las notificaciones existentes. Como el job corre en memoria, sigue vigente la restricción de una sola instancia de API.

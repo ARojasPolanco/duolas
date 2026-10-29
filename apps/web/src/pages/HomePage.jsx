@@ -8,9 +8,11 @@ import {
   Pencil,
   Radio,
   RefreshCw,
+  Sparkles,
   Swords,
   UserRoundCheck,
   Users,
+  X,
 } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
@@ -28,6 +30,11 @@ const statCard = 'rounded-xl border border-border bg-bg p-4';
 const actionLink =
   'inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition';
 
+const reminderDismissKey = () =>
+  `match-reminder-dismissed:${new Date().toLocaleDateString('en-CA', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+  })}`;
+
 export default function HomePage() {
   const { user } = useAuth();
   const { refresh: refreshCandidateCount } = useMatching();
@@ -40,6 +47,7 @@ export default function HomePage() {
   const [matchesLoading, setMatchesLoading] = useState(false);
   const [error, setError] = useState('');
   const [busyId, setBusyId] = useState(null);
+  const [showReminder, setShowReminder] = useState(false);
 
   const canInteract = Boolean(user?.emailVerified && user?.profileCompleted);
 
@@ -95,6 +103,22 @@ export default function HomePage() {
     }
   }, [canInteract]);
 
+  const loadReminder = useCallback(async () => {
+    if (!canInteract || !localStorage.getItem('token')) {
+      setShowReminder(false);
+      return;
+    }
+
+    try {
+      const res = await api.get('/v1/matching/reminder');
+      setShowReminder(
+        Boolean(res.data.reminder?.show) && !localStorage.getItem(reminderDismissKey())
+      );
+    } catch (_error) {
+      setShowReminder(false);
+    }
+  }, [canInteract]);
+
   useEffect(() => {
     loadProfile();
   }, [loadProfile]);
@@ -102,7 +126,13 @@ export default function HomePage() {
   useEffect(() => {
     loadCandidates();
     loadMatches();
-  }, [loadCandidates, loadMatches]);
+    loadReminder();
+  }, [loadCandidates, loadMatches, loadReminder]);
+
+  const dismissReminder = () => {
+    localStorage.setItem(reminderDismissKey(), '1');
+    setShowReminder(false);
+  };
 
   const copy = async (value, label) => {
     if (!value) return;
@@ -126,7 +156,7 @@ export default function HomePage() {
         toast.success('Interés enviado.');
       }
 
-      await Promise.all([loadCandidates(), loadMatches()]);
+      await Promise.all([loadCandidates(), loadMatches(), loadReminder()]);
       await refreshCandidateCount();
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos registrar el interés.');
@@ -161,6 +191,40 @@ export default function HomePage() {
     <AppShell>
       <div className="space-y-6">
         <EmailVerificationBanner />
+
+        {showReminder ? (
+          <section className="flex flex-col gap-4 rounded-2xl border border-accent/40 bg-accent/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                <Sparkles size={18} aria-hidden="true" />
+              </span>
+              <div>
+                <h2 className="text-sm font-bold">Hay gente compatible esperando</h2>
+                <p className="mt-1 text-xs leading-relaxed text-muted">
+                  Entrá a Match y dale “Me interesa” a quien te coparía tener de duo. Si hay interés
+                  mutuo, aparece la conexión.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 self-stretch sm:self-auto">
+              <Link
+                to="/match"
+                onClick={dismissReminder}
+                className="inline-flex min-h-11 flex-1 items-center justify-center rounded-xl bg-accent px-4 text-xs font-bold text-bg sm:flex-none"
+              >
+                Revisar Match
+              </Link>
+              <button
+                type="button"
+                onClick={dismissReminder}
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border text-muted"
+                aria-label="Cerrar recordatorio"
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            </div>
+          </section>
+        ) : null}
 
         {error ? (
           <div className="rounded-xl border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">

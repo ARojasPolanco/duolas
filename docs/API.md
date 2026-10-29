@@ -287,6 +287,10 @@ Protegido. Solo el dueño de la solicitud. Body: `{ "username": "nuevo_nombre" }
 
 ## 6. Matching
 
+### `GET /matching/reminder`
+
+Protegido + email verificado + perfil completo. Devuelve `{ reminder: { show, pendingIncoming } }`. `show` es true cuando hay likes recibidos pendientes y el usuario no envió likes en los últimos 7 días. No revela quién likeó.
+
 ### `GET /matching/candidates`
 
 Protegido + email verificado + perfil completo.

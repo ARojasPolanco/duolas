@@ -270,6 +270,7 @@ Además, índices únicos y parciales como última barrera:
 - **Actividad:** `last_active_at` se actualiza como máximo una vez cada 5 minutos por usuario.
 - **Push:** las suscripciones 404/410 se marcan inactivas al intentar enviar.
 - **Cuentas vencidas:** cada hora se purgan las bajas cuyo plazo de 30 días venció.
+- **Recordatorios de Match:** cada 6 horas se notifica a usuarios con likes recibidos pendientes, sin actividad propia en 7 días y sin recordatorio en 72 horas. El aviso se persiste, emite SSE y dispara push si hay suscripción.
 
 Todos los intervalos usan `unref()` para no impedir el cierre ordenado.
 

@@ -1,6 +1,13 @@
 import { matchingService, toConnectionView, toLikeView } from './matching.service.js';
+import { matchReminderService } from './matchReminder.service.js';
 import { validateCandidatesQuery, validateLike, validateUuidParam } from './matching.schema.js';
 import { catchAsync } from '../../errors/catchAsync.js';
+
+export const getMatchReminder = catchAsync(async (req, res) => {
+  const reminder = await matchReminderService.getReminderStatus(req.sessionUser.id);
+
+  res.status(200).json({ status: 'success', reminder });
+});
 
 export const getCandidates = catchAsync(async (req, res) => {
   const { hasError, errorMessages, data } = validateCandidatesQuery(req.query);

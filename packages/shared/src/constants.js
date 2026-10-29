@@ -148,6 +148,7 @@ export const NOTIFICATION_TYPES = Object.freeze([
   'username_change_suggested',
   'username_changed',
   'username_change_rejected',
+  'match_reminder',
 ]);
 
 export const METRIC_EVENT_TYPES = Object.freeze([
@@ -172,6 +173,7 @@ export const METRIC_EVENT_TYPES = Object.freeze([
   'report_created',
   'user_suspended',
   'push_subscribed',
+  'match_reminder_sent',
 ]);
 
 export const RANK_TOLERANCE = Object.freeze({

@@ -47,6 +47,7 @@ const iconByType = {
   username_change_suggested: AtSign,
   username_changed: CheckCheck,
   username_change_rejected: AtSign,
+  match_reminder: Swords,
 };
 
 const SSE_LABELS = {

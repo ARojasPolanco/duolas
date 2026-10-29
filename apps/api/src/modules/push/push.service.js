@@ -19,6 +19,11 @@ const PUSH_TYPES = new Set([
   'post_suggested',
   'warning_received',
   'account_suspended',
+  'username_change_requested',
+  'username_change_suggested',
+  'username_changed',
+  'username_change_rejected',
+  'match_reminder',
 ]);
 
 const MAX_PAYLOAD_BYTES = 4096;
