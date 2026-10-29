@@ -137,21 +137,21 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 
 ## 8. Reglas de perfil
 
-| Campo          | Regla                                                                                        |
-| -------------- | -------------------------------------------------------------------------------------------- |
-| Riot ID        | Formato `nombre#TAG`; nombre 3-16, tag 3-5 alfanumérico; único sin distinguir mayúsculas     |
-| Servidor       | Fijo `LAS` en el MVP                                                                         |
-| País           | Opcional: Argentina, Chile, Bolivia, Paraguay o Uruguay; se usa para mostrar la hora local   |
-| Rol principal  | Obligatorio: top, jungle, mid, adc o support                                                 |
-| Rol secundario | Obligatorio y distinto del principal                                                         |
-| Rango          | Tier + división obligatorios hasta Diamante; Maestro, Gran Maestro y Challenger sin división |
-| LP             | Opcional, entero mayor o igual a 0                                                           |
-| Horarios       | Mínimo 1 de 28 bloques semanales, en hora Argentina                                          |
-| Idioma         | 1 a 3 de español, inglés y portugués; el primero es principal                                |
-| Estilo         | casual, ranked o tryhard                                                                     |
-| Micrófono      | Sí o no                                                                                      |
-| Bio            | Hasta 280 caracteres                                                                         |
-| Discord        | Opcional, 2-32 caracteres alfanuméricos, punto o guión bajo                                  |
+| Campo          | Regla                                                                                            |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| Riot ID        | Formato `nombre#TAG`; nombre 3-16, tag 3-5 alfanumérico; único sin distinguir mayúsculas         |
+| Servidor       | Fijo `LAS` en el MVP                                                                             |
+| País           | Opcional: Argentina, Chile, Bolivia, Paraguay, Uruguay o Perú; se usa para mostrar la hora local |
+| Rol principal  | Obligatorio: top, jungle, mid, adc o support                                                     |
+| Rol secundario | Obligatorio y distinto del principal                                                             |
+| Rango          | Tier + división obligatorios hasta Diamante; Maestro, Gran Maestro y Challenger sin división     |
+| LP             | Opcional, entero mayor o igual a 0                                                               |
+| Horarios       | Mínimo 1 de 28 bloques semanales, en hora Argentina                                              |
+| Idioma         | 1 a 3 de español, inglés y portugués; el primero es principal                                    |
+| Estilo         | casual, ranked o tryhard                                                                         |
+| Micrófono      | Sí o no                                                                                          |
+| Bio            | Hasta 280 caracteres                                                                             |
+| Discord        | Opcional, 2-32 caracteres alfanuméricos, punto o guión bajo                                      |
 
 - El rango es declarado (`rank_source = declared`). Se muestra como declarado.
 - El nombre de usuario es el identificador de Duo LAS y no debe ser el Riot ID.

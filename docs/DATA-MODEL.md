@@ -156,7 +156,7 @@ Sin `updated_at`.
 
 Checks:
 
-- `country IS NULL OR country IN ('AR', 'CL', 'BO', 'PY', 'UY')`.
+- `country IS NULL OR country IN ('AR', 'CL', 'BO', 'PY', 'UY', 'PE')`.
 - `secondary_role <> primary_role`.
 - `(rank_tier IN ('master','grandmaster','challenger') AND rank_division IS NULL)` o `(rank_tier NOT IN (...) AND rank_division IS NOT NULL)`.
 

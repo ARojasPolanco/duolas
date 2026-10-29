@@ -258,6 +258,7 @@ Además, índices únicos y parciales como última barrera:
 | `012_account_deletion`         | Baja programada y purga de cuentas          |
 | `013_profile_country`          | País de residencia LAS                      |
 | `014_aram`                     | Publicaciones y postulaciones ARAM          |
+| `015_profile_country_peru`     | Perú dentro del check de países LAS         |
 
 ### Jobs internos
 

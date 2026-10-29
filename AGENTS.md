@@ -12,8 +12,8 @@ La propuesta original está en `Propuesta plataforma de duos para League of Lege
 
 ## 2. Estado del repositorio
 
-- Fase actual: Fase 2 (match de duo) completada. Siguiente: Fase 3 (Disponible ya y Busco 1).
-- Código: monorepo con auth, perfiles, matching, likes, conexiones, bloqueos y notificaciones persistidas.
+- Fase actual: MVP completo en producción, con ARAM y Perú dentro de LAS.
+- Código: monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, ARAM, confianza, SSE, push, PWA, métricas, conexiones, bloqueos y notificaciones persistidas.
 - No hay credenciales, claves ni secretos en el repositorio.
 - Toda decisión de producto y técnica está registrada en `docs/DECISIONS.md`.
 
@@ -250,8 +250,8 @@ Heredadas del incidente real de Market Design:
 
 ## 16. Git y commits
 
-- Rama principal de desarrollo: `dev`. Todo el trabajo se integra ahí y es la rama default del repositorio.
-- `main` queda reservada para el release al 100%. No se crea ni se actualiza hasta esa instancia.
+- Rama de desarrollo: `dev`. Todo el trabajo se integra ahí y es la rama default del repositorio.
+- `main` es producción. Solo recibe releases aprobados y testeados desde `dev`.
 - Husky + lint-staged en pre-commit (Prettier + ESLint).
 - commitlint en commit-msg.
 - Formato: `type(scope): descripción`.

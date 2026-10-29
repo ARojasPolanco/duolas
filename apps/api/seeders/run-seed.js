@@ -274,7 +274,7 @@ const DEMO_COUNTRIES = {
   mid2: 'BO',
   jungle2: 'PY',
   adc2: 'AR',
-  support2: 'CL',
+  support2: 'PE',
   top2: 'UY',
   jungle3: 'BO',
   support3: 'PY',

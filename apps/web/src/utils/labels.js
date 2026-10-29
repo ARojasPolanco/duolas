@@ -44,6 +44,7 @@ export const COUNTRY_LABELS = {
   BO: 'Bolivia',
   PY: 'Paraguay',
   UY: 'Uruguay',
+  PE: 'Perú',
 };
 
 export const QUEUE_LABELS = {

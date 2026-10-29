@@ -260,11 +260,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 
 ## ADR-033 - País de residencia y equivalencia horaria local
 
-**Contexto:** LAS incluye Argentina, Chile, Bolivia, Paraguay y Uruguay. Los bloques horarios se guardan en ART, pero un jugador de otro país puede interpretar mal la hora local.
+**Contexto:** LAS incluye Argentina, Chile, Bolivia, Paraguay, Uruguay y Perú (ADR-037). Los bloques horarios se guardan en ART, pero un jugador de otro país puede interpretar mal la hora local.
 
-**Decisión:** `country` es opcional en `player_profiles` y solo acepta los cinco países de LAS. Se usa para mostrar la equivalencia local de los bloques y una diferencia contra ART en cards, matches y perfil. No es filtro duro ni altera el matching: todos los bloques siguen siendo ART.
+**Decisión:** `country` es opcional en `player_profiles` y solo acepta los países de LAS. Se usa para mostrar la equivalencia local de los bloques y una diferencia contra ART en cards, matches y perfil. No es filtro duro ni altera el matching: todos los bloques siguen siendo ART.
 
-**Consecuencias:** el matching se mantiene simple y compatible. La UI calcula la diferencia con la zona IANA del país y `Intl`, contemplando horario de verano. Si el país no está cargado, la UI muestra solo ART. Perú y Ecuador quedan fuera porque pertenecen a LAN.
+**Consecuencias:** el matching se mantiene simple y compatible. La UI calcula la diferencia con la zona IANA del país y `Intl`, contemplando horario de verano. Si el país no está cargado, la UI muestra solo ART. Ecuador queda fuera porque pertenece a LAN.
 
 ## ADR-034 - Hardening de producción antes del release
 
@@ -289,3 +289,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** crear una sección /aram con publicaciones propias de dos tipos: solo (disponibilidad individual) y group (grupo de 2-4 que busca completar 5). Una solicitud aceptada descuenta un lugar y crea una conexión con source = 'aram', visible en Matches. No usa rango ni roles.
 
 **Consecuencias:** el flujo de duo queda intacto y ARAM se puede medir por separado. El MVP no modela el roster completo del grupo: el dueño acepta solicitudes y coordina el resto. Una publicación activa por usuario.
+
+## ADR-037 - Perú se suma como país de LAS
+
+**Contexto:** parte de la comunidad peruana juega en LAS y el check de país solo permitía Argentina, Chile, Bolivia, Paraguay y Uruguay.
+
+**Decisión:** agregar `PE` con zona `America/Lima` a `COUNTRIES` y `COUNTRY_TIMEZONES`, y migrar el check de `player_profiles.country` para aceptarlo.
+
+**Consecuencias:** los perfiles peruanos pueden declarar su país y ver la equivalencia local de los bloques contra ART. El matching no cambia porque todos los horarios siguen guardados en ART. El `down` de la migración limpia los perfiles `PE` a `NULL` antes de restaurar el check anterior.

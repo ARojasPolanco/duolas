@@ -48,10 +48,18 @@ describe('Perfiles', () => {
 
     it('rechaza un país fuera de LAS', async () => {
       const { token } = await registerUser();
-      const { res } = await completeProfile(token, { country: 'PE' });
+      const { res } = await completeProfile(token, { country: 'US' });
 
       expect(res.status).toBe(422);
       expect(res.body.message).toContain('País');
+    });
+
+    it('acepta Perú como país de LAS', async () => {
+      const { token } = await registerUser();
+      const { res } = await completeProfile(token, { country: 'PE' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.profile.country).toBe('PE');
     });
 
     it('actualiza el país de residencia', async () => {

@@ -4,14 +4,14 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 
 ## Estado actual
 
-- **Fase:** Fase 6 (métricas, hardening y cierre) implementada. Pendiente: smoke manual final y pasada visual.
-- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
+- **Fase:** MVP completo, ARAM y Perú implementados. Release aprobado para `main`.
+- **Código:** monorepo con auth, perfiles, matching, disponibilidad, invitaciones, Busco 1, ARAM, confianza, SSE, push, PWA, métricas, rate limits, conexiones, bloqueos y notificaciones persistidas.
 - **Demo:** `npm run seed` crea 12 jugadores demo, una cuenta admin, un match activo, likes pendientes, disponibilidad, invitación, Busco 1, feedback pendiente y un reporte abierto.
 - **Dev:** `npm run docker:app` levanta PostgreSQL, API y web en contenedores persistentes.
-- **Git:** `dev` es la rama principal y default en `origin`; `main` se reserva para el release final.
+- **Git:** `dev` es la rama de desarrollo; `main` es producción y recibe releases aprobados.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
-- **Última actualización:** 2026-10-26.
+- **Última actualización:** 2026-10-29.
 
 ## Leyenda
 
@@ -203,7 +203,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Admin muestra likes enviados/pendientes, matches totales/24 h y actividad reciente.
 - [x] Match muestra badge con candidatos disponibles y se refresca al likear/bloquear/editar perfil.
 - [x] Guía pública `/como-funciona` con Match, Flex, Disponible ya, Busco 1 y push.
-  - Migración 013 con `country` opcional y check de los cinco países.
+  - Migración 013 con `country` opcional y check de países LAS; migración 015 agrega Perú.
   - Selector en onboarding, badge de país/diferencia horaria en cards, matches, invitaciones, Disponible y Busco 1.
   - 109 tests pasando, lint y build verdes, migración 013 down/up verificada y seed actualizado.
 
@@ -213,8 +213,9 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Backend para grupo, disponibilidad individual, postulaciones y aceptación.
 - [x] Conexiones ARAM visibles en Matches y notificaciones/push.
 - [x] Frontend `/aram` con pestañas Busco grupo y Disponible ahora.
-- [x] 111 tests pasando y build verde.
-- [ ] Smoke visual y prueba manual en dev.
+- [x] 112 tests pasando y build verde.
+- [x] Smoke visual y prueba manual en dev.
+- [x] Perú agregado a LAS con zona `America/Lima` y migración 015.
 
 ## Hardening previo a producción
 
@@ -276,10 +277,10 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - [x] Guía de producción key, costos, revisión y checklist en `docs/RIOT-INTEGRATION.md`.
 - [x] Variables Riot preparadas en envs y Docker para uso futuro.
 - [ ] Registrar el producto en el Developer Portal de Riot.
-- [ ] Definir dominio y titular legal del producto.
-- [ ] Deploy público de web, API y PostgreSQL.
-- [ ] Verificar URLs legales, CORS, emails, captcha y PWA en producción.
-- [ ] Correr smoke público desktop/mobile.
+- [~] Dominio definido (`duolas.online`); revisar titular legal.
+- [x] Deploy público de web, API y PostgreSQL.
+- [x] Verificar URLs legales, CORS, emails, captcha y PWA en producción.
+- [x] Correr smoke público desktop/mobile.
 - [ ] Solicitar production key y probar integración en desarrollo.
 - [ ] Evaluar RSO solo si se va a verificar titularidad de cuenta.
 
@@ -305,7 +306,7 @@ Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.productio
 
 ## Próxima acción
 
-1. Cerrar dominio, titular legal y deploy público.
-2. Correr el smoke completo desktop/mobile en producción.
-3. Registrar el producto en el Developer Portal y solicitar la production key.
+1. Registrar el producto en el Developer Portal y solicitar la production key.
+2. Revisar el titular legal del dominio y completar los datos legales si faltan.
+3. Monitorear errores, métricas y feedback de ARAM/Perú en producción.
 4. Mantener el lanzamiento sin Riot API y con rango declarado.
