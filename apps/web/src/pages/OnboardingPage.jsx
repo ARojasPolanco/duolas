@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   COUNTRIES,
@@ -72,6 +72,12 @@ const WEEKEND_BLOCKS = ['sat_afternoon', 'sat_night', 'sun_afternoon', 'sun_nigh
 const APEX_TIERS = ['master', 'grandmaster', 'challenger'];
 const RIOT_ID_REGEX = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,14}[\p{L}\p{N}]#[A-Za-z0-9]{3,5}$/u;
 
+const cleanRiotId = (value) =>
+  String(value || '')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/\u00A0/g, ' ')
+    .trim();
+
 const STEPS = ['Riot ID', 'Roles', 'Rango', 'Horarios', 'Estilo', 'Contacto', 'Resumen'];
 
 const initialForm = {
@@ -91,6 +97,7 @@ const initialForm = {
   scheduleBlocks: [],
   bio: '',
   discordTag: '',
+  whatsapp: '',
 };
 
 const inputClass =
@@ -120,6 +127,7 @@ export default function OnboardingPage() {
   const { refreshUser } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const riotIdInputRef = useRef(null);
 
   useEffect(() => {
     let active = true;
@@ -147,6 +155,7 @@ export default function OnboardingPage() {
           scheduleBlocks: profile.scheduleBlocks || [],
           bio: profile.bio || '',
           discordTag: profile.discordTag || '',
+          whatsapp: profile.whatsapp || '',
         });
       } catch (_error) {
         // Si todavía no hay perfil, el formulario arranca vacío.
@@ -218,8 +227,8 @@ export default function OnboardingPage() {
     setForm((current) => ({ ...current, scheduleBlocks: [] }));
   };
 
-  const canContinue = () => {
-    if (step === 0) return RIOT_ID_REGEX.test(form.riotId.trim());
+  const canContinue = (riotIdValue = form.riotId) => {
+    if (step === 0) return RIOT_ID_REGEX.test(cleanRiotId(riotIdValue));
     if (step === 1) {
       return (
         Boolean(form.primaryRole) &&
@@ -239,9 +248,38 @@ export default function OnboardingPage() {
     return true;
   };
 
+  const stepError = () => {
+    if (step === 0) return 'Ingresá un Riot ID válido con el formato Nombre#TAG.';
+    if (step === 1) {
+      if (!form.primaryRole) return 'Elegí tu rol principal.';
+      if (!form.secondaryRole) return 'Elegí tu rol secundario.';
+      return 'El rol principal y el secundario tienen que ser distintos.';
+    }
+    if (step === 2) {
+      if (!form.rankTier) return 'Elegí tu rango de Solo/Dúo.';
+      if (!isApex && !form.rankDivision) return 'Elegí la división de tu rango Solo/Dúo.';
+      if (form.flexRankTier && !flexIsApex && !form.flexRankDivision) {
+        return 'Elegí la división de tu rango Flex.';
+      }
+    }
+    if (step === 3) return 'Elegí al menos un bloque horario.';
+    if (step === 4) {
+      if (!form.playStyle) return 'Elegí tu estilo de juego.';
+      if (!form.languages.length) return 'Elegí al menos un idioma.';
+    }
+    return 'Completá este paso antes de continuar.';
+  };
+
   const goNext = () => {
-    if (!canContinue()) {
-      setError('Completá este paso antes de continuar.');
+    const riotIdValue =
+      step === 0 ? cleanRiotId(riotIdInputRef.current?.value ?? form.riotId) : form.riotId;
+
+    if (step === 0 && riotIdValue !== form.riotId) {
+      setForm((current) => ({ ...current, riotId: riotIdValue }));
+    }
+
+    if (!canContinue(riotIdValue)) {
+      setError(stepError());
       return;
     }
     setError('');
@@ -264,7 +302,7 @@ export default function OnboardingPage() {
     if (!saveReady) return;
 
     if (!canContinue()) {
-      setError('Completá este paso antes de continuar.');
+      setError(stepError());
       return;
     }
 
@@ -288,6 +326,7 @@ export default function OnboardingPage() {
       scheduleBlocks: form.scheduleBlocks,
       bio: form.bio.trim() || null,
       discordTag: form.discordTag.trim() || null,
+      whatsapp: form.whatsapp.trim() || null,
     };
 
     try {
@@ -359,11 +398,21 @@ export default function OnboardingPage() {
                 <label className="block text-sm font-semibold">
                   Riot ID
                   <input
+                    ref={riotIdInputRef}
                     className={`${inputClass} mt-2`}
                     value={form.riotId}
                     onChange={setField('riotId')}
+                    onBlur={() =>
+                      setForm((current) => ({
+                        ...current,
+                        riotId: cleanRiotId(current.riotId),
+                      }))
+                    }
                     placeholder="Faker#LAS"
                     maxLength={22}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
                     required
                   />
                 </label>
@@ -372,7 +421,7 @@ export default function OnboardingPage() {
                   <span className="font-semibold">LAS</span>
                 </div>
                 <p className="text-xs text-muted">
-                  Tu Riot ID y tu Discord se revelan solo después de una conexión.
+                  Tu Riot ID y tus contactos opcionales se revelan solo después de una conexión.
                 </p>
               </div>
             ) : null}
@@ -767,8 +816,9 @@ export default function OnboardingPage() {
                 <div>
                   <h1 className="text-2xl font-bold">¿Cómo te contactan?</h1>
                   <p className="mt-2 text-sm leading-relaxed text-muted">
-                    El Discord se revela solo después de una conexión. Si no lo agregás, tus matches
-                    solo van a poder contactarte por Riot ID.
+                    Discord y WhatsApp son totalmente opcionales. No los necesitás para usar Duo
+                    LAS. Si los agregás, solo se revelan después de una conexión; si no, tus matches
+                    te contactan por Riot ID.
                   </p>
                 </div>
 
@@ -787,7 +837,7 @@ export default function OnboardingPage() {
                 </label>
 
                 <label className="block text-sm font-semibold">
-                  Discord (recomendado)
+                  Discord (opcional, no es necesario)
                   <input
                     className={`${inputClass} mt-2`}
                     value={form.discordTag}
@@ -795,12 +845,24 @@ export default function OnboardingPage() {
                     maxLength={32}
                     placeholder="usuario"
                   />
+                  <span className="mt-1 block text-xs font-normal text-muted">
+                    Poné solo el nombre de usuario, sin @. Se revela después de una conexión.
+                  </span>
                 </label>
 
-                <p className="rounded-xl border border-border bg-bg px-4 py-3 text-xs leading-relaxed text-muted">
-                  Poné solo el nombre de usuario, sin @. No se muestra en tu perfil público: se
-                  revela únicamente cuando hay una conexión.
-                </p>
+                <label className="block text-sm font-semibold">
+                  WhatsApp (opcional, no es necesario)
+                  <input
+                    className={`${inputClass} mt-2`}
+                    value={form.whatsapp}
+                    onChange={setField('whatsapp')}
+                    maxLength={20}
+                    placeholder="+54 9 11 1234 5678"
+                  />
+                  <span className="mt-1 block text-xs font-normal text-muted">
+                    Incluí el código de país. Se revela después de una conexión y solo si lo cargás.
+                  </span>
+                </label>
               </div>
             ) : null}
 
@@ -869,13 +931,17 @@ export default function OnboardingPage() {
                       <span className="text-text">Discord:</span>{' '}
                       {form.discordTag.trim() || 'Sin especificar'}
                     </li>
+                    <li>
+                      <span className="text-text">WhatsApp:</span>{' '}
+                      {form.whatsapp.trim() || 'Sin especificar'}
+                    </li>
                   </ul>
                 </div>
 
-                {!form.discordTag.trim() ? (
+                {!form.discordTag.trim() && !form.whatsapp.trim() ? (
                   <p className="rounded-xl border border-gold/40 bg-gold/10 px-4 py-3 text-xs leading-relaxed text-gold">
-                    No agregaste Discord. Si querés, volvé atrás y completalo para que tus matches
-                    tengan otra forma de contactarte.
+                    No agregaste Discord ni WhatsApp. No es obligatorio: tus matches solo verán tu
+                    Riot ID.
                   </p>
                 ) : null}
 

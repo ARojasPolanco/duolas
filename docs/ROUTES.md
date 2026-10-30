@@ -229,8 +229,8 @@ Requiere rol `admin`.
 3. Confirmar que el país muestra la equivalencia local de los bloques ART.
 4. Guardar y confirmar `/inicio`.
 5. Editar un campo y guardar.
-6. Abrir `/profiles/me` por API y confirmar Riot ID, país y Discord propios.
-7. Abrir `/profiles/:id` por API y confirmar que no expone email, Riot ID ni Discord.
+6. Abrir `/profiles/me` por API y confirmar Riot ID, país, Discord y WhatsApp propios.
+7. Abrir `/profiles/:id` por API y confirmar que no expone email, Riot ID, Discord ni WhatsApp.
 
 ### Flujo 4 — Match
 

@@ -660,6 +660,7 @@ export class DuoPostService {
       contact: {
         riotId: applicant.riotId,
         discordTag: applicant.discordTag,
+        whatsapp: applicant.whatsapp,
       },
     };
   }

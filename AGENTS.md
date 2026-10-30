@@ -179,7 +179,7 @@ Reglas:
 - Rate limits por IP, por credencial de login y por usuario autenticado (ver `docs/ARCHITECTURE.md`).
 - Nunca loguear tokens, tickets SSE, contraseñas ni emails completos.
 - No se guardan Riot IDs históricos. Solo el actual.
-- El Riot ID y el Discord se revelan únicamente después de una conexión.
+- El Riot ID, el Discord y el WhatsApp se revelan únicamente después de una conexión.
 - No usar `dangerouslySetInnerHTML` con contenido de usuario.
 
 ## 11. Base de datos y migraciones
@@ -270,7 +270,7 @@ Heredadas del incidente real de Market Design:
 - No coaching, pagos ni Mercado Pago.
 - No Riot API ni RSO en el MVP.
 - No uploads de imágenes ni avatares.
-- No mostrar Riot ID o Discord antes de una conexión.
+- No mostrar Riot ID, Discord o WhatsApp antes de una conexión.
 - No guardar Riot IDs históricos.
 - No exponer emails en perfiles públicos.
 - No desactivar validaciones ni saltar Zod con escapes.

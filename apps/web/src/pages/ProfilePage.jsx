@@ -107,6 +107,7 @@ const emptyForm = {
   scheduleBlocks: [],
   bio: '',
   discordTag: '',
+  whatsapp: '',
 };
 
 export default function ProfilePage() {
@@ -151,6 +152,7 @@ export default function ProfilePage() {
           scheduleBlocks: profile.scheduleBlocks || [],
           bio: profile.bio || '',
           discordTag: profile.discordTag || '',
+          whatsapp: profile.whatsapp || '',
         });
       } catch (_error) {
         setError('No pudimos cargar tu perfil. Probá recargar la página.');
@@ -266,6 +268,7 @@ export default function ProfilePage() {
         scheduleBlocks: form.scheduleBlocks,
         bio: form.bio.trim() || null,
         discordTag: form.discordTag.trim() || null,
+        whatsapp: form.whatsapp.trim() || null,
       });
 
       await refreshUser();
@@ -704,7 +707,7 @@ export default function ProfilePage() {
               </label>
 
               <label className="block text-sm font-semibold">
-                Discord (recomendado)
+                Discord (opcional, no es necesario)
                 <input
                   className={`${inputClass} mt-2`}
                   value={form.discordTag}
@@ -713,7 +716,21 @@ export default function ProfilePage() {
                   placeholder="usuario"
                 />
                 <span className="mt-1 block text-xs font-normal text-muted">
-                  Solo cuando hay match. Sin Discord, tus matches solo ven tu Riot ID.
+                  Solo se revela después de una conexión. No es obligatorio.
+                </span>
+              </label>
+
+              <label className="block text-sm font-semibold">
+                WhatsApp (opcional, no es necesario)
+                <input
+                  className={`${inputClass} mt-2`}
+                  value={form.whatsapp}
+                  onChange={setField('whatsapp')}
+                  maxLength={20}
+                  placeholder="+54 9 11 1234 5678"
+                />
+                <span className="mt-1 block text-xs font-normal text-muted">
+                  Incluí el código de país. Solo se revela después de una conexión y si lo cargás.
                 </span>
               </label>
             </div>

@@ -110,7 +110,7 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 
 **Contexto:** Riot exige no exponer Riot IDs históricos y el producto necesita proteger el contacto.
 
-**Decisión:** el Riot ID y el Discord se revelan solo a los dos integrantes de una conexión. El perfil público no los muestra.
+**Decisión:** el Riot ID y los contactos opcionales (Discord y WhatsApp) se revelan solo a los dos integrantes de una conexión. El perfil público no los muestra.
 
 **Consecuencias:** no se puede contactar a alguien sin match o aceptación. Se guarda solo el Riot ID actual.
 
@@ -118,7 +118,7 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 
 **Contexto:** Market Design tiene chat, pero sumarlo acá agranda la superficie de moderación.
 
-**Decisión:** no hay chat. El contacto es Riot ID para copiar y Discord opcional.
+**Decisión:** no hay chat. El contacto es Riot ID para copiar y Discord/WhatsApp opcionales.
 
 **Consecuencias:** menos moderación y menos complejidad. La conversación sigue fuera de la plataforma.
 
@@ -321,3 +321,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** agregar un job cada 6 horas que detecta usuarios con likes recibidos pendientes, perfil completo, email verificado, sin likes enviados en los últimos 7 días y sin recordatorio en las últimas 72 horas. Se persiste una notificación `match_reminder`, se emite por SSE y se intenta push si hay suscripción. En Inicio se muestra un banner descartable con CTA a Match.
 
 **Consecuencias:** se empuja la reciprocidad sin revelar la identidad de quien likeó. El recordatorio puede omitirse si el usuario está activo en las últimas 2 horas. No agrega tablas nuevas: la deduplicación usa las notificaciones existentes. Como el job corre en memoria, sigue vigente la restricción de una sola instancia de API.
+
+## ADR-041 - WhatsApp opcional como contacto
+
+**Contexto:** algunos jugadores prefieren coordinar por WhatsApp, pero no todos quieren compartir su número y el producto no debe obligarlos a hacerlo.
+
+**Decisión:** agregar `whatsapp` opcional a `player_profiles`, con validación de 8-15 dígitos y código de país. Se comporta igual que el Discord: no aparece en el perfil público ni en candidatos, y solo se revela después de una conexión. La UI lo marca explícitamente como opcional y no necesario.
+
+**Consecuencias:** el contacto sigue siendo consentido y posterior al match. Quien no cargue WhatsApp no pierde ninguna funcionalidad; sus matches lo contactan por Riot ID o por los otros medios que haya compartido.

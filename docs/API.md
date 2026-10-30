@@ -12,7 +12,7 @@ Contrato HTTP del MVP. Base: `/api/v1`. Si el código contradice este documento,
 - Listados con `limit` (máximo 50, default 20) y sin cursor en el MVP.
 - Escrituras con Zod `.strict()`: campos desconocidos devuelven 422.
 - Mensajes en español rioplatense.
-- Ningún endpoint público devuelve email, Riot ID ni Discord.
+- Ningún endpoint público devuelve email, Riot ID, Discord ni WhatsApp.
 
 ## 2. Códigos de estado
 
@@ -203,6 +203,7 @@ Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` 
     "scheduleBlocks": ["mon_night", "tue_night", "sat_afternoon"],
     "bio": "Mid main, busco duo para ranked.",
     "discordTag": "faker",
+    "whatsapp": "+54 9 11 1234 5678",
     "reputation": {
       "score": 70,
       "positive": 5,
@@ -225,7 +226,7 @@ Protegido. Si el usuario todavía no empezó el onboarding, `profile` es `null` 
 
 Protegido. Acepta actualización parcial de:
 
-`riotId`, `country`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `flexRankTier`, `flexRankDivision`, `flexRankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`.
+`riotId`, `country`, `primaryRole`, `secondaryRole`, `rankTier`, `rankDivision`, `rankLp`, `flexRankTier`, `flexRankDivision`, `flexRankLp`, `playStyle`, `languages`, `hasMic`, `scheduleBlocks`, `bio`, `discordTag`, `whatsapp`.
 
 El servicio exige que el estado final quede completo. Para crear el perfil hay que enviar todos los campos obligatorios; si falta alguno responde 422 con la lista. Una vez creado, acepta actualizaciones parciales que mantengan el perfil completo. `profile_completed_at` se setea al completar. `200` con perfil y completitud.
 
@@ -239,6 +240,7 @@ Reglas:
 - 1-3 idiomas.
 - 1-28 bloques.
 - Discord 2-32, alfanumérico, punto o guión bajo.
+- WhatsApp opcional, 8-15 dígitos con código de país.
 - No se permite cambiar `server`.
 
 ### `GET /profiles/:id`
@@ -275,7 +277,7 @@ Protegido. Perfil público:
 }
 ```
 
-Nunca incluye email, Riot ID ni Discord.
+Nunca incluye email, Riot ID, Discord ni WhatsApp.
 
 ### `GET /username-changes/mine`
 
@@ -345,7 +347,7 @@ Query: `queue` (`solo_duo` default, `flex`), `role` opcional, `limit` máximo 50
     "id": "uuid",
     "source": "like",
     "createdAt": "...",
-    "contact": { "riotId": "Faker#LAS", "discordTag": "faker" }
+    "contact": { "riotId": "Faker#LAS", "discordTag": "faker", "whatsapp": "+54 9 11 1234 5678" }
   }
 }
 ```
@@ -389,7 +391,7 @@ Solo salientes. No revela quién te likeó.
       "id": "uuid",
       "source": "like",
       "createdAt": "...",
-      "contact": { "riotId": "Pepe#LAS", "discordTag": "pepe" },
+      "contact": { "riotId": "Pepe#LAS", "discordTag": "pepe", "whatsapp": "+54 9 11 1234 5678" },
       "other": {
         "id": "uuid",
         "username": "pepe",
@@ -509,7 +511,7 @@ Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo, bloquead
 {
   "status": "success",
   "connection": { "id": "uuid", "source": "availability", "createdAt": "..." },
-  "contact": { "riotId": "Pepe#LAS", "discordTag": "pepe" }
+  "contact": { "riotId": "Pepe#LAS", "discordTag": "pepe", "whatsapp": "+54 9 11 1234 5678" }
 }
 ```
 

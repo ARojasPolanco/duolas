@@ -58,6 +58,7 @@ const PROFILE_DETAIL_ATTRIBUTES = [
   'scheduleBlocks',
   'bio',
   'discordTag',
+  'whatsapp',
   'reputationPositive',
   'reputationNegative',
   'rankSource',
@@ -90,6 +91,7 @@ const toProfileView = (profile) => {
     scheduleBlocks: profile.scheduleBlocks,
     bio: profile.bio,
     discordTag: profile.discordTag,
+    whatsapp: profile.whatsapp,
     reputation: {
       score: profile.reputationScore,
       positive: profile.reputationPositive,

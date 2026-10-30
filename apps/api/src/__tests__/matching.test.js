@@ -254,7 +254,10 @@ describe('Matching', () => {
 
   describe('Likes y matches', () => {
     it('gestiona like idempotente, match mutuo, contacto, notificaciones y archivo', async () => {
-      const a = await createMatchUser({ scheduleBlocks: ['thu_early'] });
+      const a = await createMatchUser({
+        scheduleBlocks: ['thu_early'],
+        whatsapp: '+54 9 11 1234 5678',
+      });
       const b = await compatibleTarget(['thu_early']);
 
       const first = await like(a.token, b.user.id);
@@ -272,6 +275,7 @@ describe('Matching', () => {
       expect(mutual.status).toBe(201);
       expect(mutual.body.matched).toBe(true);
       expect(mutual.body.connection.contact.riotId).toBe(a.profile.riotId);
+      expect(mutual.body.connection.contact.whatsapp).toBe('+54 9 11 1234 5678');
 
       const aMatches = await matches(a.token);
       const bMatches = await matches(b.token);

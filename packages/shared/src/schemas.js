@@ -50,6 +50,17 @@ export const discordTagSchema = z
   .max(32, 'El Discord no puede exceder 32 caracteres')
   .regex(/^[a-z0-9._]+$/i, 'El Discord solo admite letras, números, punto y guión bajo');
 
+export const whatsappSchema = z
+  .string()
+  .trim()
+  .min(8, 'El WhatsApp debe incluir el código de país')
+  .max(20, 'El WhatsApp no puede exceder 20 caracteres')
+  .regex(/^\+?[\d\s().-]+$/, 'Ingresá un número de WhatsApp válido')
+  .refine((value) => {
+    const digits = value.replace(/\D/g, '');
+    return digits.length >= 8 && digits.length <= 15;
+  }, 'El WhatsApp debe tener entre 8 y 15 dígitos, incluyendo el código de país');
+
 export const roleSchema = z.enum(ROLES);
 export const rankTierSchema = z.enum(RANK_TIERS);
 export const rankDivisionSchema = z.enum(RANK_DIVISIONS);

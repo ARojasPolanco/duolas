@@ -148,6 +148,7 @@ Sin `updated_at`.
 | `schedule_blocks`          | TEXT[]       | NOT NULL, cardinalidad 1-28                   |
 | `bio`                      | VARCHAR(280) | NULL                                          |
 | `discord_tag`              | VARCHAR(32)  | NULL                                          |
+| `whatsapp`                 | VARCHAR(20)  | NULL; número con código de país               |
 | `rank_source`              | VARCHAR(10)  | NOT NULL, default `declared`, check           |
 | `rank_verified_at`         | TIMESTAMPTZ  | NULL                                          |
 | `reputation_positive`      | INTEGER      | NOT NULL, default 0, check >= 0               |
@@ -597,7 +598,7 @@ Se setea cuando el perfil se crea o actualiza con todos los campos obligatorios.
 - Un usuario tiene como máximo una publicación ARAM activa.
 - Una postulación ARAM es única por publicación y usuario.
 - Crear una conexión cierra las disponibilidades activas de ambos con motivo `matched`.
-- Nunca se expone `email`, `riot_id` ni `discord_tag` en un perfil público.
+- Nunca se expone `email`, `riot_id`, `discord_tag` ni `whatsapp` en un perfil público.
 - Nunca se guardan Riot IDs históricos.
 
 ## 6. Soft delete y retención

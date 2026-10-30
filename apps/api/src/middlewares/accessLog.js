@@ -12,12 +12,15 @@ export const accessLog = (req, res, next) => {
     if (isHealthCheck && res.statusCode < 400) return;
 
     const durationMs = Number(process.hrtime.bigint() - start) / 1e6;
+    const isSlow = durationMs >= SLOW_REQUEST_MS;
     let level = 'debug';
 
     if (res.statusCode >= 500) {
       level = 'error';
-    } else if (res.statusCode >= 400 || durationMs >= SLOW_REQUEST_MS) {
+    } else if (res.statusCode >= 400) {
       level = 'warn';
+    } else if (isSlow) {
+      level = 'info';
     }
 
     logger.log(level, 'request', {
@@ -26,6 +29,7 @@ export const accessLog = (req, res, next) => {
       path,
       statusCode: res.statusCode,
       durationMs: Math.round(durationMs * 100) / 100,
+      slow: isSlow || undefined,
       userId: req.sessionUser?.id || null,
     });
   });

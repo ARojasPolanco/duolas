@@ -51,6 +51,7 @@ const toConnectionView = (connection, contact) => ({
   contact: {
     riotId: contact.riotId,
     discordTag: contact.discordTag,
+    whatsapp: contact.whatsapp,
   },
 });
 
@@ -61,6 +62,7 @@ const toMatchView = (connection, profile, feedback) => ({
   contact: {
     riotId: profile.riotId,
     discordTag: profile.discordTag,
+    whatsapp: profile.whatsapp,
   },
   other: toPublicProfile(profile, profile.user),
   feedback: feedback || buildFeedbackStatus(null, null),
@@ -243,7 +245,11 @@ export class MatchingService {
     }
 
     const [low, high] = orderedPair(viewerId, targetId);
-    const contact = { riotId: target.riotId, discordTag: target.discordTag };
+    const contact = {
+      riotId: target.riotId,
+      discordTag: target.discordTag,
+      whatsapp: target.whatsapp,
+    };
 
     const existingConnection = await DuoConnection.findOne({
       where: { userLowId: low, userHighId: high },

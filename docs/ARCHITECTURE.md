@@ -163,7 +163,7 @@ Reglas:
 - Winston en JSON a consola, nivel configurable por `LOG_LEVEL`.
 - `errorLogService` persiste errores inesperados en `errors`.
 - `x-request-id` generado o propagado por request.
-- Access log mínimo: método, ruta sin query, status, duración y user id.
+- Access log mínimo: método, ruta sin query, status, duración, slow y user id. Las requests exitosas lentas (>=1,5 s) van en `info` con `slow: true`; solo 4xx/5xx son `warn`/`error`.
 - Nunca se loguean tokens, tickets SSE, contraseñas ni emails completos.
 - Las métricas de producto van a `metrics_events`, no al log.
 

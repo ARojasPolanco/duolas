@@ -186,6 +186,7 @@ export default function HomePage() {
 
   const ownRiotId = profile?.riotId;
   const ownDiscord = profile?.discordTag;
+  const ownWhatsapp = profile?.whatsapp;
 
   return (
     <AppShell>
@@ -359,9 +360,25 @@ export default function HomePage() {
                     </button>
                   ) : null}
 
+                  {ownWhatsapp ? (
+                    <button
+                      type="button"
+                      onClick={() => copy(ownWhatsapp, 'WhatsApp')}
+                      className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-surface px-3 py-2.5 text-left"
+                    >
+                      <span>
+                        <span className="block text-[10px] uppercase tracking-wide text-muted">
+                          WhatsApp
+                        </span>
+                        <span className="text-sm font-semibold">{ownWhatsapp}</span>
+                      </span>
+                      <Copy size={14} className="text-accent" aria-hidden="true" />
+                    </button>
+                  ) : null}
+
                   <p className="pt-1 text-[11px] leading-relaxed text-muted">
-                    Tu Riot ID y Discord solo se muestran a las personas con las que concretás un
-                    match.
+                    Tu Riot ID y tus contactos opcionales solo se muestran a las personas con las
+                    que concretás un match.
                   </p>
                 </div>
               ) : (

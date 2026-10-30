@@ -104,6 +104,24 @@ describe('Perfiles', () => {
       expect(res.body.profile.country).toBe('CL');
     });
 
+    it('guarda WhatsApp opcional sin hacerlo obligatorio', async () => {
+      const { token } = await registerUser();
+      const { res } = await completeProfile(token, {
+        whatsapp: '+54 9 11 1234 5678',
+      });
+
+      expect(res.status).toBe(200);
+      expect(res.body.profile.whatsapp).toBe('+54 9 11 1234 5678');
+    });
+
+    it('rechaza un WhatsApp inválido', async () => {
+      const { token } = await registerUser();
+      const { res } = await completeProfile(token, { whatsapp: '123' });
+
+      expect(res.status).toBe(422);
+      expect(res.body.message).toContain('WhatsApp');
+    });
+
     it('rechaza un perfil incompleto', async () => {
       const { token } = await registerUser();
       const res = await request(app)
@@ -227,9 +245,9 @@ describe('Perfiles', () => {
       expect(res.body.user.country).toBe('AR');
     });
 
-    it('expone el perfil público sin email, Riot ID ni Discord', async () => {
+    it('expone el perfil público sin email, Riot ID, Discord ni WhatsApp', async () => {
       const { token, user } = await registerUser();
-      await completeProfile(token);
+      await completeProfile(token, { whatsapp: '+54 9 11 1234 5678' });
 
       const res = await request(app).get(`/api/v1/profiles/${user.id}`).set(authHeader(token));
 
@@ -237,6 +255,7 @@ describe('Perfiles', () => {
       expect(res.body.profile.username).toBe(user.username);
       expect(res.body.profile.riotId).toBeUndefined();
       expect(res.body.profile.discordTag).toBeUndefined();
+      expect(res.body.profile.whatsapp).toBeUndefined();
       expect(res.body.profile.email).toBeUndefined();
       expect(res.body.profile.country).toBe('AR');
       expect(res.body.profile.stats.connections).toBe(0);

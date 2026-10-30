@@ -279,6 +279,7 @@ export default function AdminUserDetailPage() {
                   <dl className="mt-4 grid gap-4 sm:grid-cols-2">
                     <Info label="Riot ID">{user.profile.riotId}</Info>
                     <Info label="Discord">{user.profile.discordTag || '-'}</Info>
+                    <Info label="WhatsApp">{user.profile.whatsapp || '-'}</Info>
                     <Info label="Rango Solo/Dúo">{formatRank(user.profile, 'solo_duo')}</Info>
                     <Info label="Rango Flex">{formatRank(user.profile, 'flex')}</Info>
                     <Info label="Roles">{formatRoles(user.profile)}</Info>

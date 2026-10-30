@@ -57,7 +57,7 @@ const steps = [
   {
     number: '04',
     title: 'Coordinen y jueguen',
-    text: 'Cuando hay match o aceptás una invitación/postulación, se revela el Riot ID y el Discord si lo cargaron.',
+    text: 'Cuando hay match o aceptás una invitación/postulación, se revela el Riot ID y los contactos opcionales que hayan cargado.',
   },
 ];
 
@@ -367,9 +367,9 @@ export default function HowItWorksPage() {
               </div>
               <h2 className="mt-2 text-2xl font-extrabold">Tu contacto, solo cuando hay match.</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                El Riot ID y el Discord se revelan únicamente después de una conexión. También podés
-                reportar, bloquear y dejar feedback después de jugar. La reputación ayuda a que la
-                comunidad se cuide.
+                El Riot ID y los contactos opcionales se revelan únicamente después de una conexión.
+                También podés reportar, bloquear y dejar feedback después de jugar. La reputación
+                ayuda a que la comunidad se cuide.
               </p>
             </div>
             <Users

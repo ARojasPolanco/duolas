@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Archive, Ban, Copy, Flag, MessageSquare, Swords } from 'lucide-react';
+import { Archive, Ban, Copy, Flag, MessageCircle, MessageSquare, Swords } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import FeedbackPanel from '../components/FeedbackPanel.jsx';
@@ -10,6 +10,7 @@ import ReportDialog from '../components/ReportDialog.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
+import { whatsappUrl } from '../utils/contact.js';
 import { formatRank, formatRoles, initialsOf } from '../utils/labels.js';
 
 export default function MatchesPage() {
@@ -207,6 +208,21 @@ export default function MatchesPage() {
                       </span>
                       <Copy size={15} className="text-accent" aria-hidden="true" />
                     </button>
+                  ) : null}
+
+                  {match.contact.whatsapp ? (
+                    <a
+                      href={whatsappUrl(match.contact.whatsapp)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-between gap-2 rounded-xl border border-border bg-bg px-4 py-3 text-left"
+                    >
+                      <span>
+                        <span className="block text-[11px] text-muted">WhatsApp</span>
+                        <span className="text-sm font-semibold">{match.contact.whatsapp}</span>
+                      </span>
+                      <MessageCircle size={15} className="text-accent" aria-hidden="true" />
+                    </a>
                   ) : null}
                 </div>
 

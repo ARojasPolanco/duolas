@@ -77,7 +77,7 @@ Top nav con logo, Inicio, Match, ARAM, Disponible, Busco 1, Matches e Invitacion
 - Badge `Beta` junto al logo y aviso de beta abierta en el hero.
 - Dos CTAs: "Crear cuenta" y "Ya tengo cuenta".
 - Carrusel de 4 slides con ilustraciones propias: match por afinidad, Disponible ya, Busco 1 y confianza.
-- Vista previa de 3 cards de jugadores de ejemplo, sin Riot ID ni Discord.
+- Vista previa de 3 cards de jugadores de ejemplo, sin Riot ID, Discord ni WhatsApp.
 - Tres bloques: match por afinidad, Disponible ya, Busco 1.
 - Aviso +18 y aviso de no afiliación con Riot.
 - Footer con términos y privacidad.
@@ -123,7 +123,7 @@ Siete pasos con barra de progreso:
 3. Rango Solo/Dúo con LP y rango Flex opcional con LP separado.
 4. Horarios por día con bloques de 6 horas, atajos y selección múltiple. Incluye país opcional y equivalencia local de cada bloque.
 5. Estilo, idiomas y micrófono.
-6. Contacto: bio y Discord recomendado, con aviso de que sin Discord solo queda el Riot ID.
+6. Contacto: bio y Discord/WhatsApp opcionales, con aviso de que no son necesarios y que sin ellos solo queda el Riot ID.
 7. Resumen y guardado final.
 
 Reglas:
@@ -146,7 +146,7 @@ Reglas:
 
 - Hero con saludo, email, país y perfil propio.
 - Stats de rango Solo/Dúo y Flex, roles, reputación y estado de cuenta.
-- Card de perfil propio con Riot ID y Discord visibles solo para el dueño.
+- Card de perfil propio con Riot ID, Discord y WhatsApp visibles solo para el dueño.
 - Accesos rápidos a Match, Matches y edición de perfil.
 - Carrusel compacto "Cómo funciona".
 - Sección "Jugadores para vos" con hasta 3 cards de candidatos, score, motivos, like y bloqueo.
@@ -205,7 +205,7 @@ Reglas:
 
 - Lista de conexiones con la otra persona.
 - Card con rango, roles, reputación y fecha.
-- Panel de contacto: Riot ID con botón copiar y Discord con link.
+- Panel de contacto: Riot ID con botón copiar, Discord con botón copiar y WhatsApp con link.
 - Feedback inline doble ciego: formulario, estado propio y del otro, revelado.
 - Reportar con motivo y detalle; auto-bloquea y elimina el match.
 - Archivar conexión.
@@ -216,7 +216,7 @@ Reglas:
 - Tabs Recibidas y Enviadas.
 - Card con contraparte, rol, mensaje, vencimiento y estado.
 - Acciones: aceptar/rechazar (recibidas) o cancelar (enviadas).
-- Al aceptar se muestra el contacto Riot ID/Discord con botón copiar.
+- Al aceptar se muestra el contacto Riot ID/Discord con botón copiar y WhatsApp con link.
 - Expiradas en gris.
 
 ### 3.12 Notificaciones `/notificaciones`
@@ -231,7 +231,7 @@ Reglas:
 ### 3.13 Perfil `/perfil`
 
 - Edición directa en una sola pantalla, sin repetir el wizard de onboarding.
-- Prefill con el perfil actual y los mismos campos del onboarding, incluido país, horarios, bio y Discord.
+- Prefill con el perfil actual y los mismos campos del onboarding, incluido país, horarios, bio, Discord y WhatsApp.
 - Username y email son de solo lectura en el MVP.
 - Banner de verificación de email.
 - Guardar cambios sin salir de la pantalla y volver al inicio.
@@ -242,7 +242,7 @@ Reglas:
 - Reputación y cantidad de conexiones.
 - Badge "Disponible ahora".
 - Botón reportar y bloquear.
-- Nunca muestra email, Riot ID ni Discord.
+- Nunca muestra email, Riot ID, Discord ni WhatsApp.
 
 ### 3.15 Admin resumen `/admin`
 
@@ -263,7 +263,7 @@ Reglas:
 
 - Cabecera con username, email, rol, estado y contadores.
 - Cuenta: ID, verificación, alta, último login, última actividad, suspensión y baja.
-- Perfil de jugador: Riot ID, Discord, rango Solo/Dúo, rango Flex, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
+- Perfil de jugador: Riot ID, Discord, WhatsApp, rango Solo/Dúo, rango Flex, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
 - Solicitud de cambio de username: crear, ver propuesta y aprobar/rechazar.
 - Reportes recibidos y sanciones recientes.
 - Disponibilidad activa y conexiones históricas.
@@ -448,7 +448,7 @@ Los iconos de rango y rol son SVG propios. No se usan assets oficiales de Riot.
 - El interceptor 401 no redirige en bucle.
 - No se usa `dangerouslySetInnerHTML`.
 - No se muestran datos de contacto antes de una conexión.
-- El Riot ID y el Discord propios sí se muestran en `/inicio`; los ajenos, solo en matches.
+- El Riot ID, el Discord y el WhatsApp propios sí se muestran en `/inicio`; los ajenos, solo en matches.
 - No se muestran emails en perfiles.
 - Fechas y countdowns en ART con `Intl`.
 - Toda acción destructiva pide confirmación.

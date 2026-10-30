@@ -160,7 +160,7 @@ Al pasar a producción: verificar el dominio en Resend, cambiar `OWNER_EMAIL` a 
 - [ ] Llega el email de verificación y el link funciona.
 - [ ] Login y refresh de página mantienen la sesión.
 - [ ] Onboarding guarda el perfil y `profileCompleted` pasa a true.
-- [ ] Perfil público no muestra email, Riot ID ni Discord.
+- [ ] Perfil público no muestra email, Riot ID, Discord ni WhatsApp.
 - [ ] Forgot/reset envía email y permite cambiar la contraseña.
 - [ ] Una request sin token devuelve 401 y no genera loops.
 - [ ] La web carga en mobile y desktop.

@@ -205,8 +205,8 @@ export default function LandingPage() {
                 Así se ve tu próximo duo.
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-muted">
-                Estos son ejemplos visuales. El Riot ID y el Discord de otra persona se revelan
-                recién cuando hay match mutuo.
+                Estos son ejemplos visuales. El Riot ID y los contactos opcionales de otra persona
+                se revelan recién cuando hay match mutuo.
               </p>
             </div>
             <Link

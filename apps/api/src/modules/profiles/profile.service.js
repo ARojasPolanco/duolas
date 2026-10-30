@@ -86,6 +86,7 @@ const toPrivateProfile = (profile, user) => ({
   scheduleBlocks: profile.scheduleBlocks,
   bio: profile.bio,
   discordTag: profile.discordTag,
+  whatsapp: profile.whatsapp,
   reputation: reputationOf(profile),
   availabilityActive: false,
   profileCompletedAt: profile.profileCompletedAt,
@@ -169,6 +170,8 @@ export class ProfileService {
         data.discordTag !== undefined
           ? normalizeNullableText(data.discordTag)
           : current?.discordTag,
+      whatsapp:
+        data.whatsapp !== undefined ? normalizeNullableText(data.whatsapp) : current?.whatsapp,
     };
 
     if (
@@ -238,6 +241,7 @@ export class ProfileService {
       scheduleBlocks: merged.scheduleBlocks,
       bio: merged.bio ?? null,
       discordTag: merged.discordTag ?? null,
+      whatsapp: merged.whatsapp ?? null,
       rankSource: current?.rankSource || 'declared',
       profileCompletedAt: current?.profileCompletedAt || new Date(),
       isDeleted: false,

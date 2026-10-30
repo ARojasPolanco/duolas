@@ -175,6 +175,7 @@ export class InviteService {
         contact: {
           riotId: sender.riotId,
           discordTag: sender.discordTag,
+          whatsapp: sender.whatsapp,
         },
       };
     });

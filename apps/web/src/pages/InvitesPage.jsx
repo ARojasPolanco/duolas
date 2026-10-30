@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Clock, Copy, Inbox, Lock, X } from 'lucide-react';
+import { Check, Clock, Copy, Inbox, Lock, MessageCircle, X } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
@@ -9,6 +9,7 @@ import UsernameHint from '../components/UsernameHint.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
+import { whatsappUrl } from '../utils/contact.js';
 import {
   QUEUE_LABELS,
   ROLE_LABELS,
@@ -98,6 +99,7 @@ export default function InvitesPage() {
           username: invite.counterpart.username,
           riotId: res.data.contact?.riotId,
           discordTag: res.data.contact?.discordTag,
+          whatsapp: res.data.contact?.whatsapp,
         });
         toast.success('Invitación aceptada. Ya pueden coordinar.');
       } else {
@@ -196,6 +198,21 @@ export default function InvitesPage() {
                       </span>
                       <Copy size={15} className="text-accent" aria-hidden="true" />
                     </button>
+                  ) : null}
+
+                  {accepted.whatsapp ? (
+                    <a
+                      href={whatsappUrl(accepted.whatsapp)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-between gap-2 rounded-xl border border-border bg-bg px-4 py-3 text-left"
+                    >
+                      <span>
+                        <span className="block text-[11px] text-muted">WhatsApp</span>
+                        <span className="text-sm font-semibold">{accepted.whatsapp}</span>
+                      </span>
+                      <MessageCircle size={15} className="text-accent" aria-hidden="true" />
+                    </a>
                   ) : null}
                 </div>
                 <Link

@@ -12,8 +12,8 @@ Plan de pruebas del MVP. Sin tests E2E automatizados: el smoke manual es obligat
 
 ### Estado actual
 
-- F0 a F6 cerrados técnicamente con **124 tests pasando**.
-- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, eliminación y recuperación de cuenta, perfiles, país de residencia, Riot ID, roles, rango Solo/Dúo, rango Flex, Comodín, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias, suspensiones, tickets SSE, bus de eventos, suscripciones push, métricas, panel admin de usuarios, autorización admin de KPIs, ARAM (grupo, disponibilidad individual, postulación y conexión) y cambio de username asistido con reservas y recordatorio de likes pendientes.
+- F0 a F6 cerrados técnicamente con **126 tests pasando**.
+- Cubierto: health, envelope 404, redacción de errores, registro, login, suspensión, verificación de email, resend, forgot/reset, cambio de contraseña, eliminación y recuperación de cuenta, perfiles, país de residencia, Riot ID, roles, rango Solo/Dúo, rango Flex, Comodín, completitud, middlewares, candidatos, likes, match mutuo, contacto, archivo/reactivación, bloqueos, notificaciones, disponibilidad con TTL, invitaciones, Busco 1, postulaciones, feedback doble ciego, reputación, reportes, auto-bloqueo, advertencias, suspensiones, tickets SSE, bus de eventos, suscripciones push, métricas, panel admin de usuarios, autorización admin de KPIs, ARAM (grupo, disponibilidad individual, postulación y conexión) y cambio de username asistido con reservas y recordatorio de likes pendientes y WhatsApp opcional.
 - Smoke técnico: flujo API contra PostgreSQL y rutas web respondiendo 200.
 - Pendiente: smoke visual interactivo en navegador antes del release.
 
@@ -104,6 +104,7 @@ Cuando exista CI, los mismos comandos deben pasar sin servicios externos: Resend
 - Riot ID válido e inválido.
 - Riot ID normalizado y único.
 - Discord válido e inválido.
+- WhatsApp válido, inválido y opcional.
 - Username y email.
 - Edad y términos obligatorios.
 - Contraseña de 10 a 128 caracteres.
@@ -146,7 +147,7 @@ Cuando exista CI, los mismos comandos deben pasar sin servicios externos: Resend
 - Completar perfil setea `profile_completed_at`.
 - Editar y dejar incompleto lo vuelve a NULL.
 - Riot ID duplicado → 409.
-- Perfil público no expone email, Riot ID ni Discord.
+- Perfil público no expone email, Riot ID, Discord ni WhatsApp.
 - `rank_index` se recalcula al cambiar rango.
 - No se puede cambiar `server`.
 

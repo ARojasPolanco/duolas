@@ -37,7 +37,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 - "Busco 1" para grupos.
 - Búsqueda ARAM para grupos o jugadores disponibles, sin rango ni roles.
 - Invitaciones y postulaciones.
-- Contacto revelado solo después de una conexión: Riot ID y Discord opcional.
+- Contacto revelado solo después de una conexión: Riot ID y Discord/WhatsApp opcionales.
 - Notificaciones en la app, SSE, polling de respaldo y web push.
 - Feedback posterior a la partida, reputación simple, reportes y bloqueos.
 - Moderación mínima con advertencias y suspensiones.
@@ -154,14 +154,16 @@ Sin email verificado o sin perfil completo no se puede matchear, invitar, postul
 | Estilo         | casual, ranked o tryhard                                                                         |
 | Micrófono      | Sí o no                                                                                          |
 | Bio            | Hasta 280 caracteres                                                                             |
-| Discord        | Opcional, 2-32 caracteres alfanuméricos, punto o guión bajo                                      |
+| Discord        | Opcional, 2-32 caracteres alfanuméricos, punto o guión bajo; nunca obligatorio                   |
+| WhatsApp       | Opcional, 8-15 dígitos con código de país; nunca obligatorio                                     |
 
 - El rango es declarado (`rank_source = declared`). Se muestra como declarado.
 - `fill` representa a quien juega todas las líneas y es compatible con cualquier rol.
 - Si un perfil no declara Flex, el matching de Flex usa su rango Solo/Dúo como respaldo.
 - El nombre de usuario es el identificador de Duo LAS y no debe ser el Riot ID.
 - No se admiten jugadores sin clasificar en el MVP.
-- El Riot ID y el Discord no se muestran en el perfil público.
+- El Riot ID, el Discord y el WhatsApp no se muestran en el perfil público.
+- El Discord y el WhatsApp son contactos opcionales: si el usuario no los carga, sus matches solo ven el Riot ID.
 - Solo se guarda el Riot ID actual. No se almacenan históricos.
 - El avatar se genera con iniciales y color determinístico. No hay uploads.
 - El país es informativo y no filtra candidatos. Los horarios se guardan en ART; la UI muestra la equivalencia local cuando corresponde.
@@ -174,7 +176,7 @@ Detalle completo en `docs/MATCHING.md`.
 - **Rango compatible:** ±1 tier en Solo/Dúo y ±2 tiers en Flex. Flex compara el rango Flex; si falta, usa Solo/Dúo.
 - **Roles complementarios:** debe existir un par de roles distintos entre principal y secundario de ambos. `fill` es comodín y es compatible con cualquier rol.
 - **Interés mutuo:** el like es doble ciego; no se revela quién likeó hasta que sea recíproco.
-- **Contacto:** se revela Riot ID y Discord opcional solo a los dos integrantes de la conexión.
+- **Contacto:** se revela Riot ID y Discord/WhatsApp opcionales solo a los dos integrantes de la conexión.
 - **Likes:** máximo 30 por hora, idempotentes y retirables.
 - **Conexión:** única por par; archivar la oculta; un nuevo like mutuo la reactiva.
 
@@ -293,8 +295,8 @@ Detalle completo en `docs/MATCHING.md`.
 ## 15. Edad, privacidad y legales
 
 - Producto exclusivo para mayores de 18 años, con confirmación explícita.
-- Perfil público sin email, Riot ID ni Discord.
-- El Riot ID y el Discord se revelan solo tras una conexión.
+- Perfil público sin email, Riot ID, Discord ni WhatsApp.
+- El Riot ID y los contactos opcionales se revelan solo tras una conexión.
 - No se guardan Riot IDs históricos.
 - No se muestran emails en perfiles públicos.
 - Páginas de términos de uso, política de privacidad y aviso de no afiliación con Riot Games.

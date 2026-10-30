@@ -99,6 +99,10 @@ PlayerProfile.init(
       allowNull: true,
       field: 'discord_tag',
     },
+    whatsapp: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
     rankSource: {
       type: DataTypes.STRING(10),
       allowNull: false,

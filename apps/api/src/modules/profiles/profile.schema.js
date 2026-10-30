@@ -9,6 +9,7 @@ import {
   rankTierSchema,
   riotIdSchema,
   roleSchema,
+  whatsappSchema,
 } from '@duo-las/shared';
 
 const scheduleBlockSchema = z.enum(SCHEDULE_BLOCK_VALUES);
@@ -45,6 +46,7 @@ export const updateProfileSchema = z
       .optional(),
     bio: z.string().trim().max(280, 'La bio no puede exceder 280 caracteres').nullable().optional(),
     discordTag: discordTagSchema.nullable().optional(),
+    whatsapp: whatsappSchema.nullable().optional(),
   })
   .strict();
 
@@ -65,6 +67,7 @@ const fieldLabels = {
   scheduleBlocks: 'Horarios',
   bio: 'Bio',
   discordTag: 'Discord',
+  whatsapp: 'WhatsApp',
 };
 
 export function validateUpdateProfile(data) {

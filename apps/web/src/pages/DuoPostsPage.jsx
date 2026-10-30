@@ -8,6 +8,7 @@ import {
   Clock,
   Copy,
   Lock,
+  MessageCircle,
   Plus,
   RefreshCw,
   Send,
@@ -23,6 +24,7 @@ import UsernameHint from '../components/UsernameHint.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
+import { whatsappUrl } from '../utils/contact.js';
 import {
   QUEUE_LABELS,
   RANK_LABELS,
@@ -239,6 +241,7 @@ export default function DuoPostsPage() {
         username: application.applicant.username,
         riotId: res.data.contact?.riotId,
         discordTag: res.data.contact?.discordTag,
+        whatsapp: res.data.contact?.whatsapp,
       });
       setApplications((current) => ({
         ...current,
@@ -394,6 +397,21 @@ export default function DuoPostsPage() {
                       </span>
                       <Copy size={15} className="text-accent" aria-hidden="true" />
                     </button>
+                  ) : null}
+
+                  {acceptedContact.whatsapp ? (
+                    <a
+                      href={whatsappUrl(acceptedContact.whatsapp)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-between gap-2 rounded-xl border border-border bg-bg px-4 py-3 text-left"
+                    >
+                      <span>
+                        <span className="block text-[11px] text-muted">WhatsApp</span>
+                        <span className="text-sm font-semibold">{acceptedContact.whatsapp}</span>
+                      </span>
+                      <MessageCircle size={15} className="text-accent" aria-hidden="true" />
+                    </a>
                   ) : null}
                 </div>
                 <Link

@@ -476,7 +476,7 @@ export default function AvailabilityPage() {
 
                         <p className="mt-3 flex items-center gap-1.5 text-[11px] text-muted">
                           <Lock size={11} aria-hidden="true" />
-                          Riot ID y Discord se revelan al aceptar la invitación.
+                          Riot ID y contactos opcionales se revelan al aceptar la invitación.
                         </p>
 
                         {sent ? (
