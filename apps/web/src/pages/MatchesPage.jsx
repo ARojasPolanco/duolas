@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Archive, Ban, Copy, Flag, MessageCircle, MessageSquare, Swords } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import FeedbackPanel from '../components/FeedbackPanel.jsx';
 import RankIcon from '../components/RankIcon.jsx';
@@ -22,6 +23,7 @@ export default function MatchesPage() {
   const [actionId, setActionId] = useState(null);
   const [feedbackOpenId, setFeedbackOpenId] = useState(null);
   const [reportTarget, setReportTarget] = useState(null);
+  const [confirmAction, setConfirmAction] = useState(null);
 
   const canInteract = Boolean(user?.emailVerified && user?.profileCompleted);
 
@@ -60,16 +62,12 @@ export default function MatchesPage() {
   };
 
   const archive = async (match) => {
-    const confirmed = window.confirm(
-      `¿Archivar el match con ${match.other.username}? Desaparecerá de tu lista.`
-    );
-    if (!confirmed) return;
-
     setActionId(match.id);
     try {
       await api.post(`/v1/matching/matches/${match.id}/archive`);
       setMatches((current) => current.filter((item) => item.id !== match.id));
       toast.success('Match archivado.');
+      setConfirmAction(null);
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos archivar el match.');
     } finally {
@@ -78,19 +76,25 @@ export default function MatchesPage() {
   };
 
   const block = async (match) => {
-    const confirmed = window.confirm(`¿Bloquear a ${match.other.username}?`);
-    if (!confirmed) return;
-
     setActionId(match.id);
     try {
       await api.post('/v1/blocks', { userId: match.other.id });
       setMatches((current) => current.filter((item) => item.id !== match.id));
       toast.success('Usuario bloqueado.');
+      setConfirmAction(null);
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos bloquear al usuario.');
     } finally {
       setActionId(null);
     }
+  };
+
+  const askArchive = (match) => {
+    setConfirmAction({ type: 'archive', match });
+  };
+
+  const askBlock = (match) => {
+    setConfirmAction({ type: 'block', match });
   };
 
   const handleReported = () => {
@@ -247,7 +251,7 @@ export default function MatchesPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => archive(match)}
+                      onClick={() => askArchive(match)}
                       disabled={busy}
                       className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-muted disabled:opacity-60"
                     >
@@ -265,7 +269,7 @@ export default function MatchesPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => block(match)}
+                      onClick={() => askBlock(match)}
                       disabled={busy}
                       className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-danger disabled:opacity-60"
                     >
@@ -301,6 +305,30 @@ export default function MatchesPage() {
           target={reportTarget}
           onClose={() => setReportTarget(null)}
           onReported={handleReported}
+        />
+      ) : null}
+
+      {confirmAction ? (
+        <ConfirmDialog
+          title={
+            confirmAction.type === 'archive'
+              ? `Archivar match con ${confirmAction.match.other.username}`
+              : `Bloquear a ${confirmAction.match.other.username}`
+          }
+          description={
+            confirmAction.type === 'archive'
+              ? 'El match desaparecerá de tu lista. El contacto dejará de estar visible.'
+              : 'No volverá a aparecer en tus matches ni en tus búsquedas.'
+          }
+          confirmLabel={confirmAction.type === 'archive' ? 'Archivar' : 'Bloquear'}
+          tone={confirmAction.type === 'archive' ? 'accent' : 'danger'}
+          busy={actionId === confirmAction.match.id}
+          onConfirm={() =>
+            confirmAction.type === 'archive'
+              ? archive(confirmAction.match)
+              : block(confirmAction.match)
+          }
+          onClose={() => setConfirmAction(null)}
         />
       ) : null}
     </AppShell>

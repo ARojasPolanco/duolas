@@ -220,6 +220,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Solicitud in-app de cambio de username con aprobación manual, reservas y migración 017.
 - [x] Recordatorio in-app y push para likes recibidos pendientes.
 - [x] WhatsApp opcional como contacto revelado solo tras una conexión.
+- [x] Confirmaciones de bloquear, archivar y cancelar publicaciones con `ConfirmDialog`; sin `window.confirm`.
 
 ## Hardening previo a producción
 

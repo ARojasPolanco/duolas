@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
@@ -99,6 +100,7 @@ export default function DuoPostsPage() {
   const [applyingId, setApplyingId] = useState(null);
   const [busy, setBusy] = useState(null);
   const [acceptedContact, setAcceptedContact] = useState(null);
+  const [cancelTarget, setCancelTarget] = useState(null);
 
   const canInteract = Boolean(user?.emailVerified && user?.profileCompleted);
 
@@ -282,19 +284,21 @@ export default function DuoPostsPage() {
     }
   };
 
-  const cancelPost = async (post) => {
-    const confirmed = window.confirm('¿Cancelar esta publicación?');
-    if (!confirmed) return;
+  const cancelPost = async () => {
+    if (!cancelTarget) return;
 
-    setBusy(post.id);
+    setBusy(cancelTarget.id);
 
     try {
-      await api.delete(`/v1/duo-posts/${post.id}`);
+      await api.delete(`/v1/duo-posts/${cancelTarget.id}`);
       setMine((current) =>
-        current.map((item) => (item.id === post.id ? { ...item, status: 'cancelled' } : item))
+        current.map((item) =>
+          item.id === cancelTarget.id ? { ...item, status: 'cancelled' } : item
+        )
       );
-      setPosts((current) => current.filter((item) => item.id !== post.id));
+      setPosts((current) => current.filter((item) => item.id !== cancelTarget.id));
       toast.success('Publicación cancelada.');
+      setCancelTarget(null);
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos cancelar la publicación.');
     } finally {
@@ -768,7 +772,7 @@ export default function DuoPostsPage() {
                             {post.status === 'active' ? (
                               <button
                                 type="button"
-                                onClick={() => cancelPost(post)}
+                                onClick={() => setCancelTarget(post)}
                                 disabled={busy === post.id}
                                 className="rounded-lg border border-border p-2 text-danger disabled:opacity-60"
                                 aria-label="Cancelar publicación"
@@ -910,6 +914,18 @@ export default function DuoPostsPage() {
           </>
         )}
       </div>
+
+      {cancelTarget ? (
+        <ConfirmDialog
+          title="Cancelar publicación"
+          description="La publicación dejará de estar visible y no recibirá más postulaciones."
+          confirmLabel="Cancelar publicación"
+          cancelLabel="Volver"
+          busy={busy === cancelTarget.id}
+          onConfirm={cancelPost}
+          onClose={() => setCancelTarget(null)}
+        />
+      ) : null}
     </AppShell>
   );
 }

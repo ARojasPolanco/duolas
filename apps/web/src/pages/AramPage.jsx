@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Clock3, Gamepad2, Mic, MicOff, RefreshCw, Users, X } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -51,6 +52,7 @@ export default function AramPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [busyId, setBusyId] = useState(null);
+  const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
   const [error, setError] = useState('');
 
   const canInteract = Boolean(user?.emailVerified && user?.profileCompleted);
@@ -163,12 +165,12 @@ export default function AramPage() {
 
   const cancelPost = async () => {
     if (!mine.post) return;
-    if (!window.confirm('¿Cerrar tu publicación ARAM?')) return;
 
     setBusyId(mine.post.id);
     try {
       await api.delete(`/v1/aram/${mine.post.id}`);
       toast.success('Publicación cerrada.');
+      setCloseConfirmOpen(false);
       await load();
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos cerrar la publicación.');
@@ -293,7 +295,7 @@ export default function AramPage() {
                   </div>
                   <button
                     type="button"
-                    onClick={cancelPost}
+                    onClick={() => setCloseConfirmOpen(true)}
                     disabled={busyId === mine.post.id}
                     className="rounded-lg border border-danger/40 px-3 py-2 text-xs font-semibold text-danger disabled:opacity-60"
                   >
@@ -614,6 +616,18 @@ export default function AramPage() {
           </>
         )}
       </div>
+
+      {closeConfirmOpen && mine.post ? (
+        <ConfirmDialog
+          title="Cerrar publicación ARAM"
+          description="La publicación dejará de estar visible y no recibirá más postulaciones."
+          confirmLabel="Cerrar publicación"
+          cancelLabel="Volver"
+          busy={busyId === mine.post.id}
+          onConfirm={cancelPost}
+          onClose={() => setCloseConfirmOpen(false)}
+        />
+      ) : null}
     </AppShell>
   );
 }

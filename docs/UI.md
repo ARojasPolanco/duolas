@@ -319,6 +319,7 @@ Reglas:
 | `PostCard`           | Post de Busco 1                       |
 | `ApplicationCard`    | Postulación                           |
 | `FeedbackDialog`     | Feedback positivo/negativo con tags   |
+| `ConfirmDialog`      | Confirmación accesible de acciones    |
 | `ReportDialog`       | Motivo y detalle                      |
 | `BlockButton`        | Bloquear/desbloquear                  |
 | `PushPrompt`         | Pedir permiso con gesto explícito     |
@@ -361,6 +362,7 @@ Cada pantalla contempla:
 - **Error:** mensaje, reintento y sin romper la sesión.
 - **Optimistic:** likes, invitaciones y postulaciones con rollback.
 - **Offline:** si SSE falla, polling; si la red falla, aviso y reintento.
+- **Confirmaciones:** bloquear, archivar y cancelar publicaciones usan `ConfirmDialog`; nunca `window.confirm` ni `alert`.
 
 ## 7. Copy
 

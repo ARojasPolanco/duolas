@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
+import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
 import EmailVerificationBanner from '../components/EmailVerificationBanner.jsx';
 import RankIcon from '../components/RankIcon.jsx';
@@ -46,6 +47,7 @@ export default function MatchPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionId, setActionId] = useState(null);
+  const [blockTarget, setBlockTarget] = useState(null);
 
   const canInteract = Boolean(user?.emailVerified && user?.profileCompleted);
 
@@ -140,20 +142,22 @@ export default function MatchPage() {
     }
   };
 
-  const handleBlock = async (candidate) => {
-    const confirmed = window.confirm(
-      `¿Bloquear a ${candidate.profile.username}? No volverá a aparecer en tus candidatos.`
-    );
-    if (!confirmed) return;
+  const handleBlock = (candidate) => {
+    setBlockTarget(candidate);
+  };
 
-    setActionId(candidate.profile.id);
+  const confirmBlock = async () => {
+    if (!blockTarget) return;
+
+    setActionId(blockTarget.profile.id);
 
     try {
-      await api.post('/v1/blocks', { userId: candidate.profile.id });
-      removeCandidate(candidate.profile.id);
-      setOutgoing((current) => current.filter((item) => item.target.id !== candidate.profile.id));
+      await api.post('/v1/blocks', { userId: blockTarget.profile.id });
+      removeCandidate(blockTarget.profile.id);
+      setOutgoing((current) => current.filter((item) => item.target.id !== blockTarget.profile.id));
       toast.success('Usuario bloqueado.');
       await refreshCandidateCount();
+      setBlockTarget(null);
     } catch (requestError) {
       toast.error(requestError.response?.data?.message || 'No pudimos bloquear al usuario.');
     } finally {
@@ -452,6 +456,17 @@ export default function MatchPage() {
           </>
         )}
       </div>
+
+      {blockTarget ? (
+        <ConfirmDialog
+          title={`Bloquear a ${blockTarget.profile.username}`}
+          description="No volverá a aparecer en tus candidatos ni en tus búsquedas."
+          confirmLabel="Bloquear"
+          busy={actionId === blockTarget.profile.id}
+          onConfirm={confirmBlock}
+          onClose={() => setBlockTarget(null)}
+        />
+      ) : null}
     </AppShell>
   );
 }
