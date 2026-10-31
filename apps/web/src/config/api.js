@@ -9,6 +9,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
+  config._duoAuthToken = token || null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -41,10 +42,13 @@ api.interceptors.response.use(
       '/privacidad',
     ];
     const onPublicAuthPage = publicAuthPaths.includes(window.location.pathname);
+    const currentToken = localStorage.getItem('token');
+    const requestToken = error.config?._duoAuthToken;
+    const isStaleAuthError = Boolean(currentToken && requestToken !== currentToken);
 
     const suspended = status === 403 && message.toLowerCase().includes('suspendida');
 
-    if ((status === 401 && !isAuthEndpoint) || suspended) {
+    if (!isStaleAuthError && ((status === 401 && !isAuthEndpoint) || suspended)) {
       if (suspended) {
         sessionStorage.setItem(
           'flashMessage',

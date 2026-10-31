@@ -228,7 +228,7 @@ Heredadas del incidente real de Market Design:
 
 1. Ningún componente global montado en `App.jsx` puede llamar endpoints autenticados sin token. Todo hook que haga fetch debe chequear `localStorage.getItem('token')` y no llamar a la API si no hay sesión.
 2. Hooks no condicionales: si un componente tiene early return por falta de usuario, los hooks de fetch van en un componente interno que solo se monta con sesión.
-3. Interceptor 401 en `apps/web/src/config/api.js`: limpiar token y redirigir a `/login` solo si no se está ya en `/login`. Nunca redirigir en bucle.
+3. Interceptor 401 en `apps/web/src/config/api.js`: limpiar token y redirigir a `/login` solo si no se está ya en `/login`. Nunca redirigir en bucle. Ignorar el 401 de un request hecho con un token viejo si ya hay una sesión nueva; comparar el token usado contra el actual antes de limpiar.
 4. Los endpoints de auth (`/auth/login`, `/auth/register`, `/auth/verify-email`, `/auth/forgot-password`, `/auth/reset-password`) no disparan redirect.
 5. Los endpoints protegidos devuelven 401 sin token; nunca 200 vacío ni redirect del servidor.
 6. Toda request protegida debe asumir 401 y manejarlo sin depender de que el usuario esté logueado.

@@ -387,7 +387,7 @@ SSE y rate limit viven en memoria, por lo que el MVP asume **una sola instancia 
 - Vite con proxy `/api` a `http://localhost:3000`.
 - Axios con base URL desde `VITE_API_URL` o `/api`.
 - Interceptor de request agrega el token.
-- Interceptor de response maneja 401 sin loops y excluye endpoints de auth.
+- Interceptor de response maneja 401 sin loops, excluye endpoints de auth e ignora 401 de requests con un token viejo para no borrar una sesión nueva.
 - `ProtectedRoute` y `restrictTo` en backend.
 - Contexts: `AuthContext` y `ToastContext`.
 - Hooks por dominio con guard de token.

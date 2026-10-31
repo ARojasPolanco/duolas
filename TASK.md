@@ -221,6 +221,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Recordatorio in-app y push para likes recibidos pendientes.
 - [x] WhatsApp opcional como contacto revelado solo tras una conexión.
 - [x] Confirmaciones de bloquear, archivar y cancelar publicaciones con `ConfirmDialog`; sin `window.confirm`.
+- [x] Login robusto ante respuestas 401 tardías de un token anterior, sin borrar la sesión recién creada.
 
 ## Hardening previo a producción
 

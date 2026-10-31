@@ -48,12 +48,22 @@ export function AuthProvider({ children }) {
       return null;
     }
 
+    const isSameToken = () => localStorage.getItem('token') === storedToken;
+
     try {
       const res = await api.get('/v1/auth/profile');
+
+      if (!isSameToken()) return null;
+
       storeUser(res.data.user);
       setUser(res.data.user);
       return res.data.user;
     } catch (_error) {
+      if (!isSameToken()) {
+        if (!localStorage.getItem('token')) clearSession();
+        return null;
+      }
+
       clearSession();
       return null;
     } finally {
