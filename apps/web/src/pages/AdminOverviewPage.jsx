@@ -14,6 +14,7 @@ import {
   UserRoundCheck,
   UserX,
   Users,
+  Wifi,
 } from 'lucide-react';
 import AdminShell from '../components/AdminShell.jsx';
 import api from '../config/api.js';
@@ -59,7 +60,7 @@ const statusBadge = (status, map) => {
   );
 };
 
-const cards = (overview) => [
+const cards = (overview, streamStats) => [
   {
     label: 'Usuarios activos',
     value: overview.users,
@@ -142,6 +143,17 @@ const cards = (overview) => [
     to: '/admin/usuarios',
   },
   {
+    label: 'Conectados ahora',
+    value: streamStats ? streamStats.users : null,
+    detail: streamStats
+      ? `${formatNumber(streamStats.connections)} conexiones SSE · ${formatNumber(
+          streamStats.tickets
+        )} tickets`
+      : 'Sin datos SSE',
+    icon: Wifi,
+    to: null,
+  },
+  {
     label: 'Bajas pendientes',
     value: overview.pendingDeletions,
     detail: 'Cuentas dentro del plazo de 30 días',
@@ -152,6 +164,7 @@ const cards = (overview) => [
 
 export default function AdminOverviewPage() {
   const [overview, setOverview] = useState(null);
+  const [streamStats, setStreamStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -169,9 +182,39 @@ export default function AdminOverviewPage() {
     }
   }, []);
 
+  const loadStreamStats = useCallback(async () => {
+    try {
+      const res = await api.get('/v1/events/stats');
+      setStreamStats(res.data);
+    } catch (_error) {
+      setStreamStats(null);
+    }
+  }, []);
+
+  const refreshAll = useCallback(() => {
+    load();
+    loadStreamStats();
+  }, [load, loadStreamStats]);
+
   useEffect(() => {
     load();
-  }, [load]);
+    loadStreamStats();
+
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') loadStreamStats();
+    }, 30000);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') loadStreamStats();
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [load, loadStreamStats]);
 
   return (
     <AdminShell>
@@ -186,7 +229,7 @@ export default function AdminOverviewPage() {
           </div>
           <button
             type="button"
-            onClick={load}
+            onClick={refreshAll}
             className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-4 text-xs font-semibold text-muted"
           >
             <RefreshCw size={15} aria-hidden="true" />
@@ -211,20 +254,36 @@ export default function AdminOverviewPage() {
           </div>
         ) : overview ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {cards(overview).map((card) => {
+            {cards(overview, streamStats).map((card) => {
               const Icon = card.icon;
+              const value =
+                typeof card.value === 'number' ? formatNumber(card.value) : (card.value ?? '—');
+              const content = (
+                <>
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-semibold text-muted">{card.label}</p>
+                    <Icon className="text-accent" size={18} aria-hidden="true" />
+                  </div>
+                  <p className="mt-4 text-3xl font-extrabold">{value}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">{card.detail}</p>
+                </>
+              );
+
+              if (!card.to) {
+                return (
+                  <div key={card.label} className="rounded-2xl border border-border bg-surface p-5">
+                    {content}
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={card.label}
                   to={card.to}
                   className="rounded-2xl border border-border bg-surface p-5 transition hover:border-accent/60 hover:bg-surface-2"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-semibold text-muted">{card.label}</p>
-                    <Icon className="text-accent" size={18} aria-hidden="true" />
-                  </div>
-                  <p className="mt-4 text-3xl font-extrabold">{formatNumber(card.value)}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-muted">{card.detail}</p>
+                  {content}
                 </Link>
               );
             })}
