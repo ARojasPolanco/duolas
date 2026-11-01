@@ -320,6 +320,7 @@ Reglas:
 | `ApplicationCard`    | Postulación                           |
 | `FeedbackDialog`     | Feedback positivo/negativo con tags   |
 | `ConfirmDialog`      | Confirmación accesible de acciones    |
+| `LoadingScreen`      | Carga inicial con frases de Duo LAS   |
 | `ReportDialog`       | Motivo y detalle                      |
 | `BlockButton`        | Bloquear/desbloquear                  |
 | `PushPrompt`         | Pedir permiso con gesto explícito     |
@@ -363,6 +364,7 @@ Cada pantalla contempla:
 - **Optimistic:** likes, invitaciones y postulaciones con rollback.
 - **Offline:** si SSE falla, polling; si la red falla, aviso y reintento.
 - **Confirmaciones:** bloquear, archivar y cancelar publicaciones usan `ConfirmDialog`; nunca `window.confirm` ni `alert`.
+- **Carga inicial:** `index.html` muestra un splash estático y React usa `LoadingScreen` mientras valida la sesión; nunca dejar la pantalla en blanco.
 
 ## 7. Copy
 

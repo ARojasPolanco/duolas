@@ -1,4 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import LoadingScreen from './components/LoadingScreen.jsx';
+import { useAuth } from './context/AuthContext.jsx';
 import AccountDeletedPage from './pages/AccountDeletedPage.jsx';
 import AramPage from './pages/AramPage.jsx';
 import AdminMetricsPage from './pages/AdminMetricsPage.jsx';
@@ -29,6 +31,10 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { privacySections, riotSections, termsSections } from './content/legal.js';
 
 function App() {
+  const { loading } = useAuth();
+
+  if (loading) return <LoadingScreen />;
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />

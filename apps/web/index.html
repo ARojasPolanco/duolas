@@ -56,9 +56,276 @@
       rel="stylesheet"
     />
     <title>Duo LAS — Encontrá tu duo para League of Legends en LAS</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #030407;
+      }
+
+      body {
+        color: #f4f7fb;
+        font-family: 'Montserrat', 'Segoe UI', Arial, Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      .boot {
+        position: relative;
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 24px;
+        background:
+          radial-gradient(circle at 82% 12%, rgba(21, 88, 201, 0.28), transparent 34%),
+          radial-gradient(circle at 12% 88%, rgba(176, 207, 92, 0.12), transparent 32%),
+          #030407;
+      }
+
+      .boot-card {
+        position: relative;
+        width: min(100%, 420px);
+        padding: 34px 28px 28px;
+        border: 1px solid #1558c9;
+        border-radius: 28px;
+        background: #060b14;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+        text-align: center;
+      }
+
+      .boot-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 25px;
+        font-weight: 900;
+        letter-spacing: -1px;
+      }
+
+      .boot-brand span {
+        color: #b0cf5c;
+      }
+
+      .boot-brand .boot-beta {
+        padding: 4px 8px;
+        border: 1px solid rgba(176, 207, 92, 0.55);
+        border-radius: 999px;
+        background: rgba(176, 207, 92, 0.1);
+        color: #b0cf5c;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.6px;
+      }
+
+      .boot-orbit {
+        position: relative;
+        display: flex;
+        width: 96px;
+        height: 96px;
+        align-items: center;
+        justify-content: center;
+        margin: 32px auto 0;
+      }
+
+      .boot-ring {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(176, 207, 92, 0.35);
+        border-radius: 50%;
+        animation: bootPulse 2.4s ease-out infinite;
+      }
+
+      .boot-ring.two {
+        inset: 10px;
+        border-color: rgba(21, 88, 201, 0.55);
+        animation-delay: 1.2s;
+      }
+
+      .boot-core {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        width: 46px;
+        height: 46px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: #b0cf5c;
+        color: #030407;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: 0 0 32px rgba(176, 207, 92, 0.2);
+      }
+
+      .boot-kicker {
+        margin: 28px 0 0;
+        color: #b0cf5c;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+
+      .boot-phrases {
+        position: relative;
+        height: 30px;
+        margin-top: 8px;
+      }
+
+      .boot-phrases span {
+        position: absolute;
+        inset: 0;
+        color: #f4f7fb;
+        font-size: 19px;
+        font-weight: 800;
+        line-height: 30px;
+        opacity: 0;
+        animation: bootPhrase 12s infinite;
+      }
+
+      .boot-phrases span:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      .boot-phrases span:nth-child(2) {
+        animation-delay: 2.4s;
+      }
+
+      .boot-phrases span:nth-child(3) {
+        animation-delay: 4.8s;
+      }
+
+      .boot-phrases span:nth-child(4) {
+        animation-delay: 7.2s;
+      }
+
+      .boot-phrases span:nth-child(5) {
+        animation-delay: 9.6s;
+      }
+
+      .boot-sub {
+        margin: 12px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .boot-bar {
+        height: 6px;
+        margin-top: 22px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #0a1424;
+      }
+
+      .boot-bar span {
+        display: block;
+        width: 42%;
+        height: 100%;
+        border-radius: inherit;
+        background: #b0cf5c;
+        animation: bootBar 1.8s ease-in-out infinite;
+      }
+
+      .boot-note {
+        margin: 18px 0 0;
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      @keyframes bootPhrase {
+        0% {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        4% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        18% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        22%,
+        100% {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+      }
+
+      @keyframes bootPulse {
+        0% {
+          opacity: 0.8;
+          transform: scale(0.82);
+        }
+        70%,
+        100% {
+          opacity: 0;
+          transform: scale(1.15);
+        }
+      }
+
+      @keyframes bootBar {
+        0% {
+          transform: translateX(-110%);
+        }
+        50% {
+          transform: translateX(120%);
+        }
+        100% {
+          transform: translateX(260%);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .boot-ring,
+        .boot-bar span,
+        .boot-phrases span {
+          animation: none;
+        }
+
+        .boot-phrases span:first-child {
+          opacity: 1;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" role="status" aria-live="polite">
+        <div class="boot-card">
+          <div class="boot-brand">
+            Duo<span>LAS</span>
+            <span class="boot-beta">BETA</span>
+          </div>
+
+          <div class="boot-orbit">
+            <span class="boot-ring"></span>
+            <span class="boot-ring two"></span>
+            <span class="boot-core">D</span>
+          </div>
+
+          <p class="boot-kicker">Preparando la Grieta</p>
+          <div class="boot-phrases">
+            <span>Buscando duos compatibles...</span>
+            <span>Revisando rangos y roles...</span>
+            <span>Acomodando horarios...</span>
+            <span>Calentando la Grieta...</span>
+            <span>Preparando tu próximo match...</span>
+          </div>
+          <p class="boot-sub">Estamos despertando la base de datos y cargando tu sesión.</p>
+          <div class="boot-bar"><span></span></div>
+          <p class="boot-note">La primera carga puede tardar unos segundos.</p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
