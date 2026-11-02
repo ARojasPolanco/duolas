@@ -224,6 +224,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Login robusto ante respuestas 401 tardías de un token anterior, sin borrar la sesión recién creada.
 - [x] Splash estático y `LoadingScreen` con frases de búsqueda mientras carga la sesión/DB.
 - [x] Card “Conectados ahora” en admin con usuarios/conexiones SSE y refresh cada 30 s.
+- [x] “Recordarme” en login guarda solo email/username y precarga el campo; no guarda contraseña.
 
 ## Hardening previo a producción
 

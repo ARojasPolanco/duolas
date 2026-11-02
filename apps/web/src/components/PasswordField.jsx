@@ -11,6 +11,7 @@ export default function PasswordField({
   placeholder,
   required = true,
   action,
+  name,
 }) {
   const [visible, setVisible] = useState(false);
   const id = useId();
@@ -29,6 +30,7 @@ export default function PasswordField({
           value={value}
           onChange={onChange}
           autoComplete={autoComplete}
+          name={name}
           minLength={minLength}
           maxLength={maxLength}
           placeholder={placeholder}

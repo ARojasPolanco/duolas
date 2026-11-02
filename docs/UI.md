@@ -94,6 +94,7 @@ Top nav con logo, Inicio, Match, ARAM, Disponible, Busco 1, Matches e Invitacion
 
 - Email o username + contraseña.
 - Toggle para mostrar u ocultar la contraseña.
+- Checkbox “Recordarme” que guarda solo el email o username; nunca la contraseña.
 - Link "¿Has olvidado tu contraseña?" junto al campo, hacia `/forgot-password`.
 - Link a registro.
 - Mensaje de suspensión si corresponde.
