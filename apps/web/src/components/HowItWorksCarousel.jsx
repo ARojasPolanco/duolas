@@ -33,9 +33,9 @@ const slides = [
   {
     title: 'Confianza real',
     description:
-      'Feedback posterior a la partida, reputación visible, reportes y bloqueos para cuidar la comunidad.',
+      'Feedback posterior a la partida, verificación y moderación privada para cuidar la comunidad.',
     image: '/illustrations/trust.svg',
-    alt: 'Reputación y seguridad',
+    alt: 'Feedback y seguridad',
     points: ['Feedback doble ciego', 'Reportar bloquea al instante'],
     accent: 'text-success',
   },

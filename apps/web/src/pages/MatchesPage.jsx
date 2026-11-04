@@ -182,9 +182,6 @@ export default function MatchesPage() {
                       ) : null}
                     </div>
                   </div>
-                  <span className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-muted">
-                    {match.other.reputation.label}
-                  </span>
                 </div>
 
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">

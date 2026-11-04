@@ -259,7 +259,7 @@ describe('Perfiles', () => {
       expect(res.body.profile.email).toBeUndefined();
       expect(res.body.profile.country).toBe('AR');
       expect(res.body.profile.stats.connections).toBe(0);
-      expect(res.body.profile.reputation.label).toBe('Nuevo');
+      expect(res.body.profile.reputation).toBeUndefined();
     });
 
     it('devuelve 404 si el perfil no existe o está incompleto', async () => {

@@ -1,18 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Ban,
-  Check,
-  Eye,
-  Heart,
-  Languages,
-  Mic,
-  MicOff,
-  RefreshCw,
-  Star,
-  Swords,
-  X,
-} from 'lucide-react';
+import { Ban, Check, Eye, Heart, Languages, Mic, MicOff, RefreshCw, Swords, X } from 'lucide-react';
 import AppShell from '../components/AppShell.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import CountryBadge from '../components/CountryBadge.jsx';
@@ -341,12 +329,6 @@ export default function MatchPage() {
                             {profile.languages
                               .map((language) => LANGUAGE_LABELS[language] || language)
                               .join(' · ')}
-                          </span>
-                        </span>
-                        <span className="inline-flex min-w-0 items-center gap-1">
-                          <Star size={12} className="shrink-0" aria-hidden="true" />
-                          <span className="truncate">
-                            Reputación {profile.reputation?.label || 'Nuevo'}
                           </span>
                         </span>
                       </div>

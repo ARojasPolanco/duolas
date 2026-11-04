@@ -301,6 +301,7 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - [x] Acceso por código con `VITE_RIOT_DEMO_ACCESS_CODE`.
 - [x] `noindex`, `robots.txt` y CSP para Data Dragon.
 - [x] Sin backend, DB, auth real ni Personal API Key.
+- [x] Reputación fuera de cards, perfiles y respuestas públicas; queda solo para moderación interna.
 - [x] Smoke visual de todos los pasos.
 - [ ] Publicar en Vercel y probar la URL final.
 - [ ] Grabar video del flujo real local, sin subir la Personal API Key.

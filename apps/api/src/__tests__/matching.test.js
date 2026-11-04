@@ -76,10 +76,12 @@ describe('Matching', () => {
       expect(card).toBeTruthy();
       expect(card.score).toBeGreaterThan(0);
       expect(card.breakdown.schedule).toBeGreaterThan(0);
+      expect(card.breakdown.reputation).toBeUndefined();
       expect(card.reasons.length).toBeGreaterThan(0);
       expect(card.profile.riotId).toBeUndefined();
       expect(card.profile.discordTag).toBeUndefined();
       expect(card.profile.email).toBeUndefined();
+      expect(card.profile.reputation).toBeUndefined();
     });
 
     it('excluye candidatos con rango incompatible', async () => {

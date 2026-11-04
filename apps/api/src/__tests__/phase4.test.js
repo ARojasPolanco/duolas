@@ -144,8 +144,8 @@ describe('Feedback y reputación', () => {
     expect(bFinal.body.revealed).toBe(true);
     expect(bFinal.body.theirs.sentiment).toBe('positive');
 
-    const aProfile = await api.get(`/api/v1/profiles/${a.user.id}`).set(authHeader(a.token));
-    const bProfile = await api.get(`/api/v1/profiles/${b.user.id}`).set(authHeader(a.token));
+    const aProfile = await api.get('/api/v1/profiles/me').set(authHeader(a.token));
+    const bProfile = await api.get('/api/v1/profiles/me').set(authHeader(b.token));
 
     expect(aProfile.body.profile.reputation.score).toBe(40);
     expect(bProfile.body.profile.reputation.score).toBe(60);
@@ -213,9 +213,7 @@ describe('Feedback y reputación', () => {
     expect(dueDetail.body.revealed).toBe(true);
     expect(dueDetail.body.theirs.sentiment).toBe('positive');
 
-    const dueProfile = await api
-      .get(`/api/v1/profiles/${dueB.user.id}`)
-      .set(authHeader(dueB.token));
+    const dueProfile = await api.get('/api/v1/profiles/me').set(authHeader(dueB.token));
     expect(dueProfile.body.profile.reputation.score).toBe(60);
 
     expect(a.user.id).not.toBe(b.user.id);

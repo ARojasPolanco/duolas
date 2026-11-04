@@ -20,6 +20,7 @@ import {
   maxRankDistance,
   orderedPair,
   rankIndexForQueue,
+  toPublicBreakdown,
 } from './matching.utils.js';
 
 const USER_ATTRIBUTES = [
@@ -223,7 +224,7 @@ export class MatchingService {
     const selected = scored.slice(0, limit).map((item) => ({
       profile: toPublicProfile(item.candidate, item.candidate.user),
       score: item.score,
-      breakdown: item.breakdown,
+      breakdown: toPublicBreakdown(item.breakdown),
       reasons: item.reasons,
     }));
 

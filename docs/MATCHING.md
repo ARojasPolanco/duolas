@@ -358,7 +358,7 @@ Los pesos deben sumar 100 cada uno. Un test unitario lo verifica.
 - **Bloqueo:** excluye en ambas direcciones y archiva la conexión.
 - **Disponibilidad vencida:** se cierra de forma perezosa y no aparece.
 - **Cambio de rango:** recalcula `rank_index`; los likes existentes se mantienen.
-- **Reputación nueva:** score 50 y etiqueta "Nuevo" con menos de 3 feedbacks.
+- La reputación es interna: participa del score y del desempate, pero no se devuelve en respuestas públicas ni se muestra en cards o perfiles.
 - **Zona horaria:** ART fija, sin horario de verano; el matching compara bloques ART. El país del perfil solo se usa para mostrar la equivalencia local en la UI.
 - **Sin solape horario:** se descarta aunque el resto sea perfecto.
 - **Doble like:** idempotente; no duplica conexión.

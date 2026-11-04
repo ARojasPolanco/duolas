@@ -14,6 +14,7 @@ import {
   computeNowScore,
   maxRankDistance,
   rankDistance,
+  toPublicBreakdown,
 } from '../matching/matching.utils.js';
 import DuoConnection from '../matching/duoConnection.model.js';
 
@@ -263,15 +264,12 @@ export class AvailabilityService {
           availabilityActive: true,
         },
         score: score.score,
-        breakdown: score.breakdown,
+        breakdown: toPublicBreakdown(score.breakdown),
       });
     }
 
     items.sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
-      const reputationDiff =
-        (b.profile.reputation?.score || 0) - (a.profile.reputation?.score || 0);
-      if (reputationDiff !== 0) return reputationDiff;
       return a.session.expiresAt.getTime() - b.session.expiresAt.getTime();
     });
 

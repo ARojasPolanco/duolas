@@ -105,7 +105,7 @@ Las cards de match y el perfil público solo deben mostrar datos que ayuden a de
 
 El winrate puede mostrarse al propio usuario como contexto, nunca como ranking público ni para avergonzar a otros. Todo dato de Riot requiere una cuenta vinculada vía RSO; sin RSO se mantiene el rango declarado y no se muestran datos personales de Riot.
 
-El perfil público debe poder abrirse desde cada card de candidato antes de dar "Me interesa". Los contactos y el Riot ID siguen ocultos hasta que exista una conexión.
+El perfil público debe poder abrirse desde cada card de candidato antes de dar "Me interesa". Los contactos y el Riot ID siguen ocultos hasta que exista una conexión. La reputación y los reportes son internos de moderación y no se muestran como evaluación pública.
 
 ## 9. Variables previstas
 

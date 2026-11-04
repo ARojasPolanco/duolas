@@ -37,7 +37,6 @@ const mockPlayers = [
       playStyle: 'ranked',
       languages: ['es', 'en'],
       hasMic: true,
-      reputation: { label: '92%' },
       bio: 'Mid main. Busco duo para ranked con horarios de noche.',
     },
     score: 94,
@@ -55,7 +54,6 @@ const mockPlayers = [
       playStyle: 'ranked',
       languages: ['es'],
       hasMic: true,
-      reputation: { label: '88%' },
       bio: 'Jungla main, prefiero comunicar por voz.',
     },
     score: 91,
@@ -73,7 +71,6 @@ const mockPlayers = [
       playStyle: 'casual',
       languages: ['es', 'pt'],
       hasMic: true,
-      reputation: { label: 'Nuevo' },
       bio: 'Support main, juego para mejorar sin toxicidad.',
     },
     score: 86,
@@ -132,7 +129,7 @@ export default function LandingPage() {
               transition={{ delay: 0.1 }}
               className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
             >
-              Perfiles compatibles, disponibilidad inmediata y reputación. Gratis, mobile-first y
+              Perfiles compatibles, disponibilidad inmediata y moderación. Gratis, mobile-first y
               solo para mayores de 18 años.
             </motion.p>
             <motion.p

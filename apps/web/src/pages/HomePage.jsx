@@ -25,7 +25,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useMatching } from '../context/MatchingContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import api from '../config/api.js';
-import { formatRank, formatRoles, initialsOf } from '../utils/labels.js';
+import { STYLE_LABELS, formatRank, formatRoles, initialsOf } from '../utils/labels.js';
 
 const statCard = 'rounded-xl border border-border bg-bg p-4';
 const actionLink =
@@ -272,9 +272,9 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className={statCard}>
-                  <p className="text-xs text-muted">Reputación</p>
+                  <p className="text-xs text-muted">Estilo</p>
                   <p className="mt-1 text-sm font-semibold">
-                    {profile?.reputation?.label || 'Nuevo'}
+                    {profile ? STYLE_LABELS[profile.playStyle] || profile.playStyle : 'Sin perfil'}
                   </p>
                 </div>
                 <div className={statCard}>

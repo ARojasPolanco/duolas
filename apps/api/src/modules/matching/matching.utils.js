@@ -161,6 +161,12 @@ export const computeNowScore = (a, b, { queue = 'solo_duo' } = {}) => {
   };
 };
 
+export const toPublicBreakdown = (breakdown = {}) => {
+  const publicBreakdown = { ...breakdown };
+  delete publicBreakdown.reputation;
+  return publicBreakdown;
+};
+
 export const computePostFitScore = (applicant, post, owner) => {
   const minIndex = Number(post?.rankMinIndex ?? 0);
   const maxIndex = Number(post?.rankMaxIndex ?? 36);

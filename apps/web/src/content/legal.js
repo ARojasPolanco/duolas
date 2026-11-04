@@ -25,8 +25,8 @@ export const termsSections = [
     body: 'Duo LAS facilita que dos jugadores se encuentren y coordinen una partida. No organiza partidas, no participa en la comunicación externa, no intermedia pagos y no garantiza resultados dentro del juego. La coordinación, los horarios y cualquier acuerdo posterior son responsabilidad de los jugadores. No compartas información sensible ni realices pagos a personas que conozcas por la plataforma.',
   },
   {
-    title: 'Reputación, reportes y moderación',
-    body: 'El feedback, la reputación, los reportes y los bloqueos buscan cuidar la comunidad. Reportar a una persona puede bloquearla automáticamente. Podemos advertir, suspender temporalmente o suspender de forma permanente una cuenta, y podemos conservar evidencia de moderación después de una baja. Las decisiones de moderación buscan proteger a la comunidad y pueden revisarse por el equipo de soporte.',
+    title: 'Feedback, reportes y moderación',
+    body: 'El feedback y la reputación se usan de forma interna para moderar la comunidad y nunca se muestran como evaluación pública de una persona. Los reportes y bloqueos buscan cuidar la comunidad; reportar a alguien puede bloquearlo automáticamente. Podemos advertir, suspender temporalmente o suspender de forma permanente una cuenta, y podemos conservar evidencia de moderación después de una baja. Las decisiones de moderación buscan proteger a la comunidad y pueden revisarse por el equipo de soporte.',
   },
   {
     title: 'Propiedad intelectual y Riot Games',

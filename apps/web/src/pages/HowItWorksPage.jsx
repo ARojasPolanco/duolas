@@ -368,8 +368,8 @@ export default function HowItWorksPage() {
               <h2 className="mt-2 text-2xl font-extrabold">Tu contacto, solo cuando hay match.</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted">
                 El Riot ID y los contactos opcionales se revelan únicamente después de una conexión.
-                También podés reportar, bloquear y dejar feedback después de jugar. La reputación
-                ayuda a que la comunidad se cuide.
+                También podés reportar, bloquear y dejar feedback después de jugar. La moderación
+                interna ayuda a cuidar la comunidad.
               </p>
             </div>
             <Users

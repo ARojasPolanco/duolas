@@ -345,3 +345,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** publicar `/demo-riot-9f4a2c` como una pantalla aislada con fixtures, acceso por código y `noindex`. No usa backend, base de datos, auth real, SSE ni push. La demo es un recorrido guiado por Mi perfil, Match, Perfil público, Disponible ya, Busco 1 y Cierre. Los perfiles, rangos y campeones son ficticios; las imágenes vienen de Data Dragon. El código de acceso vive en `VITE_RIOT_DEMO_ACCESS_CODE` y se comparte en la solicitud; no es una credencial real.
 
 **Consecuencias:** Riot puede revisar la presentación del perfil sin riesgo de exponer datos ni keys. La demo no valida integración real; eso queda para la implementación posterior con RSO. Los fixtures deben actualizarse si cambia la UI de perfil.
+
+## ADR-044 - Reputación solo para moderación interna
+
+**Contexto:** las políticas de Riot prohíben crear canales alternativos para reportar o evaluar jugadores y avergonzarlos por métricas o performance. La reputación pública en cards, perfiles y respuestas de API podía interpretarse como una evaluación paralela.
+
+**Decisión:** dejar de exponer la reputación en la UI y en las respuestas públicas. Se elimina de cards de Match e Inicio, Matches, perfil público, respuestas públicas de perfiles, disponibilidad e invitaciones, y del `breakdown` público. El cálculo y los datos siguen existiendo solo para moderación interna, desempates internos y el panel admin.
+
+**Consecuencias:** la app queda alineada con la revisión de Riot. Los reportes y bloqueos siguen existiendo como herramientas privadas de seguridad. El feedback y la reputación no se muestran como evaluación pública ni se usan para avergonzar jugadores.

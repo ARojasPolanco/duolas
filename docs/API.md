@@ -269,7 +269,6 @@ Protegido. Perfil público:
     "hasMic": true,
     "scheduleBlocks": ["mon_night"],
     "bio": "Mid main.",
-    "reputation": { "score": 70, "positive": 5, "negative": 1, "total": 6, "label": "70%" },
     "availabilityActive": true,
     "stats": { "connections": 4 },
     "createdAt": "2026-10-25T..."
@@ -373,8 +372,7 @@ Solo salientes. No revela quién te likeó.
         "id": "uuid",
         "username": "pepe",
         "rankTier": "diamond",
-        "primaryRole": "jungle",
-        "reputation": { "...": "..." }
+        "primaryRole": "jungle"
       }
     }
   ]
@@ -396,8 +394,7 @@ Solo salientes. No revela quién te likeó.
         "id": "uuid",
         "username": "pepe",
         "rankTier": "diamond",
-        "primaryRole": "jungle",
-        "reputation": { "...": "..." }
+        "primaryRole": "jungle"
       },
       "feedback": { "mine": "pending", "theirs": "submitted", "revealed": false }
     }
@@ -456,7 +453,7 @@ Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo, bloquead
         "expiresAt": "2026-10-25T19:00:00.000Z"
       },
       "score": 78,
-      "breakdown": { "rank": 24, "style": 25, "language": 12, "mic": 10, "reputation": 7 }
+      "breakdown": { "rank": 24, "style": 25, "language": 12, "mic": 10 }
     }
   ],
   "total": 8
@@ -496,8 +493,7 @@ Query: `queue`, `role`, `limit`. Solo sesiones vigentes, sin uno mismo, bloquead
     "username": "pepe",
     "country": "CL",
     "rankTier": "diamond",
-    "primaryRole": "mid",
-    "reputation": { "...": "..." }
+    "primaryRole": "mid"
   },
   "availability": { "roles": ["mid"], "queue": "solo_duo" }
 }

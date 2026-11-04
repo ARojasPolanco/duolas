@@ -112,7 +112,6 @@ const toPublicProfile = (profile, user) => ({
   hasMic: profile.hasMic,
   scheduleBlocks: profile.scheduleBlocks,
   bio: profile.bio,
-  reputation: reputationOf(profile),
   availabilityActive: false,
   stats: { connections: 0 },
   createdAt: user.createdAt,

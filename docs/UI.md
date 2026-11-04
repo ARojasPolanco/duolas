@@ -146,7 +146,7 @@ Reglas:
 ### 3.6 Inicio `/inicio`
 
 - Hero con saludo, email, país y perfil propio.
-- Stats de rango Solo/Dúo y Flex, roles, reputación y estado de cuenta.
+- Stats de rango Solo/Dúo y Flex, roles, estilo y estado de cuenta.
 - Card de perfil propio con Riot ID, Discord y WhatsApp visibles solo para el dueño.
 - Accesos rápidos a Match, Matches y edición de perfil.
 - Carrusel compacto "Cómo funciona".
@@ -206,7 +206,7 @@ Reglas:
 ### 3.10 Matches `/matches`
 
 - Lista de conexiones con la otra persona.
-- Card con rango, roles, reputación y fecha.
+- Card con rango, roles, país y fecha.
 - Panel de contacto: Riot ID con botón copiar, Discord con botón copiar y WhatsApp con link.
 - Feedback inline doble ciego: formulario, estado propio y del otro, revelado.
 - Reportar con motivo y detalle; auto-bloquea y elimina el match.
@@ -266,7 +266,7 @@ Reglas:
 
 - Cabecera con username, email, rol, estado y contadores.
 - Cuenta: ID, verificación, alta, último login, última actividad, suspensión y baja.
-- Perfil de jugador: Riot ID, Discord, WhatsApp, rango Solo/Dúo, rango Flex, roles, país, estilo, idiomas, micrófono, reputación, horarios y bio.
+- Perfil de jugador: Riot ID, Discord, WhatsApp, rango Solo/Dúo, rango Flex, roles, país, estilo, idiomas, micrófono, reputación interna, horarios y bio.
 - Solicitud de cambio de username: crear, ver propuesta y aprobar/rechazar.
 - Reportes recibidos y sanciones recientes.
 - Disponibilidad activa y conexiones históricas.

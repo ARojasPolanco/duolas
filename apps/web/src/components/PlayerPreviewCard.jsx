@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Ban, Check, Eye, Heart, Languages, Mic, MicOff, Star } from 'lucide-react';
+import { Ban, Check, Eye, Heart, Languages, Mic, MicOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CountryBadge from './CountryBadge.jsx';
 import RankIcon from './RankIcon.jsx';
@@ -76,10 +76,6 @@ export default function PlayerPreviewCard({
               .map((language) => LANGUAGE_LABELS[language] || language)
               .join(' · ')}
           </span>
-        </span>
-        <span className="inline-flex min-w-0 items-center gap-1">
-          <Star size={12} className="shrink-0" aria-hidden="true" />
-          <span className="truncate">Reputación {player.reputation?.label || 'Nuevo'}</span>
         </span>
       </div>
 

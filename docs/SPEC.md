@@ -11,13 +11,13 @@ El MVP resuelve cuatro necesidades:
 1. **Match por afinidad:** encontrar un duo compatible por rango, roles, horarios, estilo e idioma.
 2. **Disponibilidad inmediata:** "Disponible ya" para jugar ahora e "Busco 1" para grupos con un lugar libre.
 3. **ARAM:** buscar grupo o ponerse disponible sin rango ni roles, con postulaciones y aceptación.
-4. **Confianza:** reputación, feedback posterior a la partida, reportes y bloqueos.
+4. **Confianza:** feedback posterior a la partida, moderación interna, reportes y bloqueos.
 
 ## 2. Problema y oportunidad
 
 Hoy los duos se buscan de forma informal en grupos de Facebook, Discord y el chat del juego. No hay filtros por rango, rol, horario o estilo, no hay disponibilidad en tiempo real y no hay forma de saber si alguien miente el elo, abandona o tiene mal trato.
 
-La oportunidad es ordenar esa actividad existente en LAS con match por afinidad, disponibilidad inmediata y reputación.
+La oportunidad es ordenar esa actividad existente en LAS con match por afinidad, disponibilidad inmediata y moderación interna.
 
 ## 3. Público
 
@@ -39,7 +39,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 - Invitaciones y postulaciones.
 - Contacto revelado solo después de una conexión: Riot ID y Discord/WhatsApp opcionales.
 - Notificaciones en la app, SSE, polling de respaldo y web push.
-- Feedback posterior a la partida, reputación simple, reportes y bloqueos.
+- Feedback posterior a la partida, reputación interna, reportes y bloqueos.
 - Moderación mínima con advertencias y suspensiones.
 - Métricas de los cuatro KPIs del MVP.
 
@@ -62,7 +62,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 - **Bajo roce:** un jugador debe poder publicar disponibilidad en menos de 30 segundos.
 - **Consentimiento:** el contacto se revela solo con interés mutuo o aceptación explícita.
 - **Seguridad:** reportar bloquea de inmediato; el feedback es doble ciego.
-- **Transparencia:** el rango es declarado y así se muestra; la reputación ayuda a filtrar mentiras.
+- **Transparencia:** el rango es declarado y así se muestra; la reputación interna ayuda a moderar, pero no se expone públicamente.
 - **Sin fricción comercial:** todo el MVP es gratis.
 
 ## 6. Flujos principales
@@ -239,8 +239,7 @@ Detalle completo en `docs/MATCHING.md`.
 - Al revelarse, ambos se muestran a la vez.
 - Reputación con suavizado de Laplace: `(positivos + 2) / (positivos + negativos + 4) * 100`.
 - La reputación arranca en 50.
-- Con menos de 3 feedbacks visibles se muestra "Nuevo" sin porcentaje.
-- La reputación se cachea en el perfil y se recalcula al revelar feedback.
+- La reputación es interna: se usa para moderación y orden interno, nunca se muestra en cards, perfiles públicos ni respuestas públicas.
 
 ## 13. Reglas de reportes, bloqueos y sanciones
 
