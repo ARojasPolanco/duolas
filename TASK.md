@@ -11,7 +11,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - **Git:** `dev` es la rama de desarrollo; `main` es producción y recibe releases aprobados.
 - **Decisiones abiertas:** ninguna. Ver `docs/DECISIONS.md`.
 - **Riesgo principal:** arranque en frío. Se mitiga con lanzamiento solo en LAS y siembra por tandas.
-- **Última actualización:** 2026-10-29.
+- **Última actualización:** 2026-11-04.
 
 ## Leyenda
 
@@ -104,6 +104,7 @@ Tablero vivo del proyecto. Se actualiza al empezar y al terminar cada tarea. Si 
 - [x] Bloqueo básico excluyente de candidatos.
 - [x] Pantallas Match y Matches.
 - [x] Home interactivo con carrusel, perfil propio, jugadores compatibles y matches.
+- [x] Perfil público `/perfil/:id` accesible desde las cards de candidatos antes de likear.
 - [x] Docker de desarrollo para API y web.
 - [x] Toggle de contraseña y enlace de recuperación en el login.
 - [x] Tests unitarios de matching y de integración de likes.
@@ -292,6 +293,18 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - [x] Correr smoke público desktop/mobile.
 - [ ] Solicitar production key y probar integración en desarrollo.
 - [ ] Evaluar RSO solo si se va a verificar titularidad de cuenta.
+
+## Demo pública Riot - `/demo-riot-9f4a2c`
+
+- [x] Recorrido guiado: Mi perfil, Match, Perfil público, Disponible ya, Busco 1 y Cierre.
+- [x] Datos ficticios en `apps/web/src/content/riotDemo.js`.
+- [x] Acceso por código con `VITE_RIOT_DEMO_ACCESS_CODE`.
+- [x] `noindex`, `robots.txt` y CSP para Data Dragon.
+- [x] Sin backend, DB, auth real ni Personal API Key.
+- [x] Smoke visual de todos los pasos.
+- [ ] Publicar en Vercel y probar la URL final.
+- [ ] Grabar video del flujo real local, sin subir la Personal API Key.
+- [ ] Solicitar Production API Key.
 
 ## Pre-producción
 

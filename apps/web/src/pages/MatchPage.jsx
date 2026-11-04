@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Ban,
   Check,
+  Eye,
   Heart,
   Languages,
   Mic,
@@ -370,6 +371,14 @@ export default function MatchPage() {
                           {profile.bio}
                         </p>
                       ) : null}
+
+                      <Link
+                        to={`/perfil/${profile.id}`}
+                        className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-xs font-semibold text-accent"
+                      >
+                        <Eye size={14} aria-hidden="true" />
+                        Ver perfil completo
+                      </Link>
 
                       <div className="mt-5 flex items-center gap-2">
                         <button

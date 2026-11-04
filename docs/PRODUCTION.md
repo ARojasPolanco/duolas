@@ -55,10 +55,6 @@ Además, antes de producción hay que reemplazar los valores de desarrollo:
 | `VAPID_PUBLIC_KEY`     | Sí antes de push        | `REPLACE_WITH_VAPID_PUBLIC`                       | Generar                      | Fase 5                                           |
 | `VAPID_PRIVATE_KEY`    | Sí antes de push        | `REPLACE_WITH_VAPID_PRIVATE`                      | Generar                      | Secreto, nunca exponer                           |
 | `VAPID_SUBJECT`        | Sí antes de push        | `mailto:soporte@duolas.online`                    | Dominio de la web            | Formato `mailto:`                                |
-| `RIOT_API_KEY`         | Solo integración futura | `RGAPI-REPLACE_ME`                                | Developer Portal             | Solo backend; personal key no va a producción    |
-| `RIOT_PLATFORM`        | Solo integración futura | `la2`                                             | Manual                       | LAS                                              |
-| `RIOT_REGION`          | Solo integración futura | `americas`                                        | Manual                       | Routing regional                                 |
-| `RIOT_API_TIMEOUT_MS`  | No                      | `8000`                                            | Manual                       | Timeout de llamadas                              |
 | `RATE_LIMIT_WINDOW_MS` | No                      | `900000`                                          | Manual                       | Default 15 minutos                               |
 | `RATE_LIMIT_MAX`       | No                      | `600`                                             | Manual                       | Por IP; default 600                              |
 | `RATE_LIMIT_USER_MAX`  | No                      | `600`                                             | Manual                       | Por usuario autenticado; default 600             |
@@ -68,10 +64,11 @@ Además, antes de producción hay que reemplazar los valores de desarrollo:
 
 ## 3. Variables de la web
 
-| Variable                 | ¿Obligatoria? | Ejemplo                         | Dónde se configura | Notas                              |
-| ------------------------ | ------------- | ------------------------------- | ------------------ | ---------------------------------- |
-| `VITE_API_URL`           | Sí            | `https://api.duolas.online/api` | Vercel             | **Incluye `/api`**; es build-time  |
-| `VITE_HCAPTCHA_SITE_KEY` | Sí            | `REPLACE_WITH_SITE_KEY`         | Vercel             | Es pública; el secret va en la API |
+| Variable                     | ¿Obligatoria? | Ejemplo                         | Dónde se configura | Notas                                 |
+| ---------------------------- | ------------- | ------------------------------- | ------------------ | ------------------------------------- |
+| `VITE_API_URL`               | Sí            | `https://api.duolas.online/api` | Vercel             | **Incluye `/api`**; es build-time     |
+| `VITE_HCAPTCHA_SITE_KEY`     | Sí            | `REPLACE_WITH_SITE_KEY`         | Vercel             | Es pública; el secret va en la API    |
+| `VITE_RIOT_DEMO_ACCESS_CODE` | Demo Riot     | `REPLACE_WITH_DEMO_ACCESS_CODE` | Vercel             | Código público de la demo, no secreto |
 
 `VITE_*` se inyecta al construir. Después de cambiarlas hay que redeployar la web.
 
@@ -181,9 +178,9 @@ Al pasar a producción: verificar el dominio en Resend, cambiar `OWNER_EMAIL` a 
 - La web en Vercel aplica CSP, HSTS, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`, `X-Content-Type-Options` y CORP.
 - El CSP permite `connect-src https:` para no hardcodear el dominio de la API. Después del deploy, conviene restringirlo al dominio real en `apps/web/vercel.json`.
 - `npm audit --omit=dev` queda con 2 moderadas de `uuid` vía Sequelize. La ruta vulnerable (buffers en v3/v5/v6) no la usa Sequelize; se revisa al actualizar Sequelize 7.
-- `SECRET_JWT_SEED`, `DB_URI`, `RESEND_API_KEY`, `HCAPTCHA_SECRET`, `VAPID_PRIVATE_KEY`, `RIOT_API_KEY` y `ADMIN_PASSWORD` son secretos.
+- `SECRET_JWT_SEED`, `DB_URI`, `RESEND_API_KEY`, `HCAPTCHA_SECRET`, `VAPID_PRIVATE_KEY` y `ADMIN_PASSWORD` son secretos.
 - `VITE_HCAPTCHA_SITE_KEY` y `VAPID_PUBLIC_KEY` son públicos.
-- Nunca crear variables `VITE_RIOT_*`: expondrían la key en el bundle de la web.
+- No crear `VITE_RIOT_API_KEY` ni exponer keys de Riot en el bundle. `VITE_RIOT_DEMO_ACCESS_CODE` es solo el código de la demo pública.
 - No commitear `.env`, `.env.production` ni logs.
 - No loguear tokens de verificación, reset, tickets SSE ni emails completos.
 - Los requests exitosos quedan en nivel `debug`; con `LOG_LEVEL=info` solo se ven fallos, errores y requests de más de 1,5 s.

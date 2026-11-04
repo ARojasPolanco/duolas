@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Ban, Check, Heart, Languages, Mic, MicOff, Star } from 'lucide-react';
+import { Ban, Check, Eye, Heart, Languages, Mic, MicOff, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import CountryBadge from './CountryBadge.jsx';
 import RankIcon from './RankIcon.jsx';
 import UsernameHint from './UsernameHint.jsx';
@@ -17,6 +18,7 @@ export default function PlayerPreviewCard({
   reasons = [],
   onLike,
   onBlock,
+  profileHref,
   busy = false,
   showActions = true,
   compact = false,
@@ -94,6 +96,16 @@ export default function PlayerPreviewCard({
 
       {player.bio ? (
         <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-muted">{player.bio}</p>
+      ) : null}
+
+      {profileHref ? (
+        <Link
+          to={profileHref}
+          className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-xs font-semibold text-accent"
+        >
+          <Eye size={14} aria-hidden="true" />
+          Ver perfil completo
+        </Link>
       ) : null}
 
       {showActions ? (

@@ -329,3 +329,19 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** agregar `whatsapp` opcional a `player_profiles`, con validación de 8-15 dígitos y código de país. Se comporta igual que el Discord: no aparece en el perfil público ni en candidatos, y solo se revela después de una conexión. La UI lo marca explícitamente como opcional y no necesario.
 
 **Consecuencias:** el contacto sigue siendo consentido y posterior al match. Quien no cargue WhatsApp no pierde ninguna funcionalidad; sus matches lo contactan por Riot ID o por los otros medios que haya compartido.
+
+## ADR-042 - Perfil público previo al like y datos Riot acotados
+
+**Contexto:** el candidato solo veía un resumen en la card y podía dar "Me interesa" sin revisar el perfil completo. Además, la futura integración con Riot podía tentar a mostrar historial, KDA o winrate pública, datos que no aportan a la afinidad y agravan el riesgo de moderación.
+
+**Decisión:** habilitar `/perfil/:id` para usuarios autenticados y enlazarlo desde cada card de candidato antes del like. El perfil muestra roles, rangos Solo/Dúo y Flex, país, diferencia horaria, estilo, idiomas, mic, bio, horarios y antigüedad; no muestra reputación pública, conexiones, email ni contactos. Los datos Riot que se agreguen en el futuro se limitan a ícono, nivel, rango verificado, rol principal y top 3 campeones por maestría. No se muestran KDA, CS, historial público, MMR/ELO ni live game; el winrate solo puede verse como contexto del propio usuario.
+
+**Consecuencias:** el usuario decide con más información sin exponer datos sensibles. Los datos Riot dependen de una cuenta vinculada vía RSO; sin vinculación se mantiene el rango declarado. La reputación y los reportes quedan como herramientas internas de moderación.
+
+## ADR-043 - Demo pública aislada para la revisión de Riot
+
+**Contexto:** para solicitar la Production API Key hace falta una demo revisable sin exponer la Personal API Key, sin usar cuentas reales y sin habilitar el flujo social completo.
+
+**Decisión:** publicar `/demo-riot-9f4a2c` como una pantalla aislada con fixtures, acceso por código y `noindex`. No usa backend, base de datos, auth real, SSE ni push. La demo es un recorrido guiado por Mi perfil, Match, Perfil público, Disponible ya, Busco 1 y Cierre. Los perfiles, rangos y campeones son ficticios; las imágenes vienen de Data Dragon. El código de acceso vive en `VITE_RIOT_DEMO_ACCESS_CODE` y se comparte en la solicitud; no es una credencial real.
+
+**Consecuencias:** Riot puede revisar la presentación del perfil sin riesgo de exponer datos ni keys. La demo no valida integración real; eso queda para la implementación posterior con RSO. Los fixtures deben actualizarse si cambia la UI de perfil.

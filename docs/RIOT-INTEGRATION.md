@@ -99,6 +99,14 @@ Decisión de Duo LAS:
 
 No implementar RSO “por las dudas”: requiere production key, cliente OAuth y un flujo de consentimiento.
 
+### 8.1 Datos visibles en el producto
+
+Las cards de match y el perfil público solo deben mostrar datos que ayuden a decidir afinidad: ícono de invocador, nivel, rango verificado, rol principal y top 3 campeones por maestría. Nada de KDA, CS, historial público de partidas, MMR/ELO ni live game.
+
+El winrate puede mostrarse al propio usuario como contexto, nunca como ranking público ni para avergonzar a otros. Todo dato de Riot requiere una cuenta vinculada vía RSO; sin RSO se mantiene el rango declarado y no se muestran datos personales de Riot.
+
+El perfil público debe poder abrirse desde cada card de candidato antes de dar "Me interesa". Los contactos y el Riot ID siguen ocultos hasta que exista una conexión.
+
 ## 9. Variables previstas
 
 ```env
@@ -108,7 +116,7 @@ RIOT_REGION=americas
 RIOT_API_TIMEOUT_MS=8000
 ```
 
-No crear ninguna variable `VITE_RIOT_*`.
+No crear `VITE_RIOT_API_KEY` ni exponer la key en el frontend. El código de acceso de la demo pública vive en `VITE_RIOT_DEMO_ACCESS_CODE` y no es una credencial real.
 
 ## 10. Checklist de aplicación
 
@@ -118,6 +126,7 @@ No crear ninguna variable `VITE_RIOT_*`.
 - [ ] Verificar el dominio con `riot.txt`.
 - [ ] Registrar el producto como LFG.
 - [ ] Adjuntar demo del flujo completo.
+- [ ] Publicar la demo aislada `/demo-riot-9f4a2c` con fixtures, acceso por código y `noindex`.
 - [ ] Explicar qué datos se guardan y para qué.
 - [ ] Explicar moderación, reportes y suspensión.
 - [ ] Confirmar que no se usan assets oficiales sin permiso.
@@ -135,3 +144,14 @@ No crear ninguna variable `VITE_RIOT_*`.
 - Deprecación de mensajes: https://support-developer.riotgames.com/hc/en-us/articles/28593035600531-App-Messaging-Deprecation
 
 Los tiempos y requisitos pueden cambiar. Confirmar todo antes de aplicar.
+
+## 12. Demo pública `/demo-riot-9f4a2c`
+
+La demo pública está documentada en `docs/RIOT-DEMO.md`.
+
+- Usa fixtures; no consulta la API de Riot.
+- No usa la Personal API Key ni la Production API Key.
+- No escribe en DB, no envía emails y no usa datos de usuarios reales.
+- Frontend: `/demo-riot-9f4a2c`, con acceso por código y `noindex`.
+- Sirve como evidencia visual para la solicitud de Production API Key.
+- La integración real y RSO se implementan después de la aprobación.

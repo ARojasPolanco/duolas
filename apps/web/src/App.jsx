@@ -22,6 +22,8 @@ import LegalPage from './pages/LegalPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import PublicProfilePage from './pages/PublicProfilePage.jsx';
+import RiotPublicDemoPage, { RIOT_PUBLIC_DEMO_PATH } from './pages/RiotPublicDemoPage.jsx';
 import UsernameRequestPage from './pages/UsernameRequestPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
@@ -45,6 +47,7 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/cuenta-eliminada" element={<AccountDeletedPage />} />
+      <Route path={RIOT_PUBLIC_DEMO_PATH} element={<RiotPublicDemoPage />} />
       <Route
         path="/terminos"
         element={
@@ -88,6 +91,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/perfil/:id"
+        element={
+          <ProtectedRoute>
+            <PublicProfilePage />
           </ProtectedRoute>
         }
       />

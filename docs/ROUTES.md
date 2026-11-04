@@ -35,6 +35,7 @@ npm run seed
 | `/privacidad`       | Lista  | Política de privacidad                                    |
 | `/aviso-riot`       | Lista  | Aviso de no afiliación con Riot                           |
 | `/cuenta-eliminada` | Lista  | Baja programada, recuperación y cierre de sesión          |
+| `/demo-riot-9f4a2c` | Demo   | Recorrido guiado con datos Riot ficticios y `noindex`     |
 
 ### Protegidas
 
@@ -56,15 +57,6 @@ npm run seed
 | `/admin/reportes`     | Admin  | Reportes abiertos, advertencias y suspensiones           |
 | `/admin/metrics`      | Admin  | Los 4 KPIs con filtro de fechas                          |
 | `*`                   | Lista  | Página 404                                               |
-
-### Todavía no implementadas
-
-Estas rutas están en el plan pero hoy caen en 404:
-
-- `/perfil`
-- `/perfil/:id`
-
-La API de perfiles públicos y bloqueos ya existe; las pantallas de perfil quedan para una fase posterior.
 
 ## 2. API
 

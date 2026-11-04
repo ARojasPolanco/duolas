@@ -163,6 +163,7 @@ Reglas:
   - Iniciales, `@username`, aviso “Usuario de Duo LAS, no Riot ID”, rango, roles, país, diferencia horaria contra ART, estilo, idiomas, mic.
   - Score con anillo y motivos.
   - Botón "Me interesa" y "Pasar".
+  - Link "Ver perfil completo" antes de decidir.
   - Indicador de disponibilidad activa.
 - Lista de likes enviados.
 - El badge de navegación cuenta candidatos disponibles, se actualiza al likear, bloquear, editar el perfil y cada 60 segundos.
@@ -239,11 +240,11 @@ Reglas:
 
 ### 3.14 Perfil público `/perfil/:id`
 
-- Iniciales, username, rango, roles, país, diferencia horaria contra ART, estilo, idiomas, mic, bio.
-- Reputación y cantidad de conexiones.
-- Badge "Disponible ahora".
-- Botón reportar y bloquear.
-- Nunca muestra email, Riot ID, Discord ni WhatsApp.
+- Iniciales, username, rango Solo/Dúo y Flex, roles, país, diferencia horaria contra ART, estilo, idiomas, mic, bio, horarios y antigüedad.
+- Indica si el rango fue declarado o actualizado desde Riot.
+- Se accede desde "Ver perfil completo" en las cards de candidatos, antes de dar "Me interesa".
+- No muestra reputación pública, cantidad de conexiones, email, Riot ID, Discord ni WhatsApp.
+- Queda preparado para sumar ícono, nivel y top 3 campeones cuando exista vinculación de cuenta vía RSO.
 
 ### 3.15 Admin resumen `/admin`
 

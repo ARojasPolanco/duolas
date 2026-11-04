@@ -455,6 +455,7 @@ export default function HomePage() {
                   score={candidate.score}
                   reasons={candidate.reasons}
                   busy={busyId === candidate.profile.id}
+                  profileHref={`/perfil/${candidate.profile.id}`}
                   onLike={handleLike}
                   onBlock={handleBlock}
                 />
