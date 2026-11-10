@@ -17,6 +17,7 @@ import {
   Wifi,
 } from 'lucide-react';
 import AdminShell from '../components/AdminShell.jsx';
+import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import api from '../config/api.js';
 
 const numberFormatter = new Intl.NumberFormat('es-AR');
@@ -167,6 +168,10 @@ export default function AdminOverviewPage() {
   const [streamStats, setStreamStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [campaignOpen, setCampaignOpen] = useState(false);
+  const [campaignBusy, setCampaignBusy] = useState(false);
+  const [campaignResult, setCampaignResult] = useState('');
+  const [campaignError, setCampaignError] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -195,6 +200,28 @@ export default function AdminOverviewPage() {
     load();
     loadStreamStats();
   }, [load, loadStreamStats]);
+
+  const sendCampaign = async () => {
+    setCampaignBusy(true);
+    setCampaignError('');
+    setCampaignResult('');
+
+    try {
+      const res = await api.post('/v1/admin/notifications/pending-likes');
+      setCampaignResult(
+        `Recordatorio enviado a ${formatNumber(res.data.sent)} ${
+          res.data.sent === 1 ? 'jugador' : 'jugadores'
+        }.`
+      );
+      setCampaignOpen(false);
+    } catch (requestError) {
+      setCampaignError(
+        requestError.response?.data?.message || 'No pudimos enviar el recordatorio.'
+      );
+    } finally {
+      setCampaignBusy(false);
+    }
+  };
 
   useEffect(() => {
     load();
@@ -240,6 +267,44 @@ export default function AdminOverviewPage() {
         {error ? (
           <div className="rounded-2xl border border-danger/40 bg-danger/10 p-4 text-sm text-danger">
             {error}
+          </div>
+        ) : null}
+
+        <section className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+              Comunicación
+            </p>
+            <h2 className="mt-1 text-lg font-bold">Recordatorio de likes pendientes</h2>
+            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted">
+              Envía una notificación in-app a jugadores con likes pendientes. También reciben push
+              quienes tengan una suscripción activa. Se omiten los recordatorios enviados en las
+              últimas 72 horas.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setCampaignResult('');
+              setCampaignError('');
+              setCampaignOpen(true);
+            }}
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-xs font-bold text-bg"
+          >
+            <Send size={15} aria-hidden="true" />
+            Enviar recordatorio
+          </button>
+        </section>
+
+        {campaignResult ? (
+          <div className="rounded-2xl border border-success/40 bg-success/10 p-4 text-sm text-success">
+            {campaignResult}
+          </div>
+        ) : null}
+
+        {campaignError ? (
+          <div className="rounded-2xl border border-danger/40 bg-danger/10 p-4 text-sm text-danger">
+            {campaignError}
           </div>
         ) : null}
 
@@ -480,6 +545,19 @@ export default function AdminOverviewPage() {
           </Link>
         </section>
       </div>
+
+      <ConfirmDialog
+        open={campaignOpen}
+        title="Enviar recordatorio de likes"
+        description="Se enviará una notificación in-app a todos los jugadores con likes pendientes. También recibirán push quienes tengan suscripción activa. Se omiten quienes recibieron un recordatorio en las últimas 72 horas. No se puede deshacer."
+        confirmLabel="Enviar"
+        tone="accent"
+        busy={campaignBusy}
+        onConfirm={sendCampaign}
+        onClose={() => {
+          if (!campaignBusy) setCampaignOpen(false);
+        }}
+      />
     </AdminShell>
   );
 }

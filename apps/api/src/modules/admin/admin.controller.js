@@ -1,6 +1,7 @@
 import { adminService } from './admin.service.js';
 import { validateAdminUsersQuery } from './admin.schema.js';
 import { reportService } from '../trust/report.service.js';
+import { matchReminderService } from '../matching/matchReminder.service.js';
 import {
   validateAdminReportsQuery,
   validateResolveReport,
@@ -14,6 +15,12 @@ export const getOverview = catchAsync(async (_req, res) => {
   const overview = await adminService.overview();
 
   res.status(200).json({ status: 'success', overview });
+});
+
+export const sendPendingLikeCampaign = catchAsync(async (_req, res) => {
+  const sent = await matchReminderService.sendPendingLikeCampaign();
+
+  res.status(200).json({ status: 'success', sent });
 });
 
 export const getUsers = catchAsync(async (req, res) => {

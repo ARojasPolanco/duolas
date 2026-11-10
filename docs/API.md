@@ -821,6 +821,12 @@ Incluye actividad de matching: `likesTotal`, `likesPending`, `likes24h`, `matche
 `matches24h`, `recentLikes` y `recentMatches` (últimos 8, sin emails ni datos de contacto).
 También incluye `pendingUsernameChanges` y `recentUsernameChanges`.
 
+### `POST /admin/notifications/pending-likes`
+
+Envía una notificación in-app a todos los jugadores activos, verificados y con perfil completo que
+tengan likes pendientes. También intenta push a quienes tengan suscripción activa. Omite a quienes
+recibieron un recordatorio en las últimas 72 horas. Respuesta: `{ "status": "success", "sent": n }`.
+
 ### `GET /admin/users`
 
 Query:

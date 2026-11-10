@@ -55,4 +55,35 @@ describe('Recordatorio de likes pendientes', () => {
 
     expect(secondCount).toBe(1);
   });
+
+  it('envía la campaña manual solo a usuarios con likes pendientes y respeta el cooldown', async () => {
+    const recipient = await createMatchUser({ scheduleBlocks: ['sun_night'] });
+    const sender = await createMatchUser({ scheduleBlocks: ['sun_night'] });
+
+    const like = await api
+      .post('/api/v1/matching/likes')
+      .set(authHeader(sender.token))
+      .send({ targetUserId: recipient.user.id });
+
+    expect(like.status).toBe(201);
+
+    const sent = await matchReminderService.sendPendingLikeCampaign();
+    expect(sent).toBeGreaterThanOrEqual(1);
+
+    const notification = await Notification.findOne({
+      where: { userId: recipient.user.id, type: 'match_reminder' },
+    });
+
+    expect(notification.title).toBe('Te extrañamos en Duo LAS');
+    expect(notification.data.url).toBe('/match');
+    expect(notification.data.source).toBe('pending_likes_campaign');
+
+    await matchReminderService.sendPendingLikeCampaign();
+
+    const count = await Notification.count({
+      where: { userId: recipient.user.id, type: 'match_reminder' },
+    });
+
+    expect(count).toBe(1);
+  });
 });

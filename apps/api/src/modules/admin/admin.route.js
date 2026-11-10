@@ -5,6 +5,7 @@ import {
   getUserDetail,
   getUsers,
   resolveReport,
+  sendPendingLikeCampaign,
   warnUser,
   suspendUser,
 } from './admin.controller.js';
@@ -30,6 +31,7 @@ router.post('/username-changes/:id/approve', approveUsernameRequest);
 router.post('/username-changes/:id/reject', rejectUsernameRequest);
 router.get('/reports', getReports);
 router.post('/reports/:id/resolve', resolveReport);
+router.post('/notifications/pending-likes', sendPendingLikeCampaign);
 router.get('/metrics/summary', getMetricsSummary);
 
 export default router;
