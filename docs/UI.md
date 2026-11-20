@@ -181,6 +181,16 @@ Reglas:
 - El contacto se revela en `/matches` después de aceptar.
 - Una publicación activa por usuario.
 
+### 3.7.2 Clash LFG `/clash`
+
+- Feature temporal para Worlds Clash del 21-22/11.
+- Modal global una vez por sesión con CTA a `/clash`.
+- Crear equipo: nombre, día, rol del capitán, roles faltantes, rango mínimo/máximo y nota.
+- Listado con capitán, integrantes aceptados, roles faltantes, rango buscado y postulaciones.
+- Postularse con rol y mensaje; el capitán acepta o rechaza.
+- Al aceptar se crea una conexión `clash` y el contacto aparece en Matches.
+- No crea equipos en Riot ni gestiona tickets, brackets o premios.
+
 ### 3.8 Disponible ya `/disponible`
 
 - Formulario inline para abrir disponibilidad.

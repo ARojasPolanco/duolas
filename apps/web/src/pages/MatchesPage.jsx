@@ -162,9 +162,15 @@ export default function MatchesPage() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <h2 className="truncate font-bold">@{match.other.username}</h2>
-                        {match.source === 'aram' ? (
-                          <span className="rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gold">
-                            ARAM
+                        {match.source === 'aram' || match.source === 'clash' ? (
+                          <span
+                            className={`rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                              match.source === 'clash'
+                                ? 'border-accent/40 bg-accent/10 text-accent'
+                                : 'border-gold/40 bg-gold/10 text-gold'
+                            }`}
+                          >
+                            {match.source === 'clash' ? 'CLASH' : 'ARAM'}
                           </span>
                         ) : null}
                       </div>

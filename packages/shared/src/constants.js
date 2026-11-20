@@ -86,11 +86,16 @@ export const AVAILABILITY_STATUSES = Object.freeze(['active', 'closed']);
 export const AVAILABILITY_CLOSED_REASONS = Object.freeze(['expired', 'manual', 'matched']);
 
 export const LIKE_STATUSES = Object.freeze(['pending', 'matched', 'cancelled']);
-export const CONNECTION_SOURCES = Object.freeze(['like', 'availability', 'post', 'aram']);
+export const CONNECTION_SOURCES = Object.freeze(['like', 'availability', 'post', 'aram', 'clash']);
 export const CONNECTION_STATUSES = Object.freeze(['active', 'archived']);
 
 export const ARAM_MODES = Object.freeze(['solo', 'group']);
 export const ARAM_WINDOWS = Object.freeze(['now', 'tonight']);
+
+export const CLASH_EVENT_ENDS_AT = '2026-11-23T02:59:59.999Z';
+export const CLASH_DAYS = Object.freeze(['saturday', 'sunday', 'both']);
+export const CLASH_ROLES = Object.freeze(['top', 'jungle', 'mid', 'adc', 'support']);
+export const CLASH_STATUSES = Object.freeze(['active', 'filled', 'expired', 'cancelled']);
 
 export const POST_STATUSES = Object.freeze(['active', 'filled', 'expired', 'cancelled']);
 export const APPLICATION_STATUSES = Object.freeze(['pending', 'accepted', 'rejected', 'withdrawn']);

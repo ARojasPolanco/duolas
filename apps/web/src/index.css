@@ -3,17 +3,17 @@
 @theme {
   --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
 
-  --color-bg: #030407;
-  --color-surface: #060b14;
-  --color-surface-2: #0a1424;
-  --color-border: #1558c9;
-  --color-text: #f4f7fb;
-  --color-muted: #94a3b8;
-  --color-accent: #b0cf5c;
-  --color-accent-strong: #9fbf4f;
-  --color-gold: #f5c451;
-  --color-danger: #f87171;
-  --color-success: #34d399;
+  --color-bg: #0b1220;
+  --color-surface: #121c2e;
+  --color-surface-2: #1a2940;
+  --color-border: #2a4f7a;
+  --color-text: #f8fafc;
+  --color-muted: #a8b7ca;
+  --color-accent: #b8d96a;
+  --color-accent-strong: #a6c957;
+  --color-gold: #f6c85f;
+  --color-danger: #fb7185;
+  --color-success: #4ade80;
 }
 
 html {

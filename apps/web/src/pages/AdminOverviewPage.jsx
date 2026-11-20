@@ -47,6 +47,7 @@ const MATCH_SOURCE = {
   availability: 'Disponible ya',
   post: 'Busco 1',
   aram: 'ARAM',
+  clash: 'Clash',
 };
 
 const statusBadge = (status, map) => {

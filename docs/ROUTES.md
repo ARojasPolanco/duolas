@@ -45,6 +45,7 @@ npm run seed
 | `/solicitud-username` | Lista  | Solicitud de cambio de nombre y propuesta del usuario    |
 | `/inicio`             | Lista  | Perfil propio, carrusel, jugadores compatibles y matches |
 | `/match`              | Lista  | Filtros, candidatos, like, pasar y bloquear              |
+| `/clash`              | Lista  | Equipos Clash, postulaciones, aceptar y contacto         |
 | `/aram`               | Lista  | Publicar grupo, ponerse disponible, postular y aceptar   |
 | `/disponible`         | Lista  | Abrir/cerrar disponibilidad, TTL, filtros e invitar      |
 | `/invitaciones`       | Lista  | Recibidas/enviadas, aceptar, rechazar y cancelar         |

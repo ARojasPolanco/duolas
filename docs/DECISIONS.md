@@ -353,3 +353,11 @@ Registro de decisiones de producto y técnica. Cada decisión nueva se agrega co
 **Decisión:** dejar de exponer la reputación en la UI y en las respuestas públicas. Se elimina de cards de Match e Inicio, Matches, perfil público, respuestas públicas de perfiles, disponibilidad e invitaciones, y del `breakdown` público. El cálculo y los datos siguen existiendo solo para moderación interna, desempates internos y el panel admin.
 
 **Consecuencias:** la app queda alineada con la revisión de Riot. Los reportes y bloqueos siguen existiendo como herramientas privadas de seguridad. El feedback y la reputación no se muestran como evaluación pública ni se usan para avergonzar jugadores.
+
+## ADR-045 - Clash LFG temporal sin API de Clash
+
+**Contexto:** Worlds Clash corre el 21 y 22 de noviembre de 2026 y no hay tiempo para esperar la Production API Key ni la aprobación de RSO. La API `CLASH-V1` es de solo lectura: no permite crear equipos, invitar ni lockear.
+
+**Decisión:** agregar `/clash` como módulo temporal de búsqueda de equipos. Los capitanes publican equipo, día, rol propio, roles faltantes, rango buscado y nota. Los jugadores se postulan con rol y mensaje. Al aceptar, se crea una conexión `clash`, se revela el contacto en Matches y se notifica a ambas partes. El equipo real se crea e invita desde el cliente de LoL. No se usan tickets, pagos, apuestas, brackets ni la API de Riot.
+
+**Consecuencias:** la feature se puede lanzar sin Production Key ni RSO. No puede verificar roster ni tier de Clash; eso queda para una fase posterior. Los posts expiran al terminar el evento y el modal global se puede desactivar cambiando `CLASH_EVENT_ENDS_AT` o removiendo la ruta.

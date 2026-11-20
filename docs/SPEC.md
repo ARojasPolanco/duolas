@@ -40,6 +40,7 @@ Jugadores de League of Legends del servidor LAS, mayores de 18 años, que quiere
 - Contacto revelado solo después de una conexión: Riot ID y Discord/WhatsApp opcionales.
 - Notificaciones en la app, SSE, polling de respaldo y web push.
 - Feedback posterior a la partida, reputación interna, reportes y bloqueos.
+- Clash LFG temporal para Worlds Clash 2026: publicar equipos, postularse y coordinar. No crea equipos en Riot.
 - Moderación mínima con advertencias y suspensiones.
 - Métricas de los cuatro KPIs del MVP.
 

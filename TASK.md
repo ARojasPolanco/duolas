@@ -307,6 +307,18 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - [ ] Grabar video del flujo real local, sin subir la Personal API Key.
 - [ ] Solicitar Production API Key.
 
+## Clash LFG temporal - `/clash`
+
+- [x] Tablas `clash_posts` y `clash_applications`.
+- [x] Publicar equipo con nombre, día, capitán, roles, rango y nota.
+- [x] Listar equipos con integrantes y roles faltantes.
+- [x] Postularse con rol y mensaje.
+- [x] Aceptar/rechazar postulaciones y retirar postulación.
+- [x] Contacto revelado al aceptar mediante conexión `clash`.
+- [x] Modal global con CTA a `/clash` para todos los visitantes.
+- [x] Expiración automática al terminar el evento.
+- [x] Tests de flujo completo.
+
 ## Pre-producción
 
 Checklist completo en `docs/PRODUCTION.md`. Plantillas: `apps/api/.env.production.example` y `apps/web/.env.production.example`.

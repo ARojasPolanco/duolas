@@ -9,6 +9,8 @@ import AdminReportsPage from './pages/AdminReportsPage.jsx';
 import AdminUserDetailPage from './pages/AdminUserDetailPage.jsx';
 import AdminUsersPage from './pages/AdminUsersPage.jsx';
 import AvailabilityPage from './pages/AvailabilityPage.jsx';
+import ClashAnnouncementModal from './components/ClashAnnouncementModal.jsx';
+import ClashPage from './pages/ClashPage.jsx';
 import DuoPostsPage from './pages/DuoPostsPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import HowItWorksPage from './pages/HowItWorksPage.jsx';
@@ -38,184 +40,195 @@ function App() {
   if (loading) return <LoadingScreen />;
 
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/como-funciona" element={<HowItWorksPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/cuenta-eliminada" element={<AccountDeletedPage />} />
-      <Route path={RIOT_PUBLIC_DEMO_PATH} element={<RiotPublicDemoPage />} />
-      <Route
-        path="/terminos"
-        element={
-          <LegalPage
-            title="Términos de uso"
-            intro="Reglas básicas para usar Duo LAS y coordinar tus partidas."
-            sections={termsSections}
-          />
-        }
-      />
-      <Route
-        path="/privacidad"
-        element={
-          <LegalPage
-            title="Política de privacidad"
-            intro="Qué datos usamos, para qué y cómo los protegemos."
-            sections={privacySections}
-          />
-        }
-      />
-      <Route
-        path="/aviso-riot"
-        element={
-          <LegalPage
-            title="Aviso de Riot Games"
-            intro="Duo LAS es un proyecto independiente para la comunidad de LAS."
-            sections={riotSections}
-          />
-        }
-      />
-      <Route
-        path="/onboarding"
-        element={
-          <ProtectedRoute>
-            <OnboardingPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/perfil"
-        element={
-          <ProtectedRoute>
-            <ProfilePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/perfil/:id"
-        element={
-          <ProtectedRoute>
-            <PublicProfilePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/solicitud-username"
-        element={
-          <ProtectedRoute>
-            <UsernameRequestPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/inicio"
-        element={
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/match"
-        element={
-          <ProtectedRoute>
-            <MatchPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/aram"
-        element={
-          <ProtectedRoute>
-            <AramPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/matches"
-        element={
-          <ProtectedRoute>
-            <MatchesPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/disponible"
-        element={
-          <ProtectedRoute>
-            <AvailabilityPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/invitaciones"
-        element={
-          <ProtectedRoute>
-            <InvitesPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/busco-1"
-        element={
-          <ProtectedRoute>
-            <DuoPostsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/notificaciones"
-        element={
-          <ProtectedRoute>
-            <NotificationsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminOverviewPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/usuarios"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminUsersPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/usuarios/:id"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminUserDetailPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/reportes"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminReportsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/metrics"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminMetricsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <>
+      <ClashAnnouncementModal />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/como-funciona" element={<HowItWorksPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/cuenta-eliminada" element={<AccountDeletedPage />} />
+        <Route path={RIOT_PUBLIC_DEMO_PATH} element={<RiotPublicDemoPage />} />
+        <Route
+          path="/terminos"
+          element={
+            <LegalPage
+              title="Términos de uso"
+              intro="Reglas básicas para usar Duo LAS y coordinar tus partidas."
+              sections={termsSections}
+            />
+          }
+        />
+        <Route
+          path="/privacidad"
+          element={
+            <LegalPage
+              title="Política de privacidad"
+              intro="Qué datos usamos, para qué y cómo los protegemos."
+              sections={privacySections}
+            />
+          }
+        />
+        <Route
+          path="/aviso-riot"
+          element={
+            <LegalPage
+              title="Aviso de Riot Games"
+              intro="Duo LAS es un proyecto independiente para la comunidad de LAS."
+              sections={riotSections}
+            />
+          }
+        />
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute>
+              <OnboardingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/perfil"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/perfil/:id"
+          element={
+            <ProtectedRoute>
+              <PublicProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/solicitud-username"
+          element={
+            <ProtectedRoute>
+              <UsernameRequestPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inicio"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/match"
+          element={
+            <ProtectedRoute>
+              <MatchPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/aram"
+          element={
+            <ProtectedRoute>
+              <AramPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clash"
+          element={
+            <ProtectedRoute>
+              <ClashPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/matches"
+          element={
+            <ProtectedRoute>
+              <MatchesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/disponible"
+          element={
+            <ProtectedRoute>
+              <AvailabilityPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invitaciones"
+          element={
+            <ProtectedRoute>
+              <InvitesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/busco-1"
+          element={
+            <ProtectedRoute>
+              <DuoPostsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notificaciones"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminOverviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/usuarios"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminUsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/usuarios/:id"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminUserDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reportes"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminReportsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/metrics"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminMetricsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </>
   );
 }
 

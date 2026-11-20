@@ -644,6 +644,66 @@ Solo dueño. Rechaza una solicitud pendiente. `200`.
 
 Solo postulante. Retira una solicitud pendiente. `200`.
 
+## 9.2 Clash LFG
+
+Temporal para Worlds Clash. Requiere auth, email verificado y perfil completo. No crea equipos en Riot: solo coordina jugadores.
+
+### `GET /clash/posts`
+
+Query: `day` (`saturday`, `sunday`, `both`) y `role` (`top`, `jungle`, `mid`, `adc`, `support`). Devuelve equipos activos con capitán, integrantes aceptados, roles faltantes y rango buscado. Nunca incluye Riot ID ni contactos.
+
+### `POST /clash/posts`
+
+```json
+{
+  "teamName": "Los Pibes del Clash",
+  "day": "saturday",
+  "captainRole": "mid",
+  "rolesNeeded": ["jungle", "support"],
+  "rankMinTier": "gold",
+  "rankMaxTier": "platinum",
+  "note": "Buscamos jungla con mic."
+}
+```
+
+`201`. Un equipo activo por capitán.
+
+### `POST /clash/posts/:id/apply`
+
+```json
+{ "role": "jungle", "message": "Jungla main, tengo mic." }
+```
+
+`201`. El rol debe estar faltando y el rango del jugador debe entrar en el rango buscado.
+
+### `GET /clash/posts/:id/applications`
+
+Solo el capitán. Devuelve postulaciones con perfil público y estado, sin contactos.
+
+### `POST /clash/posts/:id/applications/:applicationId/accept`
+
+Solo el capitán. Acepta la postulación, crea una conexión `clash` y revela el contacto en Matches. Si se completan todos los roles, el equipo pasa a `filled`.
+
+### `POST /clash/posts/:id/applications/:applicationId/reject`
+
+Solo el capitán. Rechaza una postulación pendiente.
+
+### `DELETE /clash/posts/:id/applications/:applicationId`
+
+El postulante retira su postulación pendiente.
+
+### `DELETE /clash/posts/:id`
+
+El capitán cancela el equipo y se notifica a los aceptados.
+
+### `GET /clash/mine`
+
+Equipos propios con conteos de postulaciones.
+
+### `GET /clash/applications`
+
+Postulaciones propias. Si fueron aceptadas, incluye el contacto del capitán.
+
 ## 10. Confianza
 
 ### `POST /reports`

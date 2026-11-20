@@ -11,6 +11,7 @@ import {
   Radio,
   Swords,
   Trash2,
+  Trophy,
   UserRound,
   Users,
 } from 'lucide-react';
@@ -25,6 +26,7 @@ import { initialsOf } from '../utils/labels.js';
 const primaryLinks = [
   { to: '/inicio', label: 'Inicio', icon: Home },
   { to: '/match', label: 'Match', icon: Swords },
+  { to: '/clash', label: 'Clash', icon: Trophy },
   { to: '/aram', label: 'ARAM', icon: Gamepad2 },
   { to: '/disponible', label: 'Disponible', icon: Radio },
   { to: '/busco-1', label: 'Busco 1', icon: ClipboardList },
@@ -95,7 +97,10 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
             <BetaBadge />
           </Link>
 
-          <nav className="ml-4 hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
+          <nav
+            className="ml-4 hidden items-center gap-1 min-[1200px]:flex"
+            aria-label="Navegación principal"
+          >
             {primaryLinks.map((link) => {
               const badge = link.to === '/match' && candidateCount ? candidateBadge : null;
 
@@ -233,7 +238,7 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
         </div>
       </header>
 
-      <main className={`mx-auto px-4 pb-28 pt-6 sm:px-6 lg:pb-12 ${maxWidth}`}>
+      <main className={`mx-auto px-4 pb-28 pt-6 sm:px-6 min-[1200px]:pb-12 ${maxWidth}`}>
         {children}
         <footer className="mt-10 border-t border-border pt-4">
           <nav className="flex flex-wrap gap-x-4 text-[11px] font-semibold text-muted">
@@ -260,7 +265,7 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
       {deleteOpen ? <DeleteAccountDialog onClose={() => setDeleteOpen(false)} /> : null}
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl min-[1200px]:hidden"
         aria-label="Navegación mobile"
       >
         <div className="mx-auto flex max-w-2xl items-stretch">
