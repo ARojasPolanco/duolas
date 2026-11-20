@@ -6,6 +6,8 @@ import Sanction from '../trust/sanction.model.js';
 import DuoConnection from '../matching/duoConnection.model.js';
 import DuoLike from '../matching/duoLike.model.js';
 import AvailabilitySession from '../availability/availability.model.js';
+import ClashPost from '../clash/clashPost.model.js';
+import ClashApplication from '../clash/clashApplication.model.js';
 import UsernameChangeRequest from '../usernameChanges/usernameChangeRequest.model.js';
 import { usernameChangeService } from '../usernameChanges/usernameChange.service.js';
 import { AppError } from '../../errors/appError.js';
@@ -460,6 +462,56 @@ export class AdminService {
       }),
     ]);
 
+    const [
+      clashTeamsTotal,
+      clashTeamsActive,
+      clashTeamsFilled,
+      clashApplicationsTotal,
+      clashApplicationsPending,
+      recentClashTeams,
+      recentClashApplications,
+    ] = await Promise.all([
+      ClashPost.count(),
+      ClashPost.count({ where: { status: 'active' } }),
+      ClashPost.count({ where: { status: 'filled' } }),
+      ClashApplication.count(),
+      ClashApplication.count({ where: { status: 'pending' } }),
+      ClashPost.findAll({
+        include: [{ model: User, as: 'owner', attributes: ['id', 'username'] }],
+        order: [['createdAt', 'DESC']],
+        limit: 8,
+      }),
+      ClashApplication.findAll({
+        include: [
+          { model: ClashPost, as: 'post', attributes: ['id', 'teamName'] },
+          { model: User, as: 'applicant', attributes: ['id', 'username'] },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit: 8,
+      }),
+    ]);
+
+    const clashRecentIds = recentClashTeams.map((post) => post.id);
+    const clashRecentApplications = clashRecentIds.length
+      ? await ClashApplication.findAll({
+          where: { postId: { [Op.in]: clashRecentIds } },
+          attributes: ['postId', 'status'],
+        })
+      : [];
+    const clashCounts = new Map();
+
+    for (const application of clashRecentApplications) {
+      const current = clashCounts.get(application.postId) || {
+        total: 0,
+        pending: 0,
+        accepted: 0,
+      };
+      current.total += 1;
+      if (application.status === 'pending') current.pending += 1;
+      if (application.status === 'accepted') current.accepted += 1;
+      clashCounts.set(application.postId, current);
+    }
+
     return {
       users,
       players,
@@ -473,6 +525,38 @@ export class AdminService {
       openReports,
       activeConnections,
       activeAvailability,
+      clashTeamsTotal,
+      clashTeamsActive,
+      clashTeamsFilled,
+      clashApplicationsTotal,
+      clashApplicationsPending,
+      recentClashTeams: recentClashTeams.map((post) => {
+        const counts = clashCounts.get(post.id) || { total: 0, pending: 0, accepted: 0 };
+        return {
+          id: post.id,
+          teamName: post.teamName,
+          day: post.day,
+          status: post.status,
+          createdAt: post.createdAt,
+          owner: post.owner ? { id: post.owner.id, username: post.owner.username } : null,
+          members: counts.accepted + 1,
+          maxMembers: post.rolesNeeded.length + 1,
+          applications: counts.total,
+          pendingApplications: counts.pending,
+        };
+      }),
+      recentClashApplications: recentClashApplications.map((application) => ({
+        id: application.id,
+        role: application.role,
+        status: application.status,
+        createdAt: application.createdAt,
+        applicant: application.applicant
+          ? { id: application.applicant.id, username: application.applicant.username }
+          : null,
+        team: application.post
+          ? { id: application.post.id, name: application.post.teamName }
+          : null,
+      })),
       likesTotal,
       likesPending,
       likes24h,

@@ -318,6 +318,7 @@ Todas en `docs/DECISIONS.md`. Resumen:
 - [x] Modal global con CTA a `/clash` para todos los visitantes.
 - [x] Expiración automática al terminar el evento.
 - [x] Tests de flujo completo.
+- [x] Contexto de Clash en el resumen admin: equipos, completos y postulaciones.
 
 ## Pre-producción
 

@@ -5,12 +5,14 @@ import {
   AtSign,
   BarChart3,
   CheckCircle2,
+  ClipboardList,
   Clock3,
   Heart,
   Radio,
   RefreshCw,
   Send,
   ShieldAlert,
+  Trophy,
   UserRoundCheck,
   UserX,
   Users,
@@ -19,6 +21,7 @@ import {
 import AdminShell from '../components/AdminShell.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import api from '../config/api.js';
+import { ROLE_LABELS } from '../utils/labels.js';
 
 const numberFormatter = new Intl.NumberFormat('es-AR');
 const formatNumber = (value) => numberFormatter.format(Number(value || 0));
@@ -48,6 +51,26 @@ const MATCH_SOURCE = {
   post: 'Busco 1',
   aram: 'ARAM',
   clash: 'Clash',
+};
+
+const CLASH_STATUS = {
+  active: { label: 'Buscando', className: 'border-accent/40 bg-accent/10 text-accent' },
+  filled: { label: 'Completo', className: 'border-success/40 bg-success/10 text-success' },
+  expired: { label: 'Vencido', className: 'border-border bg-surface-2 text-muted' },
+  cancelled: { label: 'Cancelado', className: 'border-border bg-surface-2 text-muted' },
+};
+
+const CLASH_APPLICATION_STATUS = {
+  pending: { label: 'Pendiente', className: 'border-gold/40 bg-gold/10 text-gold' },
+  accepted: { label: 'Aceptada', className: 'border-success/40 bg-success/10 text-success' },
+  rejected: { label: 'Rechazada', className: 'border-danger/40 bg-danger/10 text-danger' },
+  withdrawn: { label: 'Retirada', className: 'border-border bg-surface-2 text-muted' },
+};
+
+const CLASH_DAY_LABELS = {
+  saturday: 'Sábado',
+  sunday: 'Domingo',
+  both: 'Sábado y domingo',
 };
 
 const statusBadge = (status, map) => {
@@ -136,6 +159,22 @@ const cards = (overview, streamStats) => [
     detail: 'Esperando respuesta',
     icon: Send,
     to: '/admin/usuarios',
+  },
+  {
+    label: 'Equipos Clash',
+    value: overview.clashTeamsTotal,
+    detail: `${formatNumber(overview.clashTeamsActive)} buscando · ${formatNumber(
+      overview.clashTeamsFilled
+    )} completos`,
+    icon: Trophy,
+    to: '/admin#clash',
+  },
+  {
+    label: 'Postulaciones Clash',
+    value: overview.clashApplicationsTotal,
+    detail: `${formatNumber(overview.clashApplicationsPending)} pendientes`,
+    icon: ClipboardList,
+    to: '/admin#clash',
   },
   {
     label: 'Disponibles ahora',
@@ -402,6 +441,83 @@ export default function AdminOverviewPage() {
                   </Link>
                 </div>
               ))}
+            </div>
+          </section>
+        ) : null}
+
+        {overview ? (
+          <section id="clash" className="rounded-2xl border border-gold/30 bg-surface p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+                  Evento temporal
+                </p>
+                <h2 className="mt-1 text-lg font-bold">Clash LFG</h2>
+              </div>
+              <span className="rounded-full border border-gold/40 bg-gold/10 px-2.5 py-1 text-[10px] font-bold text-gold">
+                {formatNumber(overview.clashTeamsActive)} buscando ·{' '}
+                {formatNumber(overview.clashTeamsFilled)} completos
+              </span>
+            </div>
+
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
+              <div className="rounded-xl border border-border bg-bg p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-sm font-bold">Equipos creados</h3>
+                  <Trophy size={18} className="text-gold" aria-hidden="true" />
+                </div>
+                {overview.recentClashTeams?.length ? (
+                  <div className="mt-3 divide-y divide-border">
+                    {overview.recentClashTeams.map((team) => (
+                      <div key={team.id} className="py-3 first:pt-0 last:pb-0">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="truncate text-sm font-semibold">{team.teamName}</p>
+                          {statusBadge(team.status, CLASH_STATUS)}
+                        </div>
+                        <p className="mt-1 text-[11px] text-muted">
+                          @{team.owner?.username || 'Usuario'} ·{' '}
+                          {CLASH_DAY_LABELS[team.day] || team.day} · {team.members}/
+                          {team.maxMembers} integrantes · {team.applications} postulaciones (
+                          {team.pendingApplications} pendientes)
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-xs text-muted">Todavía no hay equipos Clash.</p>
+                )}
+              </div>
+
+              <div className="rounded-xl border border-border bg-bg p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-sm font-bold">Postulaciones recientes</h3>
+                  <ClipboardList size={18} className="text-accent" aria-hidden="true" />
+                </div>
+                {overview.recentClashApplications?.length ? (
+                  <div className="mt-3 divide-y divide-border">
+                    {overview.recentClashApplications.map((application) => (
+                      <div
+                        key={application.id}
+                        className="flex flex-wrap items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold">
+                            @{application.applicant?.username || 'Usuario'} →{' '}
+                            {application.team?.name || 'Equipo'}
+                          </p>
+                          <p className="mt-1 text-[11px] text-muted">
+                            {ROLE_LABELS[application.role] || application.role} ·{' '}
+                            {formatDate(application.createdAt)}
+                          </p>
+                        </div>
+                        {statusBadge(application.status, CLASH_APPLICATION_STATUS)}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-xs text-muted">Todavía no hay postulaciones Clash.</p>
+                )}
+              </div>
             </div>
           </section>
         ) : null}

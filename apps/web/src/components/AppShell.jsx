@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
+  AtSign,
   Bell,
   BookOpen,
+  CheckCheck,
   ChevronDown,
   ClipboardList,
   Gamepad2,
   Home,
+  Inbox,
   LogOut,
+  MessageSquare,
   Radio,
+  ShieldAlert,
   Swords,
   Trash2,
   Trophy,
@@ -21,6 +26,7 @@ import RiotDisclaimer from './RiotDisclaimer.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useMatching } from '../context/MatchingContext.jsx';
 import { useNotifications } from '../context/NotificationsContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 import { initialsOf } from '../utils/labels.js';
 
 const primaryLinks = [
@@ -43,19 +49,63 @@ const mobileLinkClass = ({ isActive }) =>
     isActive ? 'text-accent' : 'text-muted'
   }`;
 
+const NOTIFICATION_ICONS = {
+  match_created: Swords,
+  invite_received: Inbox,
+  invite_accepted: CheckCheck,
+  invite_declined: Inbox,
+  invite_cancelled: Inbox,
+  application_received: ClipboardList,
+  application_accepted: CheckCheck,
+  application_rejected: ClipboardList,
+  application_withdrawn: ClipboardList,
+  aram_application_received: ClipboardList,
+  aram_application_accepted: CheckCheck,
+  aram_application_rejected: ClipboardList,
+  aram_application_withdrawn: ClipboardList,
+  post_suggested: ClipboardList,
+  feedback_revealed: MessageSquare,
+  warning_received: ShieldAlert,
+  account_suspended: ShieldAlert,
+  username_change_requested: AtSign,
+  username_change_suggested: AtSign,
+  username_changed: CheckCheck,
+  username_change_rejected: AtSign,
+  match_reminder: Swords,
+};
+
+const notificationDateFormatter = new Intl.DateTimeFormat('es-AR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+  timeZone: 'America/Argentina/Buenos_Aires',
+});
+
+const formatNotificationDate = (value) =>
+  value ? notificationDateFormatter.format(new Date(value)) : '-';
+
 export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
   const { user, logout } = useAuth();
   const { candidateCount } = useMatching();
-  const { unreadCount } = useNotifications();
+  const {
+    notifications,
+    unreadCount,
+    loading: notificationsLoading,
+    markRead,
+    markAllRead,
+  } = useNotifications();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef(null);
+  const notificationsRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const candidateBadge = candidateCount > 99 ? '99+' : candidateCount;
 
   useEffect(() => {
     setMenuOpen(false);
+    setNotificationsOpen(false);
     window.scrollTo({ top: 0, left: 0 });
   }, [location.pathname]);
 
@@ -79,10 +129,51 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!notificationsOpen) return undefined;
+
+    const closeOnOutside = (event) => {
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setNotificationsOpen(false);
+      }
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setNotificationsOpen(false);
+    };
+
+    document.addEventListener('mousedown', closeOnOutside);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutside);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [notificationsOpen]);
+
   const handleLogout = () => {
     setMenuOpen(false);
     logout();
     navigate('/login', { replace: true });
+  };
+
+  const openNotification = async (notification) => {
+    setNotificationsOpen(false);
+    try {
+      if (!notification.isRead) await markRead(notification.id);
+    } catch (requestError) {
+      toast.error(requestError.response?.data?.message || 'No pudimos abrir la notificación.');
+      return;
+    }
+
+    if (notification.data?.url) navigate(notification.data.url);
+  };
+
+  const markAllNotifications = async () => {
+    try {
+      await markAllRead();
+      toast.success('Todas las notificaciones quedaron leídas.');
+    } catch (requestError) {
+      toast.error(requestError.response?.data?.message || 'No pudimos marcar las notificaciones.');
+    }
   };
 
   return (
@@ -128,23 +219,121 @@ export default function AppShell({ children, maxWidth = 'max-w-6xl' }) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <Link
-              to="/notificaciones"
-              className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-border text-muted transition hover:border-accent/50 hover:text-text"
-              aria-label={`Notificaciones${unreadCount ? `: ${unreadCount} sin leer` : ''}`}
-            >
-              <Bell size={18} aria-hidden="true" />
-              {unreadCount ? (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
+            <div className="relative" ref={notificationsRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setNotificationsOpen((current) => !current);
+                  setMenuOpen(false);
+                }}
+                className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-border text-muted transition hover:border-accent/50 hover:text-text"
+                aria-label={`Notificaciones${unreadCount ? `: ${unreadCount} sin leer` : ''}`}
+                aria-haspopup="dialog"
+                aria-expanded={notificationsOpen}
+              >
+                <Bell size={18} aria-hidden="true" />
+                {unreadCount ? (
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-bg">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                ) : null}
+              </button>
+
+              {notificationsOpen ? (
+                <div
+                  role="dialog"
+                  aria-label="Notificaciones"
+                  className="absolute right-0 mt-2 w-[min(380px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl shadow-black/40"
+                >
+                  <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+                    <div>
+                      <p className="text-sm font-bold">Notificaciones</p>
+                      <p className="mt-0.5 text-[10px] text-muted">
+                        {unreadCount ? `${unreadCount} sin leer` : 'Todo al día'}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={markAllNotifications}
+                      disabled={!unreadCount}
+                      className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-[10px] font-semibold text-muted disabled:opacity-40"
+                    >
+                      <CheckCheck size={12} aria-hidden="true" />
+                      Marcar todas
+                    </button>
+                  </div>
+
+                  <div className="max-h-[min(60vh,420px)] overflow-y-auto">
+                    {notificationsLoading ? (
+                      <div className="space-y-2 p-4">
+                        <div className="h-12 animate-pulse rounded-xl bg-surface-2" />
+                        <div className="h-12 animate-pulse rounded-xl bg-surface-2" />
+                      </div>
+                    ) : notifications.length ? (
+                      notifications.slice(0, 6).map((notification) => {
+                        const Icon = NOTIFICATION_ICONS[notification.type] || Bell;
+
+                        return (
+                          <button
+                            key={notification.id}
+                            type="button"
+                            onClick={() => openNotification(notification)}
+                            className={`flex w-full items-start gap-3 border-b border-border/70 px-4 py-3 text-left transition last:border-b-0 hover:bg-surface-2 ${
+                              notification.isRead ? 'opacity-75' : ''
+                            }`}
+                          >
+                            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                              <Icon size={15} aria-hidden="true" />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="flex items-start gap-2">
+                                <span className="line-clamp-2 flex-1 text-xs font-semibold">
+                                  {notification.title}
+                                </span>
+                                {!notification.isRead ? (
+                                  <span
+                                    className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                                    aria-label="Sin leer"
+                                  />
+                                ) : null}
+                              </span>
+                              {notification.message ? (
+                                <span className="mt-0.5 line-clamp-2 block text-[11px] leading-relaxed text-muted">
+                                  {notification.message}
+                                </span>
+                              ) : null}
+                              <span className="mt-1 block text-[10px] text-muted">
+                                {formatNotificationDate(notification.createdAt)}
+                              </span>
+                            </span>
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div className="px-4 py-8 text-center text-xs text-muted">
+                        No tenés notificaciones todavía.
+                      </div>
+                    )}
+                  </div>
+
+                  <Link
+                    to="/notificaciones"
+                    onClick={() => setNotificationsOpen(false)}
+                    className="flex min-h-11 items-center justify-center border-t border-border text-xs font-semibold text-accent hover:bg-surface-2"
+                  >
+                    Ver todas
+                  </Link>
+                </div>
               ) : null}
-            </Link>
+            </div>
 
             <div className="relative" ref={menuRef}>
               <button
                 type="button"
-                onClick={() => setMenuOpen((current) => !current)}
+                onClick={() => {
+                  setMenuOpen((current) => !current);
+                  setNotificationsOpen(false);
+                }}
                 className="flex h-11 items-center gap-2 rounded-xl border border-border px-2 transition hover:border-accent/50"
                 aria-haspopup="menu"
                 aria-expanded={menuOpen}
